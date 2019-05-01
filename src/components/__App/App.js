@@ -1,10 +1,11 @@
 // Dependencies
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
 // Components
-import { ExampleComponent } from '../../components';
+import {Home, Properties, Partners, Guests, Reports, Account, Callback} from '../../components';
+
 
 //Styles
 const AppContainer = styled.div`
@@ -27,8 +28,16 @@ class App extends Component {
 	render() {
 		return (
 			<AppContainer>
-				{/* <Navbar /> */}
-				<Route exact path="/" component={ExampleComponent} />
+				{/* Declare Routes */}
+				<Switch>
+					<Route exact path = '/' component = {Home} />
+					<Route exact path = '/properties' component = {Properties} />
+					<Route exact path = '/partners' component = {Partners} />
+					<Route exact path = '/guests' component = {Guests} />
+					<Route exact path = '/reports' component = {Reports} />
+					<Route exact path = '/account' component = {Account} />
+					<Route path = '/callback' component = {Callback} />
+				</Switch>
 			</AppContainer>
 		);
 	}

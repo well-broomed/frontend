@@ -7,6 +7,12 @@ import Auth from './Auth';
 
 const auth = new Auth();
 
+// The callback component will be hit once the auth0 access token is received
+// after a successful login.
+
+// Once it mounts, it will affirm the user's details on the server side,
+// pulling any necessary profile information into state
+
 class Callback extends React.Component {
 
     async componentDidMount(){
@@ -17,7 +23,7 @@ class Callback extends React.Component {
 
     componentDidUpdate(){
         if(this.props.userChecked === true){
-            this.props.history.replace('/groups');
+            this.props.history.replace('/households');
         }
     }
 
