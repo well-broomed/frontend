@@ -175,7 +175,7 @@ class Navigation extends React.Component {
                         </Typography>
 
                         {/* CONDITIONALLY RENDER LOGIN/LOGOUT BASED ON JWT PRESENCE */}
-                        {!this.state.isLoggedIn ? 
+                        {!localStorage.getItem('jwt') ? 
                         <Button variant = 'contained' className = {classes.loginBtn} onClick = {this.handleLogin}>Login</Button>
                         :
                         <Button variant = 'contained' className = {classes.logoutBtn} onClick = {this.handleLogout}>Logout</Button>
