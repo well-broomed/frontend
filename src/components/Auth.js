@@ -20,31 +20,27 @@ class Auth {
       scope: 'openid email profile' // user information requested
     });
 
-    this.getProfile = this.getProfile.bind(this);
-    this.handleAuthentication = this.handleAuthentication.bind(this);
-    this.isAuthenticated = this.isAuthenticated.bind(this);
-    this.signIn = this.login.bind(this);
-    this.signOut = this.logout.bind(this);
+    
   }
 
-  getProfile() {
+  getProfile = () => {
     return this.profile;
   }
 
-  getIdToken() {
+  getIdToken = () => {
     return this.idToken;
   }
 
-  isAuthenticated() {
+  isAuthenticated = () => {
     return new Date().getTime() < this.expiresAt;
   }
 
-  login() {
+  login = () => {
     console.log('callback URL:', callbackURL); // sanity check for callback URL
     this.auth0.authorize();
   }
 
-  handleAuthentication() {
+  handleAuthentication = () => {
     return new Promise((resolve, reject) => {
       this.auth0.parseHash((err, authResult) => { // parse the callback's query parameter access token
         
@@ -71,7 +67,7 @@ class Auth {
     })
   }
 
-  logout() {
+  logout = () => {
     // clear id token, profile, and expiration
     this.idToken = null;
     this.profile = null;
