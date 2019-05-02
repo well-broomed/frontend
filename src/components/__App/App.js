@@ -4,7 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
 // Components
-import {Home, Properties, Partners, Guests, Reports, Account, Callback} from '../../components';
+import {Home, Properties, Partners, Guests, Reports, Account, Callback, Navigation} from '../../components';
 
 
 //Styles
@@ -28,6 +28,7 @@ class App extends Component {
 	render() {
 		return (
 			<AppContainer>
+				<Navigation />
 				{/* Declare Routes */}
 				<Switch>
 					<Route exact path = '/' component = {Home} />

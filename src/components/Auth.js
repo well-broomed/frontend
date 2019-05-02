@@ -23,8 +23,8 @@ class Auth {
     this.getProfile = this.getProfile.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
-    this.signIn = this.signIn.bind(this);
-    this.signOut = this.signOut.bind(this);
+    this.signIn = this.login.bind(this);
+    this.signOut = this.logout.bind(this);
   }
 
   getProfile() {
@@ -87,6 +87,4 @@ class Auth {
   }
 }
 
-const auth0Client = new Auth();
-
-export default auth0Client;
+export default Auth;

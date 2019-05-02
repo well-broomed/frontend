@@ -6,7 +6,6 @@ import {checkIfUserExists} from '../actions/index';
 import Auth from './Auth';
 
 const auth = new Auth();
-
 // The callback component will be hit once the auth0 access token is received
 // after a successful login.
 
