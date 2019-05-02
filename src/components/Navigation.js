@@ -5,7 +5,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import Fab from '@material-ui/core/Fab';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
@@ -22,6 +21,10 @@ import MailIcon from '@material-ui/icons/Mail';
 
 import {withRouter, Link} from 'react-router-dom';
 import {connect} from 'react-redux';
+
+import Auth from './Auth';
+
+const auth = new Auth();
 
 const styles = {
     root: {
@@ -49,9 +52,22 @@ const styles = {
     loginBtn: {
         background: '#1b5e20',
         color: 'white',
+    },
+    logoutBtn: {
+        background: '#b71c1c',
+        color: 'white',
     }
 }
 class Navigation extends React.Component {
+
+    componentDidMount(){
+        // modify this to check central state's isloggedin once backend is deployed
+        if(localStorage.getItem('jwt')){
+            this.setState({
+                isLoggedIn: true,
+            });
+        }
+    }
     
     constructor(props){
         super(props);
@@ -63,6 +79,7 @@ class Navigation extends React.Component {
             left: false,
             bottom: false,
             right: false,
+            isLoggedIn: false,
         };
 
         this.toggleDrawer = (side, open) => () => {
@@ -70,6 +87,17 @@ class Navigation extends React.Component {
                 [side]: open,
             })
         }
+    }
+
+    handleLogin = event => {
+        event.preventDefault();
+        auth.login();
+    }
+
+    handleLogout = event => {
+        event.preventDefault();
+        auth.logout();
+        this.props.history.replace('/');
     }
 
     render(){
@@ -88,7 +116,7 @@ class Navigation extends React.Component {
         const sideMenu = (
             <div className = {classes.list}>
             <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+            {['Home', 'Properties', 'Partners', 'Guests', 'Reports'].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
               <ListItemText primary={text} />
@@ -99,7 +127,7 @@ class Navigation extends React.Component {
             <Divider />
 
             <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
+          {['Account'].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
               <ListItemText primary={text} />
@@ -122,7 +150,13 @@ class Navigation extends React.Component {
                         {pathRoute}
                         </Typography>
 
-                        <Button variant = 'contained' className = {classes.loginBtn}>Login</Button>
+                        {/* CONDITIONALLY RENDER LOGIN/LOGOUT BASED ON JWT PRESENCE */}
+                        {!this.state.isLoggedIn ? 
+                        <Button variant = 'contained' className = {classes.loginBtn} onClick = {this.handleLogin}>Login</Button>
+                        :
+                        <Button variant = 'contained' className = {classes.logoutBtn} onClick = {this.handleLogout}>Logout</Button>
+                        }
+
                     </Toolbar>
                 </AppBar>
 

@@ -20,6 +20,7 @@ class Callback extends React.Component {
         });
     }
 
+    // @TODO callback redirect cant be properly resolved until backend is deployed
     componentDidUpdate(){
         if(this.props.userChecked === true){
             this.props.history.replace('/households');
