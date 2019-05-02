@@ -5,6 +5,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
@@ -45,10 +46,9 @@ const styles = {
         width: 250,
         margin: '60px 0px',
     },
-    loginbtn:{
-        padding: 0,
-        minHeight: 0,
-        minWidth: 0,
+    loginBtn: {
+        background: '#1b5e20',
+        color: 'white',
     }
 }
 class Navigation extends React.Component {
@@ -122,7 +122,7 @@ class Navigation extends React.Component {
                         {pathRoute}
                         </Typography>
 
-                        <Button color = 'inherit' className = {classes.loginbtn}>Login</Button>
+                        <Button variant = 'contained' className = {classes.loginBtn}>Login</Button>
                     </Toolbar>
                 </AppBar>
 
