@@ -19,6 +19,14 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 
+// Icons
+import AccountCircleTwoTone from '@material-ui/icons/AccountCircleTwoTone';
+import HomeTwoTone from '@material-ui/icons/HomeTwoTone';
+import BusinessTwoTone from '@material-ui/icons/BusinessTwoTone';
+import PeopleTwoTone from '@material-ui/icons/PeopleTwoTone';
+import HotelTwoTone from '@material-ui/icons/HotelTwoTone';
+import InsertChartTwoTone from '@material-ui/icons/InsertChartTwoTone';
+
 import {withRouter, Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 
@@ -116,23 +124,39 @@ class Navigation extends React.Component {
         const sideMenu = (
             <div className = {classes.list}>
             <List>
-            {['Home', 'Properties', 'Partners', 'Guests', 'Reports'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
+            <ListItem button key = 'Home' component={Link} to='/'>
+                <ListItemIcon><HomeTwoTone/></ListItemIcon> 
+                <ListItemText primary='Home'></ListItemText>
             </ListItem>
-            ))}
+
+            <ListItem button key = 'Properties' component={Link} to='/properties'>
+                <ListItemIcon><BusinessTwoTone/></ListItemIcon> 
+                <ListItemText primary='Properties'></ListItemText>
+            </ListItem>
+
+            <ListItem button key = 'Partners' component={Link} to='/partners'>
+                <ListItemIcon><PeopleTwoTone/></ListItemIcon> 
+                <ListItemText primary='Partners'></ListItemText>
+            </ListItem>
+
+            <ListItem button key = 'Guests' component={Link} to='/guests'>
+                <ListItemIcon><HotelTwoTone/></ListItemIcon> 
+                <ListItemText primary='Guests'></ListItemText>
+            </ListItem>
+
+            <ListItem button key = 'Reports' component={Link} to='/reports'>
+                <ListItemIcon><InsertChartTwoTone/></ListItemIcon> 
+                <ListItemText primary='Reports'></ListItemText>
+            </ListItem>
 
             </List>
             <Divider />
 
             <List>
-          {['Account'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
+                <ListItem button key = 'Account' component={Link} to = '/account'>
+                    <ListItemIcon><AccountCircleTwoTone /></ListItemIcon>
+                    <ListItemText primary = 'Account'></ListItemText>
+                </ListItem>
         </List>
 
 
