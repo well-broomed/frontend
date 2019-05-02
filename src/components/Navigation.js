@@ -25,6 +25,7 @@ import {connect} from 'react-redux';
 const styles = {
     root: {
         flexGrow: 1,
+        padding: 0,
     },
     grow: {
         flexGrow: 1,
@@ -44,6 +45,11 @@ const styles = {
         width: 250,
         margin: '60px 0px',
     },
+    loginbtn:{
+        padding: 0,
+        minHeight: 0,
+        minWidth: 0,
+    }
 }
 class Navigation extends React.Component {
     
@@ -112,7 +118,11 @@ class Navigation extends React.Component {
                         <IconButton color = 'inherit' aria-label='Menu' onClick = {this.toggleDrawer('left', !this.state.left)}>
                             <MenuIcon />
                         </IconButton>
+                        <Typography variant = 'h6' color = 'inherit' className = {classes.grow}>
                         {pathRoute}
+                        </Typography>
+
+                        <Button color = 'inherit' className = {classes.loginbtn}>Login</Button>
                     </Toolbar>
                 </AppBar>
 
