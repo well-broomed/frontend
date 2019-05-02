@@ -5,7 +5,6 @@ import {connect} from 'react-redux';
 // Router
 import {withRouter} from 'react-router-dom';
 // Components
-import {Navigation} from '../components';
 
 class Home extends React.Component {
     constructor(props){
@@ -17,7 +16,6 @@ class Home extends React.Component {
     render(){
         return (
             <div>
-                <Navigation />
                 
             </div>
         )
