@@ -4,14 +4,7 @@ export const ERROR = 'ERROR';
 export const CHECKING_USER = 'CHECKING_USER';
 export const USER_CHECKED = 'USER_CHECKED';
 
-
-let backendUrl;
-if(process.env.NODE_ENV === 'development'){
-    backendUrl = `http://localhost:9000`
-} else {
-    // add live url once backend is deployed
-}
-
+const backendUrl = process.env.REACT_APP_BACKEND_URL || `http://localhost:9000`
 
 export const checkIfUserExists = () => {
     // This function passes the auth0 jwt to the backend, and validates whether an entry
