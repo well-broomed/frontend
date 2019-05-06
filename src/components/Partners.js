@@ -14,7 +14,10 @@ class Partners extends React.Component {
 
     render(){
         return (
-            <div></div>
+            <div>
+
+
+            </div>
         )
     }
 }
@@ -30,5 +33,3 @@ export default withRouter(connect(mapStateToProps, {
     // actions
     
 })(Partners))
-
-
