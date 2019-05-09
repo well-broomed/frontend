@@ -1,11 +1,6 @@
 import Auth0Lock from 'auth0-lock';
 
-let frontendURL;
-if(process.env.NODE_ENV === 'development'){
-    frontendURL = 'http://localhost:3000';
-} else {
-    frontendURL = `https://www.wellbroomed.com`
-}
+const frontendURL = process.env.REACT_APP_FRONTEND_URL || 'http://localhost:3000';
 
 var lockOptions = {
     auth: {
