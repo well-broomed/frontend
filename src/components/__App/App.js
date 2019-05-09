@@ -4,7 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
 // Components
-import {Home, Properties, Partners, Guests, Reports, Account, Callback, Navigation} from '../../components';
+import {Home, Properties, Partners, Guests, Reports, Account, Callback, Navigation, Redirect} from '../../components';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 
@@ -41,6 +41,7 @@ class App extends Component {
 					<Route exact path = '/reports' component = {Reports} />
 					<Route exact path = '/account' component = {Account} />
 					<Route path = '/callback' component = {Callback} />
+					<Route path = '/redirect' component = {Redirect} />
 				</Switch>
 			</div>
 		);

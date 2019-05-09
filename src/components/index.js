@@ -12,3 +12,4 @@ export {default as Reports} from './Reports';
 export {default as Callback} from './Callback';
 export {default as Auth} from './Auth';
 export {default as Navigation} from './Navigation';
+export {default as Redirect} from './Redirect';

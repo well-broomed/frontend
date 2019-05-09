@@ -31,6 +31,7 @@ import {withRouter, Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 
 import Auth from './Auth';
+import lock from './Lock';
 
 const auth = new Auth();
 
@@ -99,7 +100,7 @@ class Navigation extends React.Component {
 
     handleLogin = event => {
         event.preventDefault();
-        auth.login();
+        lock.show();
     }
 
     handleLogout = event => {
