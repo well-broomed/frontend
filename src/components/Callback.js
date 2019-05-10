@@ -39,6 +39,7 @@ class Callback extends React.Component {
 }
 
 const mapStateToProps = state => {
+    console.log('state', state);
     return {
         // state items
         userInfo: state.userInfo

@@ -14,6 +14,9 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { withStyles } from '@material-ui/core';
 
+// Actions
+import {getUserProperties} from '../actions';
+
 const styles = {
     card: {
         maxWidth: 600,
@@ -25,6 +28,11 @@ const styles = {
 }
 
 class Properties extends React.Component {
+
+    componentDidMount(){
+        this.props.getUserProperties();
+    }
+
     constructor(props){
         super(props);
         this.state = {
@@ -138,10 +146,12 @@ class Properties extends React.Component {
 const mapStateToProps = state => {
     return {
         // state items
+        properties: state.properties
     }
 }
 
 export default withRouter(connect(mapStateToProps, {
     // actions
+    getUserProperties,
     
 })(withStyles(styles)(Properties)));

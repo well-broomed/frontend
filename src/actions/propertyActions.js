@@ -1,35 +1,36 @@
 import axios from 'axios';
 
 export const ERROR = 'ERROR';
-export const CHECKING_USER = 'CHECKING_USER';
-export const USER_CHECKED = 'USER_CHECKED';
+export const FETCHING_PROPERTIES = 'FETCHING_PROPERTIES';
+export const PROPERTIES_FETCHED = 'PROPERTIES_FETCHED';
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || `http://localhost:5000`
 
-export const checkIfUserExists = (role) => {
+export const getUserProperties = () => {
     // This function passes the auth0 jwt to the backend, and validates whether an entry
     // for this user exists in the database.
 
     // The role selected by the user is passed upon account validation.
 
     let token = localStorage.getItem('jwt');
+    let userInfo = localStorage.getItem('userInfo');
 
     let options = {
         headers: {
             Authorization: `Bearer ${token}`,
+            'user-info': userInfo,
         }
     }
 
-    const checkUrl = axios.post(`${backendUrl}/api/users/login`, role, options)
+    const fetchUrl = axios.get(`${backendUrl}/api/properties`, options);
 
     return dispatch => {
-        dispatch({type: CHECKING_USER});
+        dispatch({type: FETCHING_PROPERTIES});
 
-        checkUrl.then(res => {
-            console.log('server return', res.data);
-            localStorage.setItem('userInfo', res.data.userInfo);
+        fetchUrl.then(res => {
+            console.log('property return', res.data);
             // localStorage.setItem('userId', res.data.profile.id);
-            dispatch({type: USER_CHECKED, payload: res.data});
+            dispatch({type: PROPERTIES_FETCHED, payload: res.data});
         }).catch(err => {
             console.log(err);
             dispatch({type: ERROR})
