@@ -74,7 +74,7 @@ class Auth {
     localStorage.removeItem('userId');
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('accountType');
-
+    localStorage.removeItem('userToken');
   }
 }
 
