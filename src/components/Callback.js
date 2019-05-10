@@ -16,7 +16,8 @@ class Callback extends React.Component {
 
     async componentDidMount(){
         await auth.handleAuthentication().then(status => {
-            this.props.checkIfUserExists();
+            console.log('auth handled');
+            this.props.checkIfUserExists(localStorage.getItem('accountType'));
         });
     }
 
@@ -40,7 +41,7 @@ class Callback extends React.Component {
 const mapStateToProps = state => {
     return {
         // state items
-        userChecked: state.userChecked
+        userInfo: state.userInfo
     }
 }
 

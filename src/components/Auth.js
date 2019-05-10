@@ -73,6 +73,7 @@ class Auth {
     localStorage.removeItem('img_url');
     localStorage.removeItem('userId');
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('accountType');
 
   }
 }
