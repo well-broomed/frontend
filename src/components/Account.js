@@ -12,9 +12,19 @@ class Account extends React.Component {
 
     }
 
+
+    sendEmail = () => {
+    }
+
     render(){
         return (
-            <div></div>
+            <div>
+                <button
+                onClick={this.sendEmail}
+                >
+                    Send Email
+                </button>
+            </div>
         )
     }
 }
