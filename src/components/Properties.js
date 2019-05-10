@@ -109,7 +109,7 @@ class Properties extends React.Component {
 
         return (
             <div>
-                <h1>Properties</h1>
+                <Typography variant = 'h2'>Properties</Typography>
 
                 {this.props.properties ? this.props.properties.map(property => {
                     return (
@@ -136,7 +136,7 @@ class Properties extends React.Component {
                     )
                 })
             
-            : (<h2>No properties have been added yet.</h2>)}
+            : (<Typography variant = 'overline'>No properties have been added yet.</Typography>)}
 
 
             </div>

@@ -21,7 +21,6 @@ class App extends Component {
 	render() {
 		return (
 			<div>
-				<Typography>
 				<CssBaseline />
 				<Navigation />
 				{/* Declare Routes */}
@@ -39,7 +38,6 @@ class App extends Component {
 				</Switch>
 
 				</ComponentContainer>
-				</Typography>
 			</div>
 		);
 	}
