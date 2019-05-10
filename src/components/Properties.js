@@ -14,6 +14,8 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { withStyles } from '@material-ui/core';
 
+import Typography from '@material-ui/core/Typography';
+
 // Actions
 import {getUserProperties} from '../actions';
 
@@ -109,7 +111,7 @@ class Properties extends React.Component {
             <div>
                 <h1>Properties</h1>
 
-                {dummyProperties ? dummyProperties.map(property => {
+                {this.props.properties ? this.props.properties.map(property => {
                     return (
     
                         <Card className = {classes.card} key = {property.id}>
@@ -134,7 +136,7 @@ class Properties extends React.Component {
                     )
                 })
             
-            : (null)}
+            : (<h2>No properties have been added yet.</h2>)}
 
 
             </div>
@@ -146,7 +148,7 @@ class Properties extends React.Component {
 const mapStateToProps = state => {
     return {
         // state items
-        properties: state.properties
+        properties: state.propertyReducer.properties
     }
 }
 

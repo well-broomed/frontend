@@ -42,7 +42,8 @@ const mapStateToProps = state => {
     console.log('state', state);
     return {
         // state items
-        userInfo: state.userInfo
+        userInfo: state.authReducer.userInfo,
+        userChecked: state.authReducer.userChecked
     }
 }
 

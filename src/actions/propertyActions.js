@@ -30,7 +30,7 @@ export const getUserProperties = () => {
         fetchUrl.then(res => {
             console.log('property return', res.data);
             // localStorage.setItem('userId', res.data.profile.id);
-            dispatch({type: PROPERTIES_FETCHED, payload: res.data});
+            dispatch({type: PROPERTIES_FETCHED, payload: res.data.properties});
         }).catch(err => {
             console.log(err);
             dispatch({type: ERROR})
