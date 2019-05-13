@@ -14,6 +14,11 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { withStyles } from '@material-ui/core';
 
+import Typography from '@material-ui/core/Typography';
+
+// Actions
+import {getUserProperties} from '../actions';
+
 const styles = {
     card: {
         maxWidth: 600,
@@ -25,6 +30,11 @@ const styles = {
 }
 
 class Properties extends React.Component {
+
+    componentDidMount(){
+        this.props.getUserProperties();
+    }
+
     constructor(props){
         super(props);
         this.state = {
@@ -99,9 +109,9 @@ class Properties extends React.Component {
 
         return (
             <div>
-                <h1>Properties</h1>
+                <Typography variant = 'h2'>Properties</Typography>
 
-                {dummyProperties ? dummyProperties.map(property => {
+                {this.props.properties ? this.props.properties.map(property => {
                     return (
     
                         <Card className = {classes.card} key = {property.id}>
@@ -126,7 +136,7 @@ class Properties extends React.Component {
                     )
                 })
             
-            : (null)}
+            : (<Typography variant = 'overline'>No properties have been added yet.</Typography>)}
 
 
             </div>
@@ -138,10 +148,12 @@ class Properties extends React.Component {
 const mapStateToProps = state => {
     return {
         // state items
+        properties: state.propertyReducer.properties
     }
 }
 
 export default withRouter(connect(mapStateToProps, {
     // actions
+    getUserProperties,
     
 })(withStyles(styles)(Properties)));

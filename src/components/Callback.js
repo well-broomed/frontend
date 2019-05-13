@@ -16,13 +16,14 @@ class Callback extends React.Component {
 
     async componentDidMount(){
         await auth.handleAuthentication().then(status => {
-            this.props.checkIfUserExists();
+            this.props.checkIfUserExists(localStorage.getItem('accountType'));
         });
     }
 
     // @TODO callback redirect cant be properly resolved until backend is deployed
     componentDidUpdate(){
         if(this.props.userChecked === true){
+            localStorage.removeItem('accountType');
             this.props.history.replace('/properties');
         }
     }
@@ -38,9 +39,11 @@ class Callback extends React.Component {
 }
 
 const mapStateToProps = state => {
+    console.log('state', state);
     return {
         // state items
-        userChecked: state.userChecked
+        userInfo: state.authReducer.userInfo,
+        userChecked: state.authReducer.userChecked
     }
 }
 
