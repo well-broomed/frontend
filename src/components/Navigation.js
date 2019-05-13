@@ -143,8 +143,10 @@ class Navigation extends React.Component {
 
     handleLogout = event => {
         event.preventDefault();
+        
         auth.logout();
-        this.props.history.replace('/');
+        
+        window.location = `https://${process.env.REACT_APP_AUTH0_DOMAIN}/v2/logout`;
     }
 
     render(){

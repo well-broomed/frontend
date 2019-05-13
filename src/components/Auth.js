@@ -65,6 +65,7 @@ class Auth {
     this.idToken = null;
     this.profile = null;
     this.expiresAt = null;
+    this.accessToken = null;
 
     // clear local storage
     localStorage.removeItem('name');
@@ -75,6 +76,7 @@ class Auth {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('accountType');
     localStorage.removeItem('userInfo');
+
   }
 }
 
