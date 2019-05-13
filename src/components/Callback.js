@@ -16,7 +16,6 @@ class Callback extends React.Component {
 
     async componentDidMount(){
         await auth.handleAuthentication().then(status => {
-            console.log('auth handled');
             this.props.checkIfUserExists(localStorage.getItem('accountType'));
         });
     }
@@ -24,6 +23,7 @@ class Callback extends React.Component {
     // @TODO callback redirect cant be properly resolved until backend is deployed
     componentDidUpdate(){
         if(this.props.userChecked === true){
+            localStorage.removeItem('accountType');
             this.props.history.replace('/properties');
         }
     }
