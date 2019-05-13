@@ -36,7 +36,7 @@ class Auth {
   handleAuthentication = () => {
     return new Promise((resolve, reject) => {
       this.auth0.parseHash((err, authResult) => { // parse the callback's query parameter access token
-        
+        console.log('manage login', authResult);
 
         if (err) return reject(err);
         if (!authResult || !authResult.idToken) {
@@ -65,6 +65,7 @@ class Auth {
     this.idToken = null;
     this.profile = null;
     this.expiresAt = null;
+    this.accessToken = null;
 
     // clear local storage
     localStorage.removeItem('name');
@@ -75,6 +76,7 @@ class Auth {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('accountType');
     localStorage.removeItem('userInfo');
+
   }
 }
 
