@@ -20,7 +20,15 @@ export const checkIfUserExists = (role) => {
         }
     }
 
-    const checkUrl = axios.post(`${backendUrl}/api/users/login`, role, options)
+    console.log('actions role', role);
+
+    let body = {
+        role: role,
+    }
+
+    console.log('body', body);
+
+    const checkUrl = axios.post(`${backendUrl}/api/users/login`, body, options)
 
     return dispatch => {
         dispatch({type: CHECKING_USER});
