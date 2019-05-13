@@ -36,7 +36,7 @@ class Auth {
   handleAuthentication = () => {
     return new Promise((resolve, reject) => {
       this.auth0.parseHash((err, authResult) => { // parse the callback's query parameter access token
-        
+        console.log('manage login', authResult);
 
         if (err) return reject(err);
         if (!authResult || !authResult.idToken) {

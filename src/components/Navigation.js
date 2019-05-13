@@ -133,12 +133,18 @@ class Navigation extends React.Component {
     }
 
     handleLogin = () => {
-        if(!this.state.accountType){
-            window.alert('You must select an account type!')
-        } else {
-            localStorage.setItem('accountType', this.state.accountType);
-            lock.show();
-        }
+        /**
+         * Lock module will not work with database logins unless we pay for auth0 custom domain.
+         */
+
+        // if(!this.state.accountType){
+        //     window.alert('You must select an account type!')
+        // } else {
+        //     localStorage.setItem('accountType', this.state.accountType);
+        //     lock.show();
+        // }
+
+        auth.login();
     }
 
     handleLogout = event => {
