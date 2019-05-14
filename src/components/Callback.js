@@ -16,6 +16,7 @@ class Callback extends React.Component {
 
     async componentDidMount(){
         await auth.handleAuthentication().then(status => {
+            console.log('callback role', localStorage.getItem('accountType'));
             this.props.checkIfUserExists(localStorage.getItem('accountType'));
         });
     }

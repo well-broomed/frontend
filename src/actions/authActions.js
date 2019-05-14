@@ -20,13 +20,16 @@ export const checkIfUserExists = (role) => {
         }
     }
 
-    const checkUrl = axios.post(`${backendUrl}/api/users/login`, role, options)
+    let body = {
+        role: role,
+    }
+
+    const checkUrl = axios.post(`${backendUrl}/api/users/login`, body, options)
 
     return dispatch => {
         dispatch({type: CHECKING_USER});
 
         checkUrl.then(res => {
-            console.log('server return', res.data);
             localStorage.setItem('userInfo', res.data.userInfo);
             // localStorage.setItem('userId', res.data.profile.id);
             dispatch({type: USER_CHECKED, payload: res.data});

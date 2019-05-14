@@ -144,6 +144,8 @@ class Navigation extends React.Component {
         //     lock.show();
         // }
 
+        localStorage.setItem('accountType', this.state.accountType);
+
         auth.login();
     }
 
