@@ -10,6 +10,7 @@ import {addProperty} from '../actions/propertyActions';
 // Form Components 
 
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
 import Typography from '@material-ui/core/Typography';
 
@@ -19,6 +20,12 @@ const styles = {
         flexFlow: 'column nowrap',
         padding: '5%',
         height: '50vh',
+    },
+    formField: {
+        margin: '10px 0px',
+    },
+    formButton: {
+        margin: '10px 0px',
     }
 
 }
@@ -28,6 +35,7 @@ class AddPropertyForm extends React.Component {
         super(props);
 
         this.state = {
+            addModal: false,
             property_name: '',
             address: '',
             img_url: null,
@@ -56,21 +64,22 @@ class AddPropertyForm extends React.Component {
         }
 
         this.props.addProperty(property);
+        this.props.close();
     }
 
     render(){
         const {classes} = this.props;
         return (
             <div>
-                <form className = {classes.container} noValidate autoComplete='off'>
+                <form onSubmit = {this.handleSubmit} className = {classes.container} noValidate autoComplete='off'>
                 <Typography variant  = 'h4' textAlign = 'center'>Add a New Property</Typography>
 
-                <TextField id='standard-dense' label = 'Property Name' value = {this.state.property_name} onChange={this.handleInput('property_name')}/>
-                <TextField id='standard-dense' label = 'Address' value = {this.state.address} onChange = {this.handleInput('address')} />
+                <TextField className = {classes.formField} id='standard-dense' label = 'Property Name' value = {this.state.property_name} onChange={this.handleInput('property_name')}/>
+                <TextField className = {classes.formField} id='standard-dense' label = 'Address' value = {this.state.address} onChange = {this.handleInput('address')} />
+                <Button className = {classes.formButton} variant = 'outlined' color = 'primary' type='submit'>Submit</Button>
                 </form>
 
             </div>
-
         )
     }
 }

@@ -26,7 +26,8 @@ import Slide from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
 
 // Icons
-import AddCircleTwoTone from '@material-ui/icons/AddCircleTwoTone';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 
 // Actions
 import {getUserProperties} from '../actions';
@@ -63,6 +64,12 @@ class Properties extends React.Component {
 
     componentDidMount(){
         this.props.getUserProperties();
+    }
+
+    componentDidUpdate(){
+        if(this.props.refreshProperties){
+            this.props.getUserProperties();
+        }
     }
 
     constructor(props){
@@ -105,29 +112,6 @@ class Properties extends React.Component {
         const open = Boolean(anchorEl);
         const {classes} = this.props;
 
-        const dummyProperties = [
-            {
-                property_id: 100,
-                manager_id: 201,
-                cleaner_id: 70,
-                property_name: 'Lambda House',
-                address: '123 Inthe Place, 2B Beverly Hills, CA 90210',
-                img_url: null,
-                guest_guide: null,
-                assistant_guide: null,
-            },
-            {
-                property_id: 110,
-                manager_id: 211,
-                cleaner_id: 710,
-                property_name: 'Bezos Garage',
-                address: '89 Bookman Dr. Seattle, WA 98139',
-                img_url: null,
-                guest_guide: null,
-                assistant_guide: null,
-            }
-        ];
-
         const dummyCleaners = [
             {
                 user_id: 198,
@@ -153,12 +137,12 @@ class Properties extends React.Component {
         return (
             <div>
                 <TopBar>
-                <Typography variant = 'h2'>Properties</Typography> <AddCircleTwoTone className = {classes.addIcon} onClick = {this.handleModalOpen}></AddCircleTwoTone>
+                <Typography variant = 'h2'>Properties</Typography> <Fab color = 'primary' className = {classes.addIcon} onClick = {this.handleModalOpen}><AddIcon/></Fab>
                 </TopBar>
 
-                <Dialog  open={this.state.addModal} TransitionComponent={Transition} keepMounted onClose={this.handleModalClose}>
+                <Dialog open={this.state.addModal} TransitionComponent={Transition} keepMounted onClose={this.handleModalClose}>
                 <DialogContent>
-                <AddPropertyForm></AddPropertyForm>
+                <AddPropertyForm close = {this.handleModalClose}></AddPropertyForm>
                 </DialogContent>
                 
                 </Dialog>
@@ -200,7 +184,8 @@ class Properties extends React.Component {
 const mapStateToProps = state => {
     return {
         // state items
-        properties: state.propertyReducer.properties
+        properties: state.propertyReducer.properties,
+        refreshProperties: state.propertyReducer.refreshProperties,
     }
 }
 

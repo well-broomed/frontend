@@ -1,15 +1,18 @@
-import { FETCHING_PROPERTIES, PROPERTIES_FETCHED } from '../actions';
+import { FETCHING_PROPERTIES, PROPERTIES_FETCHED, PROPERTY_ADDED } from '../actions';
 
 const initialState = {
-    properties: null,
+	properties: null,
+	refreshProperties: false,
 };
 
 const propertyReducer = (state = initialState, action) => {
 	switch (action.type) {
 		// example action
 		case PROPERTIES_FETCHED:
-			return { ...state, properties: action.payload};
+			return { ...state, properties: action.payload, refreshProperties: false};
 
+		case PROPERTY_ADDED:
+			return {...state, refreshProperties: true}
 		default:
 			return state;
 	}
