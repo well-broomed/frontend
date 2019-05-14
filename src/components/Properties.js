@@ -5,6 +5,11 @@ import {connect} from 'react-redux';
 // Router
 import {withRouter} from 'react-router-dom';
 
+import AddPropertyForm from './AddPropertyForm';
+
+// Styled Components
+import styled from 'styled-components';
+
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -14,10 +19,27 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { withStyles } from '@material-ui/core';
 
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import Slide from '@material-ui/core/Slide';
+
 import Typography from '@material-ui/core/Typography';
+
+// Icons
+import AddCircleTwoTone from '@material-ui/icons/AddCircleTwoTone';
 
 // Actions
 import {getUserProperties} from '../actions';
+
+const TopBar = styled.div`
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+
+    `;
+
 
 const styles = {
     card: {
@@ -26,7 +48,15 @@ const styles = {
     },
     media: {
         objectFit: 'cover'
-    }
+    },
+    addIcon: {
+        fontSize: '5rem',
+        cursor: 'pointer',
+    },
+}
+
+function Transition(props){
+    return <Slide direction = 'down' {...props} />;
 }
 
 class Properties extends React.Component {
@@ -39,6 +69,7 @@ class Properties extends React.Component {
         super(props);
         this.state = {
             anchorEl: null,
+            addModal: false,
         };
 
     }
@@ -52,6 +83,18 @@ class Properties extends React.Component {
     handleClose = () => {
         this.setState({
             anchorEl: null,
+        })
+    }
+
+    handleModalOpen = () => {
+        this.setState({
+            addModal: true,
+        })
+    }
+
+    handleModalClose = () => {
+        this.setState({
+            addModal: false,
         })
     }
 
@@ -109,7 +152,16 @@ class Properties extends React.Component {
 
         return (
             <div>
-                <Typography variant = 'h2'>Properties</Typography>
+                <TopBar>
+                <Typography variant = 'h2'>Properties</Typography> <AddCircleTwoTone className = {classes.addIcon} onClick = {this.handleModalOpen}></AddCircleTwoTone>
+                </TopBar>
+
+                <Dialog  open={this.state.addModal} TransitionComponent={Transition} keepMounted onClose={this.handleModalClose}>
+                <DialogContent>
+                <AddPropertyForm></AddPropertyForm>
+                </DialogContent>
+                
+                </Dialog>
 
                 {this.props.properties ? this.props.properties.map(property => {
                     return (
