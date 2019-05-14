@@ -8,6 +8,14 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
+// Login Modal
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogActions from '@material-ui/core/DialogActions';
+import Slide from '@material-ui/core/Slide';
+
 // Side Drawer
 import { withStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
@@ -65,7 +73,15 @@ const styles = {
     logoutBtn: {
         background: '#b71c1c',
         color: 'white',
+    },
+    loginModal: {
+        background: '#3d3d3d',
     }
+}
+
+// Slide the login modal from screen bottom
+function Transition(props){
+    return <Slide direction = 'up' {...props} />;
 }
 class Navigation extends React.Component {
 
@@ -81,7 +97,6 @@ class Navigation extends React.Component {
     constructor(props){
         super(props);
         
-
         this.state = {
             // nav state, to handle search inputs, modals, etc
             top: false,
@@ -89,6 +104,8 @@ class Navigation extends React.Component {
             bottom: false,
             right: false,
             isLoggedIn: false,
+            loginModal: false,
+            accountType: null,
         };
 
         this.toggleDrawer = (side, open) => () => {
@@ -98,15 +115,44 @@ class Navigation extends React.Component {
         }
     }
 
-    handleLogin = event => {
+    toggleModal = event => {
         event.preventDefault();
-        lock.show();
+        this.setState({
+            loginModal: !this.state.loginModal,
+        })
+    }
+
+    selectAccount = (event, role) => {
+        event.preventDefault();
+
+        this.setState({
+            accountType: role,
+            loginModal: false
+        },
+            this.handleLogin);
+    }
+
+    handleLogin = () => {
+        /**
+         * Lock module will not work with database logins unless we pay for auth0 custom domain.
+         */
+
+        // if(!this.state.accountType){
+        //     window.alert('You must select an account type!')
+        // } else {
+        //     localStorage.setItem('accountType', this.state.accountType);
+        //     lock.show();
+        // }
+
+        auth.login();
     }
 
     handleLogout = event => {
         event.preventDefault();
+        
         auth.logout();
-        this.props.history.replace('/');
+        
+        window.location = `https://${process.env.REACT_APP_AUTH0_DOMAIN}/v2/logout`;
     }
 
     render(){
@@ -121,6 +167,28 @@ class Navigation extends React.Component {
         } else {
             pathRoute = 'Home';
         }
+
+        const loginModal = (
+            <div className = {classes.loginModal}>
+            <Dialog open={this.state.loginModal} TransitionComponent={Transition} keepMounted onClose={this.toggleModal}>
+            <DialogTitle>
+                Please select your account type.
+            </DialogTitle>
+
+            <DialogActions>
+            <Button onClick = {(event) => {this.selectAccount(event, 'manager')}}>
+            I am a Property Manager
+            </Button>
+
+            <Button onClick = {(event) => {this.selectAccount(event, 'assistant')}}>
+            I am an Assistant
+            </Button>
+
+            </DialogActions>
+            
+            </Dialog>
+            </div>
+        )
 
         const sideMenu = (
             <div className = {classes.list}>
@@ -177,13 +245,15 @@ class Navigation extends React.Component {
 
                         {/* CONDITIONALLY RENDER LOGIN/LOGOUT BASED ON JWT PRESENCE */}
                         {!localStorage.getItem('jwt') ? 
-                        <Button variant = 'contained' className = {classes.loginBtn} onClick = {this.handleLogin}>Login</Button>
+                        <Button variant = 'contained' className = {classes.loginBtn} onClick = {this.toggleModal}>Login</Button>
                         :
                         <Button variant = 'contained' className = {classes.logoutBtn} onClick = {this.handleLogout}>Logout</Button>
                         }
 
                     </Toolbar>
                 </AppBar>
+
+                {loginModal}
 
                     <SwipeableDrawer className = {classes.drawer} open = {this.state.left} onClose = {this.toggleDrawer('left', false)} onOpen = {this.toggleDrawer('left', true)}>                
                     <div tabIndex={0} role='button' onClick = {this.toggleDrawer('left', false)} onKeyDown={this.toggleDrawer('left', false)}>
