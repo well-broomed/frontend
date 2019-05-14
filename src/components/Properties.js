@@ -31,6 +31,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 // Actions
 import {getUserProperties} from '../actions';
+import PropertyPreview from './PropertyPreview';
 
 const TopBar = styled.div`
     width: 100%;
@@ -149,26 +150,7 @@ class Properties extends React.Component {
 
                 {this.props.properties ? this.props.properties.map(property => {
                     return (
-    
-                        <Card className = {classes.card} key = {property.id}>
-                        <CardHeader title = {property.property_name} subheader = {property.address}>
-                        </CardHeader>
-
-                        <CardContent>
-                            
-                            <Menu id='long-menu' anchorEl={anchorEl} open={open} onClose={this.handleClose}>
-            
-                            {dummyCleaners.map(cleaner => (
-                                <MenuItem key = {cleaner.user_id} selected={cleaner.user_name} onClick={this.handleClose}>
-                                {cleaner.user_name}
-                                </MenuItem>
-                            ))}
-
-                            </Menu>
-
-                        </CardContent>
-                        </Card>
-                        
+                        <PropertyPreview property = {property} />
                     )
                 })
             
