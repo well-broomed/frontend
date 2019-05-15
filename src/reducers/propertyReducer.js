@@ -1,4 +1,4 @@
-import { FETCHING_PROPERTIES, PROPERTIES_FETCHED, PROPERTY_ADDED } from '../actions';
+import { FETCHING_PROPERTIES, PROPERTIES_FETCHED, PROPERTY_ADDED, CLEANERS_FETCHED } from '../actions';
 
 const initialState = {
 	properties: null,
@@ -13,6 +13,10 @@ const propertyReducer = (state = initialState, action) => {
 
 		case PROPERTY_ADDED:
 			return {...state, refreshProperties: true}
+
+		case CLEANERS_FETCHED:
+			return {...state, cleaners: action.payload};
+			
 		default:
 			return state;
 	}

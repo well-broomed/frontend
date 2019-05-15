@@ -30,7 +30,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
 // Actions
-import {getUserProperties} from '../actions';
+import {getUserProperties, getCleaners} from '../actions';
 import PropertyPreview from './PropertyPreview';
 
 const TopBar = styled.div`
@@ -65,6 +65,7 @@ class Properties extends React.Component {
 
     componentDidMount(){
         this.props.getUserProperties();
+        this.props.getCleaners();
     }
 
     componentDidUpdate(){
@@ -113,27 +114,6 @@ class Properties extends React.Component {
         const open = Boolean(anchorEl);
         const {classes} = this.props;
 
-        const dummyCleaners = [
-            {
-                user_id: 198,
-                user_name: 'Jiffy Smith',
-                email: 'jiffy@smith.com',
-                role: 'cleaner',
-                img_url: null,
-                phone: '123-456-7890',
-                address: '21 Jump St. Los Angeles, CA 90021'
-            },
-            {
-                user_id: 211,
-                user_name: 'Johnny Breeze',
-                email: 'jbreezy@gmail.com',
-                role: 'cleaner',
-                img_url: null,
-                phone: '123-456-7890',
-                address: '21 Jump St. Los Angeles, CA 90021'
-
-            }
-        ]
 
         return (
             <div>
@@ -150,7 +130,7 @@ class Properties extends React.Component {
 
                 {this.props.properties ? this.props.properties.map(property => {
                     return (
-                        <PropertyPreview property = {property} />
+                        <PropertyPreview property = {property} key = {property.id} />
                     )
                 })
             
@@ -168,11 +148,14 @@ const mapStateToProps = state => {
         // state items
         properties: state.propertyReducer.properties,
         refreshProperties: state.propertyReducer.refreshProperties,
+        cleaners: state.propertyReducer.cleaners,
+        userInfo: state.authReducer.userInfo,
     }
 }
 
 export default withRouter(connect(mapStateToProps, {
     // actions
     getUserProperties,
+    getCleaners,
     
 })(withStyles(styles)(Properties)));

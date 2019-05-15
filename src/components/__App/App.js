@@ -1,7 +1,10 @@
 // Dependencies
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { withRouter, Route, Switch } from 'react-router-dom';
+import {connect} from 'react-redux';
 import styled from 'styled-components';
+
+import {checkIfUserExists} from '../../actions/index';
 
 // Components
 import {Home, Properties, Partners, Guests, Reports, Account, Callback, Navigation, Redirect} from '../../components';
@@ -18,6 +21,13 @@ const ComponentContainer = styled.div`
 
 
 class App extends Component {
+
+	componentDidMount(){
+		if(!this.props.userInfo){
+			this.props.checkIfUserExists(null);
+		}
+	}
+
 	render() {
 		return (
 			<div>
@@ -43,4 +53,16 @@ class App extends Component {
 	}
 }
 
-export default App;
+
+const mapStateToProps = state => {
+    return {
+		// state items
+		userInfo: state.authReducer.userInfo,
+    }
+}
+
+export default withRouter(connect(mapStateToProps, {
+	// actions
+	checkIfUserExists
+    
+})(App));
