@@ -55,6 +55,60 @@ class Partners extends React.Component {
   }
 
     render(){
+        const dummydata = [
+          {
+            user_id: 1,
+            role: 'partner',
+            email: 'kevin@kevintena.com',
+            phone: '123-234-0527',
+            address: '123 W Cherry Ln',
+            houses: [{
+              house_id:1,
+              admin_id:1,
+              cleaner_id: 1,
+              address: '500 N Lakeshore Dr'
+            },
+            {
+              house_id:2,
+              admin_id:1,
+              cleaner_id: 1,
+              address: '28 N Franklin Ave'
+            }],
+            available_houses:[{
+              user_id: 1,
+              house_id: 1
+            }]
+          },
+          {
+            user_id: 2,
+            role: 'partner',
+            email: 'chuck@kevintena.com',
+            phone: '123-456-7890',
+            address: '300 W Monroe St',
+            houses: [{
+              house_id:3,
+              admin_id:1,
+              cleaner_id: 2,
+              address: ' 234 N Michigan Ave'
+            },
+            {
+              house_id:4,
+              admin_id:1,
+              cleaner_id: 2,
+              address: '3000 N Lincoln Ave'
+            }],
+            available_houses:[{
+              user_id: 2,
+              house_id: 3
+            },
+            {
+              user_id: 2,
+              house_id: 4
+            }]
+          }
+        ]
+          
+        
         return (
             <div>
               <Typography variant='h2'>Partners</Typography>
