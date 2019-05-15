@@ -59,10 +59,11 @@ class Partners extends React.Component {
             <div>
               <Typography variant='h2'>Partners</Typography>
               <div>
+                  <Typography variant='h5'> Send an invite to add more partners! </Typography>
                   <TextField
                       value={this.state.email}
                       onChange={this.handleInputChange}
-                      placeholder="Assistant's Email"
+                      placeholder="Partner's Email"
                       type="text"
                       name="email"
                   />
