@@ -6,6 +6,9 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 // Axios
 import axios from 'axios';
+//Material-UI
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
 
 class Partners extends React.Component {
     constructor(props){
@@ -53,21 +56,19 @@ class Partners extends React.Component {
     render(){
         return (
             <div>
-              <form>
-                <input
+                <TextField
                     value={this.state.email}
                     onChange={this.handleInputChange}
                     placeholder="Assistant's Email"
                     type="text"
                     name="email"
                 />
-                <button 
+                <Button
                 type="submit"
                 onClick={this.sendEmail}
                 >
                     Send Invite
-                </button>
-            </form>
+                </Button>
             </div>
         )
     }
