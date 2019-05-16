@@ -12,6 +12,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import Select from '@material-ui/core/Select';
 import NativeSelect from '@material-ui/core/NativeSelect';
+import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core';
 
 import {withRouter} from 'react-router-dom';
@@ -36,7 +37,7 @@ const styles = {
 class PropertyPreview extends React.Component {
 
     componentDidUpdate(oldProps){
-        if((this.props.cleaners !== oldProps.cleaners) && this.props.property){
+        if((this.props.cleaners !== oldProps.cleaners) || this.props.refreshCleaners){
             let defaultCleaner;
 
             if(this.props.property.cleaner_id === null){
@@ -74,13 +75,14 @@ class PropertyPreview extends React.Component {
             cleaner: event.target.value
         })
 
-        console.log('trigger change cleaner function');
+        console.log(event.target.value.id);
+
+        this.props.changeCleaner(this.props.property.id, event.target.value.id)
     }
 
 
     render(){
         const {classes} = this.props;
-        console.log('default', this.state.cleaner);
         return(
             <div>
                 <Card className = {classes.card} key = {this.props.property.id}>
@@ -88,7 +90,7 @@ class PropertyPreview extends React.Component {
                         </CardHeader>
 
                         <CardContent>
-                        <h2>Cleaners</h2>
+                        <Typography variant = 'overline'>Select Cleaner</Typography>
 
                         <FormControl className={classes.formControl}>
                         <InputLabel shrink htmlFor='cleaner-native-label-placeholder'>
