@@ -5,16 +5,18 @@ import {connect} from 'react-redux';
 // Router
 import {withRouter} from 'react-router-dom';
 
+
 class Account extends React.Component {
     constructor(props){
         super(props);
-        this.state = {};
-
+        this.state = {
+        };
     }
 
     render(){
         return (
-            <div></div>
+            <div>
+            </div>
         )
     }
 }
