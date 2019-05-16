@@ -11,6 +11,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import Select from '@material-ui/core/Select';
+import NativeSelect from '@material-ui/core/NativeSelect';
 import { withStyles } from '@material-ui/core';
 
 import {withRouter} from 'react-router-dom';
@@ -34,31 +35,29 @@ const styles = {
 
 class PropertyPreview extends React.Component {
 
-    componentDidUpdate(prevProps){
-        /**
-         * We need to set the default cleaner for the house.
-         */
-        if((this.props.cleaners !== prevProps.cleaners) && this.props.cleaners){
-            if(this.props.cleaners.length === 1){
-                this.setState({
-                    cleaner: this.props.cleaners[0],
-                    cleaner_name: this.props.cleaners[0].user_name,
-                    cleaner_id: this.props.cleaners[0].user_id
+    componentDidUpdate(oldProps){
+        if((this.props.cleaners !== oldProps.cleaners) && this.props.property){
+            let defaultCleaner;
+
+            if(this.props.property.cleaner_id === null){
+                defaultCleaner = this.props.cleaners.map(cleaner => {
+                    if(cleaner.user_id === this.props.property.manager_id){
+                        return cleaner;
+                    }
                 })
             } else {
-                let defaultCleaner = this.props.cleaners.map(cleaner => {
+                defaultCleaner = this.props.cleaners.map(cleaner => {
                     if(cleaner.user_id === this.props.property.cleaner_id){
                         return cleaner;
                     }
                 })
-                this.setState({
-                    cleaner: defaultCleaner,
-                    cleaner_name: defaultCleaner.user_name,
-                    cleaner_id: defaultCleaner.user_id,
-                })
             }
+
+            this.setState({
+                cleaner: defaultCleaner
+            })
+
         }
-        
     }
 
     constructor(props){
@@ -67,24 +66,21 @@ class PropertyPreview extends React.Component {
         this.state = {
             // state
             cleaner: null,
-            cleaner_id: null,
-            cleaner_name: null,
         }
     }
 
     handleSelect = event => {
-        console.log('select', event.target.value);
         this.setState({
-            cleaner_name: event.target.value.user_name,
-            cleaner_id: event.target.value.user_id,
             cleaner: event.target.value
         })
 
         console.log('trigger change cleaner function');
     }
 
+
     render(){
         const {classes} = this.props;
+        console.log('default', this.state.cleaner);
         return(
             <div>
                 <Card className = {classes.card} key = {this.props.property.id}>
@@ -92,25 +88,32 @@ class PropertyPreview extends React.Component {
                         </CardHeader>
 
                         <CardContent>
-                            cleaners
-                            {this.state.cleaner ? (
-                            <form autoComplete='off'>
-                            <FormControl className = {classes.formControl}>
-                                <InputLabel shrink htmlFor='cleaner-label-placeholder'>Cleaner</InputLabel>
-                                <Select value = {this.state.cleaner_name} 
-                                onChange = {this.handleSelect} 
-                                input={<Input name = 'cleaner' id='cleaner-label-placeholder' />}
-                                name = 'cleaner'>
-                                <MenuItem value = {this.state.cleaner}>{this.state.cleaner.user_name}</MenuItem>
-                                {this.props.cleaners ? this.props.cleaners.map(cleaner => {
-                                    return <MenuItem value = {cleaner} key = {cleaner.user_id}>{cleaner.user_name}</MenuItem>
-                                }) : null}
-                                
-                                </Select>
-                            </FormControl>
-                            </form>
-                            ) : null}
-                            
+                        <h2>Cleaners</h2>
+
+                        <FormControl className={classes.formControl}>
+                        <InputLabel shrink htmlFor='cleaner-native-label-placeholder'>
+                        Assigned Cleaner
+                        </InputLabel>
+                        {this.state.cleaner ? (
+                            <NativeSelect 
+                            value = {this.state.cleaner.user_name} // placholder == assigned cleaner's name
+                            onChange = {this.handleSelect}
+                            input = {<Input name = 'cleaner' id = 'cleaner-native-label-placeolder' />}
+                            >
+
+                            {this.props.cleaners ? this.props.cleaners.map(cleaner => {
+                                return <option value  = {cleaner}>{cleaner.user_name}</option>
+                            }) : null}
+    
+    
+                            </NativeSelect>
+
+                        ) : null}
+                        
+                        
+                        </FormControl>
+
+
                         </CardContent>
                         </Card>
 

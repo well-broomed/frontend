@@ -3,6 +3,7 @@ import { FETCHING_PROPERTIES, PROPERTIES_FETCHED, PROPERTY_ADDED, CLEANERS_FETCH
 const initialState = {
 	properties: null,
 	refreshProperties: false,
+	cleaners: null,
 };
 
 const propertyReducer = (state = initialState, action) => {
@@ -16,7 +17,7 @@ const propertyReducer = (state = initialState, action) => {
 
 		case CLEANERS_FETCHED:
 			return {...state, cleaners: action.payload};
-			
+
 		default:
 			return state;
 	}
