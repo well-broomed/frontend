@@ -31,6 +31,12 @@ const styles = {
 	},
 	img: {
 		width: 40
+	},
+	content:{
+		display: 'flex'
+	},
+	contentTypography:{
+		margin: 'auto'
 	}
 };
 
@@ -154,9 +160,17 @@ class Partners extends React.Component {
 											<img className={classes.img} src={exampleimg} />
 										</Avatar>
 									}
+									action={
+										<Button>
+										House Availability
+										</Button>
+									}
 								/>
 
-								<CardContent />
+								<CardContent className={classes.content}>
+								<Typography variant="h6" className={classes.contentTypography}>Default Houses: {partner.houses.length}</Typography>
+								<Typography variant="h6" className={classes.contentTypography}>Available Houses: {partner.available_houses.length}</Typography>
+								</CardContent>
 							</Card>
 						);
 					})
