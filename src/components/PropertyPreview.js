@@ -104,7 +104,7 @@ class PropertyPreview extends React.Component {
                             >
 
                             {this.props.cleaners ? this.props.cleaners.map(cleaner => {
-                                return <option value  = {cleaner}>{cleaner.user_name}</option>
+                                return <option value  = {cleaner} key = {cleaner.user_id}>{cleaner.user_name}</option>
                             }) : null}
     
     

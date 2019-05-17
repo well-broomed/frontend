@@ -130,7 +130,7 @@ class Properties extends React.Component {
 
                 {this.props.properties ? this.props.properties.map(property => {
                     return (
-                        <PropertyPreview property = {property} key = {property.id} />
+                        <PropertyPreview property = {property} key = {property.property_id} />
                     )
                 })
             

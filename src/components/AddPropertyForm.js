@@ -72,7 +72,7 @@ class AddPropertyForm extends React.Component {
         return (
             <div>
                 <form onSubmit = {this.handleSubmit} className = {classes.container} noValidate autoComplete='off'>
-                <Typography variant  = 'h4' textAlign = 'center'>Add a New Property</Typography>
+                <Typography variant  = 'h4'>Add a New Property</Typography>
 
                 <TextField className = {classes.formField} id='standard-dense' label = 'Property Name' value = {this.state.property_name} onChange={this.handleInput('property_name')}/>
                 <TextField className = {classes.formField} id='standard-dense' label = 'Address' value = {this.state.address} onChange = {this.handleInput('address')} />
