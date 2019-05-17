@@ -15,10 +15,10 @@ import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
+import Paper from '@material-ui/core/Paper';
 
 import { withStyles } from '@material-ui/core';
 
-import exampleimg from './Profile thumbpic.JPG';
 
 const styles = {
 	card: {
@@ -32,10 +32,10 @@ const styles = {
 	img: {
 		width: 40
 	},
-	content:{
+	content: {
 		display: 'flex'
 	},
-	contentTypography:{
+	contentTypography: {
 		margin: 'auto'
 	}
 };
@@ -44,13 +44,19 @@ class Partners extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			email: ''
+			email: '',
+			open: false
 		};
 	}
 
 	handleInputChange = event => {
 		this.setState({
 			[event.target.name]: event.target.value
+		});
+	};
+	handlePartnerHouse = event => {
+		this.setState({
+			open: !this.state.open
 		});
 	};
 	sendEmail = async e => {
@@ -151,27 +157,45 @@ class Partners extends React.Component {
 				{dummydata ? (
 					dummydata.map(partner => {
 						return (
-							<Card key={partner.user_id} className={classes.card}>
-								<CardHeader
-									title={partner.user_name}
-									subheader={partner.address}
-									avatar={
-										<Avatar>
-											<img className={classes.img} src={exampleimg} />
-										</Avatar>
-									}
-									action={
-										<Button>
-										House Availability
-										</Button>
-									}
-								/>
+							<div>
+								<Card key={partner.user_id} className={classes.card}>
+									<CardHeader
+										title={partner.user_name}
+										subheader={partner.address}
+										avatar={
+											<Avatar>
+												<img className={classes.img} src={''} />
+											</Avatar>
+										}
+										action={<Button variant={this.state.open ? 'contained' : 'default'} onClick={this.handlePartnerHouse}>House Availability</Button>}
+									/>
 
-								<CardContent className={classes.content}>
-								<Typography variant="h6" className={classes.contentTypography}>Default Houses: {partner.houses.length}</Typography>
-								<Typography variant="h6" className={classes.contentTypography}>Available Houses: {partner.available_houses.length}</Typography>
-								</CardContent>
-							</Card>
+									<CardContent className={classes.content}>
+										<Typography
+											variant="h6"
+											className={classes.contentTypography}
+										>
+											Default Houses: {partner.houses.length}
+										</Typography>
+										<Typography
+											variant="h6"
+											className={classes.contentTypography}
+										>
+											Available Houses: {partner.available_houses.length}
+										</Typography>
+									</CardContent>
+								</Card>
+
+								{/* {this.state.open ? <Paper className={classes.root}> //wIL
+									<Typography variant="h6" component="h3">
+										This is a sheet of paper.
+									</Typography>
+									<Typography component="p">
+										Paper can be used to build surface or other elements for
+										your application.
+									</Typography>
+								</Paper> : null} */}
+							</div>
 						);
 					})
 				) : (
