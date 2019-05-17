@@ -11,6 +11,7 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 
 class Partners extends React.Component {
+    
     constructor(props){
         super(props);
         this.state = {
@@ -46,7 +47,7 @@ class Partners extends React.Component {
       
       const backendUrl = process.env.backendURL|| 'http://localhost:5000';
       try {
-         const res = await axios.post(`${backendUrl}/api/invites/`, body, options);
+         const res = await axios.post(`${backendUrl}/api/invites`, body, options);
       }
       catch (err) {
           console.log(err);
