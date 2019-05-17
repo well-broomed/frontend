@@ -1,37 +1,68 @@
 // Dependencies
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { withRouter, Route, Switch } from 'react-router-dom';
+import {connect} from 'react-redux';
 import styled from 'styled-components';
 
+import {checkIfUserExists} from '../../actions/index';
+
 // Components
-import { ExampleComponent } from '../../components';
+import {Home, Properties, Partners, Guests, Reports, Account, Callback, Navigation, Redirect} from '../../components';
+
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Typography from '@material-ui/core/Typography';
 
 //Styles
-const AppContainer = styled.div`
-	display: flex;
-	max-width: 1280px;
-	height: 100vh;
-	background: #c6def2;
-	background-image: radial-gradient(
-		circle,
-		white,
-		#97c3e7,
-		#c6def2,
-		white,
-		white
-	);
+const ComponentContainer = styled.div`
+	width: 80%;
 	margin: 0 auto;
-`;
+	margin-top: 80px;
+	`;
+
 
 class App extends Component {
+
+	componentDidMount(){
+		if(!this.props.userInfo){
+			this.props.checkIfUserExists(null);
+		}
+	}
+
 	render() {
 		return (
-			<AppContainer>
-				{/* <Navbar /> */}
-				<Route exact path="/" component={ExampleComponent} />
-			</AppContainer>
+			<div>
+				<CssBaseline />
+				<Navigation />
+				{/* Declare Routes */}
+				<ComponentContainer>
+
+				<Switch>
+					<Route exact path = '/' component = {Home} />
+					<Route exact path = '/properties' component = {Properties} />
+					<Route exact path = '/partners' component = {Partners} />
+					<Route exact path = '/guests' component = {Guests} />
+					<Route exact path = '/reports' component = {Reports} />
+					<Route exact path = '/account' component = {Account} />
+					<Route path = '/callback' component = {Callback} />
+					<Route path = '/redirect' component = {Redirect} />
+				</Switch>
+
+				</ComponentContainer>
+			</div>
 		);
 	}
 }
 
-export default App;
+
+const mapStateToProps = state => {
+    return {
+		// state items
+		userInfo: state.authReducer.userInfo,
+    }
+}
+
+export default withRouter(connect(mapStateToProps, {
+	// actions
+	checkIfUserExists
+    
+})(App));

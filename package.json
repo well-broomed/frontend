@@ -18,7 +18,12 @@
 		"not op_mini all"
 	],
 	"dependencies": {
+		"@material-ui/core": "^3.9.3",
+		"@material-ui/icons": "^3.0.2",
+		"auth0-js": "^9.10.2",
+		"auth0-lock": "^11.16.0",
 		"axios": "^0.18.0",
+		"mailgun-js": "^0.22.0",
 		"react": "^16.8.6",
 		"react-dom": "^16.8.6",
 		"react-redux": "^7.0.3",
