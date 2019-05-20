@@ -20,6 +20,8 @@ export const checkIfUserExists = (role) => {
         }
     }
 
+    console.log('checking user');
+
     let body = {
         role: role,
     }
@@ -31,6 +33,7 @@ export const checkIfUserExists = (role) => {
 
         checkUrl.then(res => {
             localStorage.setItem('userInfo', res.data.userInfo);
+            localStorage.setItem('role', res.data.user.role);
             // localStorage.setItem('userId', res.data.profile.id);
             dispatch({type: USER_CHECKED, payload: res.data});
         }).catch(err => {

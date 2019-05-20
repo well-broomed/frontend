@@ -24,7 +24,7 @@ class App extends Component {
 
 	componentDidMount(){
 		if(!this.props.userInfo){
-			this.props.checkIfUserExists(null);
+			this.props.checkIfUserExists(localStorage.getItem('role'));
 		}
 	}
 
