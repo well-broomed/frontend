@@ -1,8 +1,8 @@
-import { CHECKING_USER, USER_CHECKED } from '../actions';
+import { USER_CHECKED } from '../actions';
 
 const initialState = {
-    userInfo: null,
-    userChecked: null,
+	userInfo: null,
+	userChecked: null
 };
 
 const authReducer = (state = initialState, action) => {
