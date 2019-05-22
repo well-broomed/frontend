@@ -5,6 +5,8 @@ import {connect} from 'react-redux';
 // Router
 import {withRouter} from 'react-router-dom';
 
+// FlexBox
+
 // Card
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -20,6 +22,15 @@ import { withStyles } from '@material-ui/core';
 // Icons 
 import EditTwoTone from '@material-ui/icons/EditTwoTone';
 import Icon from '@material-ui/core/Icon';
+
+// Styled Components
+import styled from 'styled-components';
+
+const FlexRowNoWrap = styled.div`
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    `;
 
 const styles = {
     card: {
@@ -49,6 +60,8 @@ class Account extends React.Component {
             password2: '',
             username: '',
             usernameOpen: false,
+            emailOpen: false,
+            email: '',
         };
     }
 
@@ -101,12 +114,12 @@ class Account extends React.Component {
                      <CardContent>
                         <Typography variant = 'overline'>Username</Typography>
                         {!this.state.usernameOpen ? (
+                            <FlexRowNoWrap>
                             <Typography variant = 'h6'>{this.props.currentUser.user_name}</Typography>
+                            <IconButton onClick = {this.toggleInput} name = 'usernameOpen'><EditTwoTone name = 'usernameOpen'/></IconButton>
+                            </FlexRowNoWrap>
                         ) : null}
-                        
-                        {!this.state.usernameOpen ? (
-                        <IconButton onClick = {this.toggleInput} name = 'usernameOpen'><EditTwoTone name = 'usernameOpen'/></IconButton>
-                        ) : null}
+
                         
                         {this.state.usernameOpen ? (
                             <form onSubmit = {this.handleSubmit}>
