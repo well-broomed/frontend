@@ -12,9 +12,14 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core';
+
+// Icons 
+import EditTwoTone from '@material-ui/icons/EditTwoTone';
+import Icon from '@material-ui/core/Icon';
 
 const styles = {
     card: {
@@ -57,14 +62,24 @@ class Account extends React.Component {
 
     toggleInput = event => {
         event.preventDefault();
-        let name = event.target.getAttribute('name');
-        this.setState({
-            [name]: !this.state[name]
-        })
-
-        console.log(this.state.passwordOpen);
-        console.log(event.target);
-        console.log(this.state[event.target.name])
+        let name;
+        /**
+         * So this is a tricky bit due to material UI svg icons.
+         * If you click on the svg itself, the usual onClick event 'name' passage will not work.
+         * So, you have to traverse two levels up the DOM to gather the proper name
+         * in order for the dynamic state assignment to fire properly.
+         */
+        if(event.target.tagName === 'path'){
+            name = event.target.parentNode.parentNode.getAttribute('name');
+            this.setState({
+                [name]: !this.state[name]
+            });
+        } else {
+            name = event.target.getAttribute('name');
+            this.setState({
+                [name]: !this.state[name]
+            });
+        }
     }
 
     handleSubmit = event => {
@@ -85,10 +100,12 @@ class Account extends React.Component {
                      </CardActionArea>
                      <CardContent>
                         <Typography variant = 'overline'>Username</Typography>
-                        <Typography variant = 'h6'>{this.props.currentUser.user_name}</Typography>
+                        {!this.state.usernameOpen ? (
+                            <Typography variant = 'h6'>{this.props.currentUser.user_name}</Typography>
+                        ) : null}
                         
                         {!this.state.usernameOpen ? (
-                        <Button><div name = 'usernameOpen' onClick = {this.toggleInput}>Change Username</div></Button>
+                        <IconButton onClick = {this.toggleInput} name = 'usernameOpen'><EditTwoTone name = 'usernameOpen'/></IconButton>
                         ) : null}
                         
                         {this.state.usernameOpen ? (
@@ -108,12 +125,15 @@ class Account extends React.Component {
                         <Typography variant = 'overline'>Account Type</Typography>
                         <Typography variant = 'h6'>{this.props.currentUser.role}</Typography>
 
-                        <Typography variant = 'overline'>Change Password</Typography>
-                        <Button>
-                            <div className = 'password-btn' name = 'passwordOpen' onClick = {this.toggleInput}>
-                            Change Password
-                            </div>
-                        </Button>
+                        
+                        {!this.state.passwordOpen ? (
+                            <Button variant = 'contained' color = 'secondary'>
+                                <div className = 'password-btn' name = 'passwordOpen' onClick = {this.toggleInput}>
+                                Change Password
+                                </div>
+                            </Button>
+                        ) : null}
+                        
                         {this.state.passwordOpen ? (
                             <form onSubmit = {this.handleSubmit}>
                             <TextField variant = 'outlined' label = 'New Password' type = 'password' name = 'password1' value = {this.state.password1}></TextField>
