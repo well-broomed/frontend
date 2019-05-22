@@ -32,6 +32,12 @@ const FlexRowNoWrap = styled.div`
     align-items: center;
     `;
 
+const FlexColNoWrap = styled.div`
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    `;
+
 const styles = {
     card: {
         maxWidth: 400,
@@ -97,6 +103,7 @@ class Account extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault();
+        console.log('submit');
     }
 
     render(){
@@ -123,11 +130,14 @@ class Account extends React.Component {
                         
                         {this.state.usernameOpen ? (
                             <form onSubmit = {this.handleSubmit}>
+                            <FlexColNoWrap>
                             <TextField variant = 'outlined' label = 'Username' name = 'username' value = {this.state.username} onChange = {this.handleInput}></TextField>
                         
-
+                            <FlexRowNoWrap>
+                            <Button onClick = {this.toggleInput} name = 'usernameOpen'><div name = 'usernameOpen' onClick = {this.toggleInput}>Cancel</div></Button>
                             <Button type = 'submit'>Submit</Button>
-                            <Button><div name = 'usernameOpen' onClick = {this.toggleInput}>Cancel</div></Button>
+                            </FlexRowNoWrap>
+                            </FlexColNoWrap>
                         </form>
                         ) : null}
                         
@@ -138,10 +148,11 @@ class Account extends React.Component {
                         <Typography variant = 'overline'>Account Type</Typography>
                         <Typography variant = 'h6'>{this.props.currentUser.role}</Typography>
 
-                        
+                        <Typography variant = 'overline'>Password</Typography>
+
                         {!this.state.passwordOpen ? (
-                            <Button variant = 'contained' color = 'secondary'>
-                                <div className = 'password-btn' name = 'passwordOpen' onClick = {this.toggleInput}>
+                            <Button variant = 'contained' color = 'secondary' onClick = {this.toggleInput} name = 'passwordOpen'>
+                                <div style = {{width: '100%'}} className = 'password-btn' name = 'passwordOpen' onClick = {this.toggleInput}>
                                 Change Password
                                 </div>
                             </Button>
@@ -149,11 +160,15 @@ class Account extends React.Component {
                         
                         {this.state.passwordOpen ? (
                             <form onSubmit = {this.handleSubmit}>
-                            <TextField variant = 'outlined' label = 'New Password' type = 'password' name = 'password1' value = {this.state.password1}></TextField>
-                            <TextField variant = 'outlined' label = 'New Password (Again)' type = 'password' name = 'password2' value = {this.state.password2}></TextField>    
-                            
-                            <Button type = 'submit'>Submit</Button>
-                            <Button><div name = 'passwordOpen' onClick = {this.toggleInput}>Cancel</div></Button>
+                            <FlexColNoWrap>
+                                <TextField variant = 'outlined' label = 'New Password' type = 'password' name = 'password1' value = {this.state.password1}></TextField>
+                                <TextField variant = 'outlined' label = 'New Password (Again)' type = 'password' name = 'password2' value = {this.state.password2}></TextField>    
+                                
+                                <FlexRowNoWrap>
+                                    <Button><div name = 'passwordOpen' onClick = {this.toggleInput}>Cancel</div></Button>
+                                    <Button type = 'submit'>Submit</Button>
+                                </FlexRowNoWrap>
+                            </FlexColNoWrap>
                             </form>
                         ) : null}
                         
