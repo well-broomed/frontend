@@ -8,15 +8,37 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Paper from '@material-ui/core/Paper';
 
-const PartnerCard = props => {
-	const [count, setCount] = useState(0);
+import { withStyles } from '@material-ui/core';
 
+const styles = {
+	card: {
+		maxWidth: 600,
+		margin: '20px auto'
+	},
+	img: {
+		width: 40
+	},
+	content: {
+		display: 'flex'
+	},
+	contentTypography: {
+		margin: 'auto'
+	}
+};
+
+class PartnerCard extends React.component {
+	constructor(props){
+		super(props);
+	}
+
+	render(){
+	const {classes} = this.props;
 	return (
 		<div>
-			<Card key={partner.user_id} className={classes.card}>
+			<Card key={this.props.partner.user_id} className={classes.card}>
 				<CardHeader
-					title={partner.user_name}
-					subheader={partner.address}
+					title={this.props.partner.user_name}
+					subheader={this.props.partner.address}
 					avatar={
 						<Avatar>
 							<img className={classes.img} src={''} />
@@ -33,10 +55,10 @@ const PartnerCard = props => {
 				/>
 				<CardContent className={classes.content}>
 					<Typography variant="h6" className={classes.contentTypography}>
-						Default Houses: {partner.houses.length}
+						Default Houses: {this.props.partner.houses.length}
 					</Typography>
 					<Typography variant="h6" className={classes.contentTypography}>
-						Available Houses: {partner.available_houses.length}
+						Available Houses: {this.props.partner.available_houses.length}
 					</Typography>
 				</CardContent>
 			</Card>
@@ -52,8 +74,7 @@ const PartnerCard = props => {
 					</Typography>
 				</Paper>
 			) : null}
-			<p> You clicked {count} times</p>
-			<button onClick={() => setCount(count + 1)}>Click me</button>
 		</div>
 	);
+		}
 };

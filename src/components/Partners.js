@@ -19,6 +19,8 @@ import Paper from '@material-ui/core/Paper';
 
 import { withStyles } from '@material-ui/core';
 
+//Actions
+import { getCleaners }  from '../actions';
 
 const styles = {
 	card: {
@@ -47,6 +49,10 @@ class Partners extends React.Component {
 			email: '',
 			open: false
 		};
+	}
+	
+	componentDidMount() {
+		this.props.getCleaners();
 	}
 
 	handleInputChange = event => {
@@ -154,8 +160,8 @@ class Partners extends React.Component {
 		return (
 			<div>
 				<Typography variant="h2">Partners</Typography>
-				{dummydata ? (
-					dummydata.map(partner => {
+				{this.props.cleaners ? (
+					this.props.cleaners.map(partner => {
 						return (
 							<div>
 								<Card key={partner.user_id} className={classes.card}>
@@ -167,7 +173,7 @@ class Partners extends React.Component {
 												<img className={classes.img} src={''} />
 											</Avatar>
 										}
-										action={<Button variant={this.state.open ? 'contained' : 'default'} onClick={this.handlePartnerHouse}>House Availability</Button>}
+										action={<Button variant={this.state.open ? 'contained' : null} onClick={this.handlePartnerHouse}>House Availability</Button>}
 									/>
 
 									<CardContent className={classes.content}>
@@ -175,13 +181,13 @@ class Partners extends React.Component {
 											variant="h6"
 											className={classes.contentTypography}
 										>
-											Default Houses: {partner.houses.length}
+											Default Houses: {partner.houses}
 										</Typography>
 										<Typography
 											variant="h6"
 											className={classes.contentTypography}
 										>
-											Available Houses: {partner.available_houses.length}
+											Available Houses: {partner.available_houses}
 										</Typography>
 									</CardContent>
 								</Card>
@@ -227,6 +233,7 @@ class Partners extends React.Component {
 const mapStateToProps = state => {
 	return {
 		// state items
+		cleaners: state.propertyReducer.cleaners,
 	};
 };
 
@@ -235,6 +242,7 @@ export default withRouter(
 		mapStateToProps,
 		{
 			// actions
+			getCleaners,
 		}
 	)(withStyles(styles)(Partners))
 );
