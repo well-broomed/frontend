@@ -87,14 +87,20 @@ class Account extends React.Component {
                         <Typography variant = 'overline'>Username</Typography>
                         <Typography variant = 'h6'>{this.props.currentUser.user_name}</Typography>
                         
-                        <form onSubmit = {this.handleSubmit}>
-                        <TextField variant = 'outlined' label = 'Username' name = 'username' value = {this.state.username} onChange = {this.handleInput}></TextField>
+                        {!this.state.usernameOpen ? (
+                        <Button><div name = 'usernameOpen' onClick = {this.toggleInput}>Change Username</div></Button>
+                        ) : null}
                         
-                        <Button name = 'usernameOpen' onClick = {this.toggleInput}>Edit</Button>
+                        {this.state.usernameOpen ? (
+                            <form onSubmit = {this.handleSubmit}>
+                            <TextField variant = 'outlined' label = 'Username' name = 'username' value = {this.state.username} onChange = {this.handleInput}></TextField>
+                        
 
-                        <Button type = 'submit'>Submit</Button>
-                        <Button>Cancel</Button>
+                            <Button type = 'submit'>Submit</Button>
+                            <Button><div name = 'usernameOpen' onClick = {this.toggleInput}>Cancel</div></Button>
                         </form>
+                        ) : null}
+                        
 
                         <Typography variant = 'overline'>Email</Typography>
                         <Typography variant = 'h6'>{this.props.currentUser.email}</Typography>
