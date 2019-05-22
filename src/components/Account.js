@@ -13,6 +13,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core';
 
 const styles = {
@@ -25,17 +26,53 @@ const styles = {
 }
 
 class Account extends React.Component {
+
+    // set default input values
+    componentDidUpdate(prevProps){
+        if(this.props.currentUser !== prevProps.currentUser){
+            this.setState({
+                username: this.props.currentUser.user_name
+            })
+        }
+    }
+
     constructor(props){
         super(props);
         this.state = {
+            passwordOpen: false,
             password1: '',
             password2: '',
+            username: '',
+            usernameOpen: false,
         };
+    }
+
+    handleInput = event => {
+        event.preventDefault();
+        this.setState({
+            [event.target.name]: event.target.value,
+        })
+
+    }
+
+    toggleInput = event => {
+        event.preventDefault();
+        let name = event.target.getAttribute('name');
+        this.setState({
+            [name]: !this.state[name]
+        })
+
+        console.log(this.state.passwordOpen);
+        console.log(event.target);
+        console.log(this.state[event.target.name])
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
     }
 
     render(){
         const {classes} = this.props;
-        console.log(this.props.currentUser);
         return (
             <div>
                 <Typography variant = 'h2'>Account</Typography>
@@ -49,12 +86,38 @@ class Account extends React.Component {
                      <CardContent>
                         <Typography variant = 'overline'>Username</Typography>
                         <Typography variant = 'h6'>{this.props.currentUser.user_name}</Typography>
+                        
+                        <form onSubmit = {this.handleSubmit}>
+                        <TextField variant = 'outlined' label = 'Username' name = 'username' value = {this.state.username} onChange = {this.handleInput}></TextField>
+                        
+                        <Button name = 'usernameOpen' onClick = {this.toggleInput}>Edit</Button>
+
+                        <Button type = 'submit'>Submit</Button>
+                        <Button>Cancel</Button>
+                        </form>
 
                         <Typography variant = 'overline'>Email</Typography>
                         <Typography variant = 'h6'>{this.props.currentUser.email}</Typography>
 
                         <Typography variant = 'overline'>Account Type</Typography>
                         <Typography variant = 'h6'>{this.props.currentUser.role}</Typography>
+
+                        <Typography variant = 'overline'>Change Password</Typography>
+                        <Button>
+                            <div className = 'password-btn' name = 'passwordOpen' onClick = {this.toggleInput}>
+                            Change Password
+                            </div>
+                        </Button>
+                        {this.state.passwordOpen ? (
+                            <form onSubmit = {this.handleSubmit}>
+                            <TextField variant = 'outlined' label = 'New Password' type = 'password' name = 'password1' value = {this.state.password1}></TextField>
+                            <TextField variant = 'outlined' label = 'New Password (Again)' type = 'password' name = 'password2' value = {this.state.password2}></TextField>    
+                            
+                            <Button type = 'submit'>Submit</Button>
+                            <Button><div name = 'passwordOpen' onClick = {this.toggleInput}>Cancel</div></Button>
+                            </form>
+                        ) : null}
+                        
                      </CardContent>
  
  
