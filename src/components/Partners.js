@@ -20,7 +20,7 @@ import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core';
 
 //Actions
-import { getCleaners }  from '../actions';
+import { getPartners }  from '../actions';
 
 const styles = {
 	card: {
@@ -52,7 +52,7 @@ class Partners extends React.Component {
 	}
 	
 	componentDidMount() {
-		this.props.getCleaners();
+		this.props.getPartners();
 	}
 
 	handleInputChange = event => {
@@ -94,69 +94,6 @@ class Partners extends React.Component {
 
 	render() {
 		const { classes } = this.props;
-		const dummydata = [
-			{
-				user_id: 1,
-				user_name: 'Kevin Tena',
-				role: 'partner',
-				email: 'kevin@kevintena.com',
-				phone: '123-234-0527',
-				address: '123 W Cherry Ln',
-				houses: [
-					{
-						house_id: 1,
-						admin_id: 1,
-						cleaner_id: 1,
-						address: '500 N Lakeshore Dr'
-					},
-					{
-						house_id: 2,
-						admin_id: 1,
-						cleaner_id: 1,
-						address: '28 N Franklin Ave'
-					}
-				],
-				available_houses: [
-					{
-						user_id: 1,
-						house_id: 1
-					}
-				]
-			},
-			{
-				user_id: 2,
-				user_name: 'John Doe',
-				role: 'partner',
-				email: 'chuck@kevintena.com',
-				phone: '123-456-7890',
-				address: '300 W Monroe St',
-				houses: [
-					{
-						house_id: 3,
-						admin_id: 1,
-						cleaner_id: 2,
-						address: ' 234 N Michigan Ave'
-					},
-					{
-						house_id: 4,
-						admin_id: 1,
-						cleaner_id: 2,
-						address: '3000 N Lincoln Ave'
-					}
-				],
-				available_houses: [
-					{
-						user_id: 2,
-						house_id: 3
-					},
-					{
-						user_id: 2,
-						house_id: 4
-					}
-				]
-			}
-		];
-		console.log(dummydata);
 		return (
 			<div>
 				<Typography variant="h2">Partners</Typography>
@@ -233,7 +170,7 @@ class Partners extends React.Component {
 const mapStateToProps = state => {
 	return {
 		// state items
-		cleaners: state.propertyReducer.cleaners,
+		cleaners: state.propertyReducer.partners,
 	};
 };
 
@@ -242,7 +179,7 @@ export default withRouter(
 		mapStateToProps,
 		{
 			// actions
-			getCleaners,
+			getPartners,
 		}
 	)(withStyles(styles)(Partners))
 );
