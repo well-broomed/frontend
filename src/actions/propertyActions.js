@@ -9,6 +9,8 @@ export const FETCHING_CLEANERS = 'FETCHING_CLEANERS';
 export const CLEANERS_FETCHED = 'CLEANERS_FETCHED';  
 export const UPDATING_CLEANER = 'UPDATING_CLEANER';
 export const CLEANER_UPDATED = 'CLEANER_UPDATED';
+export const PARTNERS_FETCHED = 'PARTNERS_FETCHED';
+export const FETCHING_PARTNERS = 'FETCHING_PARTNERS'
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || `http://localhost:5000`
 
@@ -93,6 +95,32 @@ export const getCleaners = () => {
             console.log('get cleaners', res.data);
 
             dispatch({type: CLEANERS_FETCHED, payload: res.data.cleaner_profiles});
+        }).catch(err => {
+            console.log(err);
+            dispatch({type: ERROR})
+        })
+    }
+}
+
+export const getPartners = () => {
+
+    let token = localStorage.getItem('jwt');
+    let userInfo = localStorage.getItem('userInfo');
+
+    let options = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'user-info': userInfo,
+        }
+    }
+
+    const endpoint = axios.get(`${backendUrl}/api/cleaners/partners`, options);
+
+    return dispatch => {
+        dispatch({type: FETCHING_PARTNERS});
+
+        endpoint.then(res => {
+            dispatch({type: PARTNERS_FETCHED, payload: res.data.partners});
         }).catch(err => {
             console.log(err);
             dispatch({type: ERROR})
