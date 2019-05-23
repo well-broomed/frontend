@@ -22,6 +22,9 @@ import { withStyles } from '@material-ui/core';
 //Actions
 import { getPartners }  from '../actions';
 
+//Component
+import PartnerCard from './PartnerCard';
+
 const styles = {
 	card: {
 		maxWidth: 600,
@@ -60,11 +63,7 @@ class Partners extends React.Component {
 			[event.target.name]: event.target.value
 		});
 	};
-	handlePartnerHouse = event => {
-		this.setState({
-			open: !this.state.open
-		});
-	};
+	
 	sendEmail = async e => {
 		if (!this.state.email) return;
 		e.preventDefault();
@@ -100,45 +99,7 @@ class Partners extends React.Component {
 				{this.props.cleaners ? (
 					this.props.cleaners.map(partner => {
 						return (
-							<div>
-								<Card key={partner.user_id} className={classes.card}>
-									<CardHeader
-										title={partner.user_name}
-										subheader={partner.address}
-										avatar={
-											<Avatar>
-												<img className={classes.img} src={''} />
-											</Avatar>
-										}
-										action={<Button variant={this.state.open ? 'contained' : null} onClick={this.handlePartnerHouse}>House Availability</Button>}
-									/>
-
-									<CardContent className={classes.content}>
-										<Typography
-											variant="h6"
-											className={classes.contentTypography}
-										>
-											Default Houses: {partner.houses}
-										</Typography>
-										<Typography
-											variant="h6"
-											className={classes.contentTypography}
-										>
-											Available Houses: {partner.available_houses}
-										</Typography>
-									</CardContent>
-								</Card>
-
-								{/* {this.state.open ? <Paper className={classes.root}> //wIL
-									<Typography variant="h6" component="h3">
-										This is a sheet of paper.
-									</Typography>
-									<Typography component="p">
-										Paper can be used to build surface or other elements for
-										your application.
-									</Typography>
-								</Paper> : null} */}
-							</div>
+							<PartnerCard partner={partner} key={partner.user_id}/>
 						);
 					})
 				) : (

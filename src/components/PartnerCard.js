@@ -1,4 +1,9 @@
 import React, { useState } from 'react';
+//Redux
+import {withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
+
+//Material-ui
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
@@ -26,10 +31,19 @@ const styles = {
 	}
 };
 
-class PartnerCard extends React.component {
+class PartnerCard extends React.Component {
 	constructor(props){
 		super(props);
+		this.state = {
+			open: false
+		}
 	}
+
+	handlePartnerHouse = event => {
+		this.setState({
+			open: !this.state.open
+		});
+	};
 
 	render(){
 	const {classes} = this.props;
@@ -55,10 +69,10 @@ class PartnerCard extends React.component {
 				/>
 				<CardContent className={classes.content}>
 					<Typography variant="h6" className={classes.contentTypography}>
-						Default Houses: {this.props.partner.houses.length}
+						Default Houses: {this.props.partner.houses}
 					</Typography>
 					<Typography variant="h6" className={classes.contentTypography}>
-						Available Houses: {this.props.partner.available_houses.length}
+						Available Houses: {this.props.partner.available_houses}
 					</Typography>
 				</CardContent>
 			</Card>
@@ -78,3 +92,15 @@ class PartnerCard extends React.component {
 	);
 		}
 };
+
+const mapStateToProps = state => {
+    return {
+        // state items
+    }
+}
+
+export default withRouter(connect(mapStateToProps, {
+    // actions
+    
+    
+})(withStyles(styles)(PartnerCard)));
