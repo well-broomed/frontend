@@ -3,104 +3,144 @@ import axios from 'axios';
 export const ERROR = 'ERROR';
 export const FETCHING_PROPERTIES = 'FETCHING_PROPERTIES';
 export const PROPERTIES_FETCHED = 'PROPERTIES_FETCHED';
+
+// getProperty
+export const GETTING_PROPERTY = 'GETTING_PROPERTY';
+export const GOT_PROPERTY = 'GOT_PROPERTY';
+export const GET_PROPERTY_ERROR = 'GET_PROPERTY_ERROR';
+
 export const ADDING_PROPERTY = 'ADDING_PROPERTY';
 export const PROPERTY_ADDED = 'PROPERTY_ADDED';
-export const FETCHING_CLEANERS = 'FETCHING_CLEANERS';
-export const CLEANERS_FETCHED = 'CLEANERS_FETCHED';  
+export const FETCHING_CLEANERS = 'FETCHING_CLEANERS';
+export const CLEANERS_FETCHED = 'CLEANERS_FETCHED';
 export const UPDATING_CLEANER = 'UPDATING_CLEANER';
 export const CLEANER_UPDATED = 'CLEANER_UPDATED';
 export const PARTNERS_FETCHED = 'PARTNERS_FETCHED';
 export const FETCHING_PARTNERS = 'FETCHING_PARTNERS'
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL || `http://localhost:5000`
+const backendUrl = process.env.REACT_APP_BACKEND_URL || `http://localhost:5000`;
 
 export const getUserProperties = () => {
-    // This function passes the auth0 jwt to the backend, and validates whether an entry
-    // for this user exists in the database.
+	// This function passes the auth0 jwt to the backend, and validates whether an entry
+	// for this user exists in the database.
 
-    // The role selected by the user is passed upon account validation.
+	// The role selected by the user is passed upon account validation.
 
-    let token = localStorage.getItem('jwt');
-    let userInfo = localStorage.getItem('userInfo');
+	let token = localStorage.getItem('jwt');
+	let userInfo = localStorage.getItem('userInfo');
 
-    let options = {
-        headers: {
-            Authorization: `Bearer ${token}`,
-            'user-info': userInfo,
-        }
-    }
+	let options = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+			'user-info': userInfo
+		}
+	};
 
-    const fetchUrl = axios.get(`${backendUrl}/api/properties`, options);
+	const fetchUrl = axios.get(`${backendUrl}/api/properties`, options);
 
-    return dispatch => {
-        dispatch({type: FETCHING_PROPERTIES});
+	return dispatch => {
+		dispatch({ type: FETCHING_PROPERTIES });
 
-        fetchUrl.then(res => {
-            console.log('property return', res.data);
-            // localStorage.setItem('userId', res.data.profile.id);
-            dispatch({type: PROPERTIES_FETCHED, payload: res.data.properties});
-        }).catch(err => {
-            console.log(err);
-            dispatch({type: ERROR})
-        })
-    }
-}
+		fetchUrl
+			.then(res => {
+				console.log('property return', res.data);
+				// localStorage.setItem('userId', res.data.profile.id);
+				dispatch({ type: PROPERTIES_FETCHED, payload: res.data.properties });
+			})
+			.catch(err => {
+				console.log(err);
+				dispatch({ type: ERROR });
+			});
+	};
+};
+
+export const getProperty = property_id => {
+	const token = localStorage.getItem('jwt');
+	const userInfo = localStorage.getItem('userInfo');
+
+	const options = {
+		headers: { Authorization: `Bearer ${token}`, 'user-info': userInfo }
+	};
+
+	return dispatch => {
+		dispatch({ type: GETTING_PROPERTY });
+
+		axios
+			.get(`${backendUrl}/api/properties/${property_id}`, options)
+			.then(res => {
+				dispatch({ type: GOT_PROPERTY, payload: res.data.property });
+			})
+			.catch(error => {
+				console.log(error);
+				dispatch({ type: GET_PROPERTY_ERROR, payload: error });
+			});
+	};
+};
 
 export const addProperty = property => {
+	let token = localStorage.getItem('jwt');
+	let userInfo = localStorage.getItem('userInfo');
 
-    let token = localStorage.getItem('jwt');
-    let userInfo = localStorage.getItem('userInfo');
+	let options = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+			'user-info': userInfo
+		}
+	};
 
-    let options = {
-        headers: {
-            Authorization: `Bearer ${token}`,
-            'user-info': userInfo,
-        }
-    }
+	const endpoint = axios.post(
+		`${backendUrl}/api/properties`,
+		property,
+		options
+	);
 
-    const endpoint = axios.post(`${backendUrl}/api/properties`, property, options);
+	return dispatch => {
+		dispatch({ type: ADDING_PROPERTY });
 
-    return dispatch => {
-        dispatch({type: ADDING_PROPERTY});
+		endpoint
+			.then(res => {
+				console.log('add return', res.data);
 
-        endpoint.then(res => {
-            console.log('add return', res.data);
-
-            dispatch({type: PROPERTY_ADDED});
-        }).catch(err => {
-            console.log(err);
-            dispatch({type: ERROR});
-        })
-    }
-}
+				dispatch({ type: PROPERTY_ADDED });
+			})
+			.catch(err => {
+				console.log(err);
+				dispatch({ type: ERROR });
+			});
+	};
+};
 
 export const getCleaners = () => {
+	let token = localStorage.getItem('jwt');
+	let userInfo = localStorage.getItem('userInfo');
 
-    let token = localStorage.getItem('jwt');
-    let userInfo = localStorage.getItem('userInfo');
+	let options = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+			'user-info': userInfo
+		}
+	};
 
-    let options = {
-        headers: {
-            Authorization: `Bearer ${token}`,
-            'user-info': userInfo,
-        }
-    }
+	const endpoint = axios.get(`${backendUrl}/api/cleaners`, options);
 
-    const endpoint = axios.get(`${backendUrl}/api/cleaners`, options);
+	return dispatch => {
+		dispatch({ type: FETCHING_CLEANERS });
 
-    return dispatch => {
-        dispatch({type: FETCHING_CLEANERS});
+		endpoint
+			.then(res => {
+				console.log('get cleaners', res.data);
 
-        endpoint.then(res => {
-            console.log('get cleaners', res.data);
-
-            dispatch({type: CLEANERS_FETCHED, payload: res.data.cleaner_profiles});
-        }).catch(err => {
-            console.log(err);
-            dispatch({type: ERROR})
-        })
-    }
-}
+				dispatch({
+					type: CLEANERS_FETCHED,
+					payload: res.data.cleaner_profiles
+				});
+			})
+			.catch(err => {
+				console.log(err);
+				dispatch({ type: ERROR });
+			});
+	};
+};
 
 export const getPartners = () => {
 

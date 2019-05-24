@@ -1,7 +1,18 @@
-import { FETCHING_PROPERTIES, PROPERTIES_FETCHED, PROPERTY_ADDED, CLEANERS_FETCHED, CLEANER_UPDATED, PARTNERS_FETCHED, FETCHING_PARTNERS } from '../actions';
+import {
+	// FETCHING_PROPERTIES,
+	PROPERTIES_FETCHED,
+	PROPERTY_ADDED,
+	CLEANERS_FETCHED,
+	PARTNERS_FETCHED,
+	CLEANER_UPDATED,
+	GETTING_PROPERTY,
+	GOT_PROPERTY,
+	GET_PROPERTY_ERROR
+} from '../actions';
 
 const initialState = {
 	properties: null,
+	property: {},
 	refreshProperties: false,
 	cleaners: null,
 	refreshCleaners: false,
@@ -10,15 +21,27 @@ const initialState = {
 
 const propertyReducer = (state = initialState, action) => {
 	switch (action.type) {
-		// example action
+		case GETTING_PROPERTY:
+			return { ...state, gettingProperty: true };
+
+		case GOT_PROPERTY:
+			return { ...state, property: action.payload, gettingProperty: undefined };
+
+		case GET_PROPERTY_ERROR:
+			return {
+				...state,
+				getPropertyError: action.payload,
+				gettingProperty: undefined
+			};
+
 		case PROPERTIES_FETCHED:
-			return { ...state, properties: action.payload, refreshProperties: false};
+			return { ...state, properties: action.payload, refreshProperties: false };
 
 		case PROPERTY_ADDED:
-			return {...state, refreshProperties: true}
+			return { ...state, refreshProperties: true };
 
 		case CLEANERS_FETCHED:
-			return {...state, cleaners: action.payload};
+			return { ...state, cleaners: action.payload };
 
 		case CLEANER_UPDATED:
 			return {...state, refreshCleaners: true}
