@@ -2,6 +2,8 @@ import React from 'react';
 //Redux
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+//Redux actions
+import { changeCleaner } from '../actions/propertyActions'
 
 //Material-ui
 import Button from '@material-ui/core/Button';
@@ -12,9 +14,17 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Paper from '@material-ui/core/Paper';
-import Icon from '@material-ui/core/Icon'
+import Icon from '@material-ui/core/Icon';
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
 
 import { withStyles } from '@material-ui/core';
+
 
 const styles = {
 	card: {
@@ -35,8 +45,8 @@ const styles = {
 		margin: '20px auto',
 		padding: '5px',
 		'flex-direction': 'column',
-    	'align-items': 'center',
-    	display: 'flex',
+		'align-items': 'center',
+		display: 'flex'
 	}
 };
 
@@ -45,13 +55,17 @@ class PartnerCard extends React.Component {
 		super(props);
 		this.state = {
 			open: false,
+			defaultDialog: false,
+			availableDialog: false,
+			properties: [],
 			defaultproperties: [],
-			availableproperties: [],
+			availableproperties: []
 		};
 	}
 
 	componentDidUpdate(prevProps) {
-		if (prevProps.properties !== this.props.properties) {
+		if (prevProps.properties !== this.props.properties || this.state.properties !== this.props.properties) {
+			const properties = this.props.properties;
 			const defaultproperties = this.props.properties.filter(
 				property => property.cleaner_id === this.props.partner.user_id
 			);
@@ -61,8 +75,28 @@ class PartnerCard extends React.Component {
 					cleaner => cleaner['cleaner_id'] === this.props.partner.user_id
 				)
 			);
-			this.setState({ defaultproperties, availableproperties });
+			this.setState({ defaultproperties, availableproperties, properties})
 		}
+	}
+
+	handleDefaultDialogOpen = () => {
+		this.setState({defaultDialog:true});
+	}
+
+	handleDefaultDialogClose = property_id => {
+		if(property_id)
+			this.props.changeCleaner(property_id, this.props.partner.user_id);
+		this.setState({defaultDialog:false});
+	}
+
+	handleAvailableDialogOpen = () => {
+		this.setState({availableDialog:true});
+	}
+
+	handleAvailableDialogClose = property_id => {
+		if(property_id)
+			//Change available cleaner function would go here
+		this.setState({availableDialog:false});
 	}
 
 	handlePartnerHouse = event => {
@@ -108,21 +142,68 @@ class PartnerCard extends React.Component {
 						<Typography variant="h6" component="h3">
 							Default Properties
 						</Typography>
-						{this.state.defaultproperties.length ? this.state.defaultproperties.map(property => {
-							 return <Typography key={property.property_id} component="p"> {property.property_name} </Typography>	
-						}) : <Typography component="p">This partner currently has no default properties</Typography>}
-						<Button variant="contained" color="secondary">
+						{this.state.defaultproperties.length ? (
+							this.state.defaultproperties.map(property => {
+								return (
+									<Typography key={property.property_id} component="p">
+										{' '}
+										{property.property_name}{' '}
+									</Typography>
+								);
+							})
+						) : (
+							<Typography component="p">
+								This partner currently has no default properties
+							</Typography>
+						)}
+						<Button variant="contained" color="secondary" onClick={this.handleDefaultDialogOpen}>
 							<Icon>add_circle</Icon>
 						</Button>
+						<Dialog open={this.state.defaultDialog}
+								onClose={() => this.handleDefaultDialogClose()}
+								>
+							<DialogTitle>Your Properties</DialogTitle>
+							<List>
+								{this.props.properties.map(property => (
+									<ListItem button onClick={() => this.handleDefaultDialogClose(property.property_id)} key={property.property_id}>
+									<ListItemText primary={property.property_name}/>
+									</ListItem>
+								))}
+							</List>
+						</Dialog>
+
 						<Typography variant="h6" component="h3">
 							Available Properties
 						</Typography>
-						{this.state.availableproperties.length ? this.state.availableproperties.map(property => {
-							 return <Typography key={property.property_id} component="p"> {property.property_name} </Typography>	
-						}) : <Typography component="p">This partner currently has no available properties</Typography>}
-						<Button variant="contained" color="secondary">
+						{this.state.availableproperties.length ? (
+							this.state.availableproperties.map(property => {
+								return (
+									<Typography key={property.property_id} component="p">
+										{' '}
+										{property.property_name}{' '}
+									</Typography>
+								);
+							})
+						) : (
+							<Typography component="p">
+								This partner currently has no available properties
+							</Typography>
+						)}
+						<Button variant="contained" color="secondary" onClick={this.handleAvailableDialogOpen}>
 							<Icon>add_circle</Icon>
 						</Button>
+						<Dialog open={this.state.availableDialog}
+								onClose={() => this.handleAvailableDialogClose()}
+								>
+							<DialogTitle>Your Properties</DialogTitle>
+							<List>
+								{this.props.properties.map(property => (
+									<ListItem button onClick={() => this.handleAvailableDialogClose(property.property_id)} key={property.property_id}>
+									<ListItemText primary={property.property_name}/>
+									</ListItem>
+								))}
+							</List>
+						</Dialog>
 					</Paper>
 				) : null}
 			</div>
@@ -142,6 +223,7 @@ export default withRouter(
 		mapStateToProps,
 		{
 			// actions
+			changeCleaner
 		}
 	)(withStyles(styles)(PartnerCard))
 );

@@ -140,7 +140,7 @@ export const changeCleaner = (property_id, cleaner_id) => {
         }
     }
 
-    const endpoint = axios.put(`${backendUrl}/api/cleaners/update/${property_id}`, cleaner_id, options)
+    const endpoint = axios.put(`${backendUrl}/api/cleaners/update/${property_id}`, {cleaner_id}, options)
 
     return dispatch => {
         dispatch({type: UPDATING_CLEANER});
