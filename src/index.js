@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 // Middleware
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 
@@ -18,7 +18,9 @@ import { App } from './components';
 // Styles
 import './index.css';
 
-const store = createStore(reducer, applyMiddleware(thunk, logger));
+//Use Compose for redux Devtools
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(reducer, composeEnhancers(applyMiddleware(thunk, logger)));
 
 ReactDOM.render(
 	<Provider store={store}>
