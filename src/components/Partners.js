@@ -20,7 +20,7 @@ import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core';
 
 //Actions
-import { getPartners }  from '../actions';
+import { getPartners, getUserProperties } from '../actions';
 
 //Component
 import PartnerCard from './PartnerCard';
@@ -49,12 +49,12 @@ class Partners extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			email: '',
-			open: false
+			email: ''
 		};
 	}
-	
+
 	componentDidMount() {
+		this.props.getUserProperties();
 		this.props.getPartners();
 	}
 
@@ -63,7 +63,6 @@ class Partners extends React.Component {
 			[event.target.name]: event.target.value
 		});
 	};
-	
 	sendEmail = async e => {
 		if (!this.state.email) return;
 		e.preventDefault();
@@ -98,9 +97,7 @@ class Partners extends React.Component {
 				<Typography variant="h2">Partners</Typography>
 				{this.props.cleaners ? (
 					this.props.cleaners.map(partner => {
-						return (
-							<PartnerCard partner={partner} key={partner.user_id}/>
-						);
+						return <PartnerCard partner={partner} key={partner.user_id} />;
 					})
 				) : (
 					<Typography variant="overline">
@@ -131,7 +128,8 @@ class Partners extends React.Component {
 const mapStateToProps = state => {
 	return {
 		// state items
-		cleaners: state.propertyReducer.partners,
+		properties: state.propertyReducer.properties,
+		cleaners: state.propertyReducer.partners
 	};
 };
 
@@ -141,6 +139,7 @@ export default withRouter(
 		{
 			// actions
 			getPartners,
+			getUserProperties
 		}
 	)(withStyles(styles)(Partners))
 );
