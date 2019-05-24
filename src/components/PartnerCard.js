@@ -120,7 +120,7 @@ class PartnerCard extends React.Component {
 						}
 						action={
 							<Button
-								variant={this.state.open ? 'contained' : null}
+								variant={this.state.open ? 'contained' : 'outlined'}
 								onClick={this.handlePartnerHouse}
 							>
 								House Availability
