@@ -12,6 +12,7 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Paper from '@material-ui/core/Paper';
+import Icon from '@material-ui/core/Icon'
 
 import { withStyles } from '@material-ui/core';
 
@@ -28,6 +29,14 @@ const styles = {
 	},
 	contentTypography: {
 		margin: 'auto'
+	},
+	paper: {
+		maxWidth: 600,
+		margin: '20px auto',
+		padding: '5px',
+		'flex-direction': 'column',
+    	'align-items': 'center',
+    	display: 'flex',
 	}
 };
 
@@ -38,7 +47,6 @@ class PartnerCard extends React.Component {
 			open: false,
 			defaultproperties: [],
 			availableproperties: [],
-			updated: false
 		};
 	}
 
@@ -73,7 +81,7 @@ class PartnerCard extends React.Component {
 						subheader={this.props.partner.address}
 						avatar={
 							<Avatar>
-								<img className={classes.img} src={''} />
+								<img className={classes.img} src={this.props.partner.img_url} />
 							</Avatar>
 						}
 						action={
@@ -86,24 +94,35 @@ class PartnerCard extends React.Component {
 						}
 					/>
 					<CardContent className={classes.content}>
-						<Typography variant="h6" className={classes.contentTypography}>
-							Default Houses: {this.state.defaultproperties.length}
+						<Typography component="p" className={classes.contentTypography}>
+							Default Properties: {this.state.defaultproperties.length}
 						</Typography>
-						<Typography variant="h6" className={classes.contentTypography}>
-							Available Houses: {this.state.availableproperties.length}
+						<Typography component="p" className={classes.contentTypography}>
+							Available Properties: {this.state.availableproperties.length}
 						</Typography>
 					</CardContent>
 				</Card>
 
 				{this.state.open ? (
-					<Paper className={classes.card}>
+					<Paper className={classes.paper}>
 						<Typography variant="h6" component="h3">
-							This is a sheet of paper.
+							Default Properties
 						</Typography>
-						<Typography component="p">
-							Paper can be used to build surface or other elements for your
-							application.
+						{this.state.defaultproperties.length ? this.state.defaultproperties.map(property => {
+							 return <Typography key={property.property_id} component="p"> {property.property_name} </Typography>	
+						}) : <Typography component="p">This partner currently has no default properties</Typography>}
+						<Button variant="contained" color="secondary">
+							<Icon>add_circle</Icon>
+						</Button>
+						<Typography variant="h6" component="h3">
+							Available Properties
 						</Typography>
+						{this.state.availableproperties.length ? this.state.availableproperties.map(property => {
+							 return <Typography key={property.property_id} component="p"> {property.property_name} </Typography>	
+						}) : <Typography component="p">This partner currently has no available properties</Typography>}
+						<Button variant="contained" color="secondary">
+							<Icon>add_circle</Icon>
+						</Button>
 					</Paper>
 				) : null}
 			</div>
