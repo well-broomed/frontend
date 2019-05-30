@@ -164,9 +164,10 @@ function getSuggestionValue(suggestion) {
 const Property = props => {
 	const classes = useStyles();
 
-	const [newTaskDeadline, setNewTaskDeadline] = useState(10);
+	const [newTaskDeadline, setNewTaskDeadline] = useState(null);
 	const [state, setState] = useState({ newTask: '' });
 	const [stateSuggestions, setSuggestions] = React.useState([]);
+	const [newDeadline, setnewDeadline] = React.useState(null);
 
 	useEffect(() => {
 		props.getProperty(props.match.params.property_id);
@@ -225,6 +226,9 @@ const Property = props => {
 			}
 		}
 	}
+
+	console.log('afterStay:', afterStay);
+
 	return (
 		<PropertyContainer>
 			<BeforeAndDuringColumn>
@@ -360,6 +364,9 @@ const Property = props => {
 							<React.Fragment key={deadline[0].deadline}>
 								<AfterStaySelect
 									className={classes.root}
+									value={afterStayOptions.find(
+										option => +option.value === deadline[0].deadline
+									)}
 									options={afterStayOptions}
 								/>
 								<List className={classes.root}>
@@ -426,6 +433,57 @@ const Property = props => {
 							</React.Fragment>
 						)
 				)}
+				<Typography variant="h6" className={classes.title}>
+					Add "After Stay" List
+				</Typography>
+				<Select
+					className={classes.root}
+					value={newDeadline}
+					options={afterStayOptions.filter(option => !afterStay[+option.value])}
+					onChange={option => {
+						setnewDeadline(option);
+					}}
+				/>
+				{newDeadline &&
+					(newTaskDeadline === newDeadline.value ? (
+						<form onSubmit={handleSubmit}>
+							<Autosuggest
+								{...autosuggestProps}
+								inputProps={{
+									classes,
+									placeholder: 'Add a task',
+									value: state.newTask,
+									onChange: handleChange('newTask'),
+									autoFocus: true,
+									onBlur: () => setNewTaskDeadline(null),
+									onKeyDown: e => {
+										if (e.key === 'Escape') setNewTaskDeadline(null);
+									}
+								}}
+								theme={{
+									container: classes.container,
+									suggestionsContainerOpen: classes.suggestionsContainerOpen,
+									suggestionsList: classes.suggestionsList,
+									suggestion: classes.suggestion
+								}}
+								renderSuggestionsContainer={options => (
+									<Paper {...options.containerProps} square>
+										{options.children}
+									</Paper>
+								)}
+							/>
+						</form>
+					) : (
+						<IconButton
+							aria-label="AddCircle"
+							onClick={() => {
+								setNewTaskDeadline(newDeadline.value);
+								setState({ newTask: '' });
+							}}
+						>
+							<AddCircle className={classes.icon} style={{ fontSize: 30 }} />
+						</IconButton>
+					))}
 			</AfterColumn>
 		</PropertyContainer>
 	);
