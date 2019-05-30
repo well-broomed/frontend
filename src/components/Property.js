@@ -203,7 +203,11 @@ const Property = props => {
 
 		props.addTask(props.property.property_id, state.newTask, newTaskDeadline);
 
-		// clear newTaskDeadline on success somehow
+		// clear newTaskDeadline on success but not on failure (somehow)
+		setnewDeadline(null);
+		setNewTaskDeadline(null);
+
+		// at the moment, errors eat your input with no feedback
 	};
 
 	const handleDelete = task_id => {
