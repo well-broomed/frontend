@@ -234,222 +234,40 @@ const Property = props => {
 	console.log('afterStay:', afterStay);
 
 	return (
-		<PropertyContainer>
-			<BeforeAndDuringColumn>
-				<Typography variant="h6" className={classes.title}>
-					Before Stay
+		<React.Fragment>
+			<TopBar>
+				<Typography variant="h4">
+					{props.gettingProperty
+						? 'Loading...'
+						: props.getPropertyError
+						? 'Error'
+						: props.property.property_name}
 				</Typography>
-				<List className={classes.root}>
-					{beforeStay.map(({ task_id, text }) => (
-						<ListItemWrapper key={task_id}>
-							<ListItem role={undefined} button>
-								<ListItemText primary={text} />
-								<SecondaryActionWrapper>
-									<ListItemSecondaryAction
-										onClick={() => handleDelete(task_id)}
-									>
-										<IconButton aria-label="Delete">
-											<DeleteIcon />
-										</IconButton>
-									</ListItemSecondaryAction>
-								</SecondaryActionWrapper>
-							</ListItem>
-						</ListItemWrapper>
-					))}
-				</List>
-				{newTaskDeadline < 0 ? (
-					<form onSubmit={handleSubmit}>
-						<Autosuggest
-							{...autosuggestProps}
-							inputProps={{
-								classes,
-								placeholder: 'Add a task',
-								value: state.newTask,
-								onChange: handleChange('newTask'),
-								autoFocus: true,
-								onBlur: () => setNewTaskDeadline(null),
-								onKeyDown: e => {
-									if (e.key === 'Escape') setNewTaskDeadline(null);
-								}
-							}}
-							theme={{
-								container: classes.container,
-								suggestionsContainerOpen: classes.suggestionsContainerOpen,
-								suggestionsList: classes.suggestionsList,
-								suggestion: classes.suggestion
-							}}
-							renderSuggestionsContainer={options => (
-								<Paper {...options.containerProps} square>
-									{options.children}
-								</Paper>
-							)}
-						/>
-					</form>
-				) : (
-					<IconButton
-						aria-label="AddCircle"
-						onClick={() => {
-							setNewTaskDeadline(-1);
-							setState({ newTask: '' });
-						}}
-					>
-						<AddCircle className={classes.icon} style={{ fontSize: 30 }} />
-					</IconButton>
-				)}
-				<Typography variant="h6" className={classes.title}>
-					After Stay
-				</Typography>
-				<List className={classes.root}>
-					{duringStay.map(({ task_id, text }) => (
-						<ListItemWrapper key={task_id}>
-							<ListItem role={undefined} button>
-								<ListItemText primary={text} />
-								<SecondaryActionWrapper>
-									<ListItemSecondaryAction
-										onClick={() => handleDelete(task_id)}
-									>
-										<IconButton aria-label="Delete">
-											<DeleteIcon />
-										</IconButton>
-									</ListItemSecondaryAction>
-								</SecondaryActionWrapper>
-							</ListItem>
-						</ListItemWrapper>
-					))}
-				</List>
-				{newTaskDeadline === 0 ? (
-					<form onSubmit={handleSubmit}>
-						<Autosuggest
-							{...autosuggestProps}
-							inputProps={{
-								classes,
-								placeholder: 'Add a task',
-								value: state.newTask,
-								onChange: handleChange('newTask'),
-								autoFocus: true,
-								onBlur: () => setNewTaskDeadline(null),
-								onKeyDown: e => {
-									if (e.key === 'Escape') setNewTaskDeadline(null);
-								}
-							}}
-							theme={{
-								container: classes.container,
-								suggestionsContainerOpen: classes.suggestionsContainerOpen,
-								suggestionsList: classes.suggestionsList,
-								suggestion: classes.suggestion
-							}}
-							renderSuggestionsContainer={options => (
-								<Paper {...options.containerProps} square>
-									{options.children}
-								</Paper>
-							)}
-						/>
-					</form>
-				) : (
-					<IconButton
-						aria-label="AddCircle"
-						onClick={() => {
-							setNewTaskDeadline(0);
-							setState({ newTask: '' });
-						}}
-					>
-						<AddCircle className={classes.icon} style={{ fontSize: 30 }} />
-					</IconButton>
-				)}
-			</BeforeAndDuringColumn>
-
-			<AfterColumn>
-				<Typography variant="h6" className={classes.title}>
-					After Stay
-				</Typography>
-				{afterStay.map(
-					deadline =>
-						deadline && (
-							<React.Fragment key={deadline[0].deadline}>
-								<AfterStaySelect
-									className={classes.root}
-									value={afterStayOptions.find(
-										option => +option.value === deadline[0].deadline
-									)}
-									options={afterStayOptions}
-								/>
-								<List className={classes.root}>
-									{deadline.map(({ task_id, text }) => (
-										<ListItemWrapper key={task_id}>
-											<ListItem role={undefined} button>
-												<ListItemText primary={text} />
-												<SecondaryActionWrapper>
-													<ListItemSecondaryAction
-														onClick={() => handleDelete(task_id)}
-													>
-														<IconButton aria-label="Delete">
-															<DeleteIcon />
-														</IconButton>
-													</ListItemSecondaryAction>
-												</SecondaryActionWrapper>
-											</ListItem>
-										</ListItemWrapper>
-									))}
-								</List>
-								{newTaskDeadline === deadline[0].deadline ? (
-									<form onSubmit={handleSubmit}>
-										<Autosuggest
-											{...autosuggestProps}
-											inputProps={{
-												classes,
-												placeholder: 'Add a task',
-												value: state.newTask,
-												onChange: handleChange('newTask'),
-												autoFocus: true,
-												onBlur: () => setNewTaskDeadline(null),
-												onKeyDown: e => {
-													if (e.key === 'Escape') setNewTaskDeadline(null);
-												}
-											}}
-											theme={{
-												container: classes.container,
-												suggestionsContainerOpen:
-													classes.suggestionsContainerOpen,
-												suggestionsList: classes.suggestionsList,
-												suggestion: classes.suggestion
-											}}
-											renderSuggestionsContainer={options => (
-												<Paper {...options.containerProps} square>
-													{options.children}
-												</Paper>
-											)}
-										/>
-									</form>
-								) : (
-									<IconButton
-										aria-label="AddCircle"
-										onClick={() => {
-											setNewTaskDeadline(deadline[0].deadline);
-											setState({ newTask: '' });
-										}}
-									>
-										<AddCircle
-											className={classes.icon}
-											style={{ fontSize: 30 }}
-										/>
-									</IconButton>
-								)}
-							</React.Fragment>
-						)
-				)}
-				<Typography variant="h6" className={classes.title}>
-					Add "After Stay" List
-				</Typography>
-				<Select
-					className={classes.root}
-					value={newDeadline}
-					options={afterStayOptions.filter(option => !afterStay[+option.value])}
-					onChange={option => {
-						setnewDeadline(option);
-					}}
-				/>
-				{newDeadline &&
-					(newTaskDeadline === newDeadline.value ? (
+			</TopBar>
+			<PropertyContainer>
+				<BeforeAndDuringColumn>
+					<Typography variant="h6" className={classes.title}>
+						Before Stay
+					</Typography>
+					<List className={classes.root}>
+						{beforeStay.map(({ task_id, text }) => (
+							<ListItemWrapper key={task_id}>
+								<ListItem role={undefined} button>
+									<ListItemText primary={text} />
+									<SecondaryActionWrapper>
+										<ListItemSecondaryAction
+											onClick={() => handleDelete(task_id)}
+										>
+											<IconButton aria-label="Delete">
+												<DeleteIcon />
+											</IconButton>
+										</ListItemSecondaryAction>
+									</SecondaryActionWrapper>
+								</ListItem>
+							</ListItemWrapper>
+						))}
+					</List>
+					{newTaskDeadline < 0 ? (
 						<form onSubmit={handleSubmit}>
 							<Autosuggest
 								{...autosuggestProps}
@@ -481,15 +299,210 @@ const Property = props => {
 						<IconButton
 							aria-label="AddCircle"
 							onClick={() => {
-								setNewTaskDeadline(newDeadline.value);
+								setNewTaskDeadline(-1);
 								setState({ newTask: '' });
 							}}
 						>
 							<AddCircle className={classes.icon} style={{ fontSize: 30 }} />
 						</IconButton>
-					))}
-			</AfterColumn>
-		</PropertyContainer>
+					)}
+					<Typography variant="h6" className={classes.title}>
+						After Stay
+					</Typography>
+					<List className={classes.root}>
+						{duringStay.map(({ task_id, text }) => (
+							<ListItemWrapper key={task_id}>
+								<ListItem role={undefined} button>
+									<ListItemText primary={text} />
+									<SecondaryActionWrapper>
+										<ListItemSecondaryAction
+											onClick={() => handleDelete(task_id)}
+										>
+											<IconButton aria-label="Delete">
+												<DeleteIcon />
+											</IconButton>
+										</ListItemSecondaryAction>
+									</SecondaryActionWrapper>
+								</ListItem>
+							</ListItemWrapper>
+						))}
+					</List>
+					{newTaskDeadline === 0 ? (
+						<form onSubmit={handleSubmit}>
+							<Autosuggest
+								{...autosuggestProps}
+								inputProps={{
+									classes,
+									placeholder: 'Add a task',
+									value: state.newTask,
+									onChange: handleChange('newTask'),
+									autoFocus: true,
+									onBlur: () => setNewTaskDeadline(null),
+									onKeyDown: e => {
+										if (e.key === 'Escape') setNewTaskDeadline(null);
+									}
+								}}
+								theme={{
+									container: classes.container,
+									suggestionsContainerOpen: classes.suggestionsContainerOpen,
+									suggestionsList: classes.suggestionsList,
+									suggestion: classes.suggestion
+								}}
+								renderSuggestionsContainer={options => (
+									<Paper {...options.containerProps} square>
+										{options.children}
+									</Paper>
+								)}
+							/>
+						</form>
+					) : (
+						<IconButton
+							aria-label="AddCircle"
+							onClick={() => {
+								setNewTaskDeadline(0);
+								setState({ newTask: '' });
+							}}
+						>
+							<AddCircle className={classes.icon} style={{ fontSize: 30 }} />
+						</IconButton>
+					)}
+				</BeforeAndDuringColumn>
+
+				<AfterColumn>
+					<Typography variant="h6" className={classes.title}>
+						After Stay
+					</Typography>
+					{afterStay.map(
+						deadline =>
+							deadline && (
+								<React.Fragment key={deadline[0].deadline}>
+									<AfterStaySelect
+										className={classes.root}
+										value={afterStayOptions.find(
+											option => +option.value === deadline[0].deadline
+										)}
+										options={afterStayOptions}
+									/>
+									<List className={classes.root}>
+										{deadline.map(({ task_id, text }) => (
+											<ListItemWrapper key={task_id}>
+												<ListItem role={undefined} button>
+													<ListItemText primary={text} />
+													<SecondaryActionWrapper>
+														<ListItemSecondaryAction
+															onClick={() => handleDelete(task_id)}
+														>
+															<IconButton aria-label="Delete">
+																<DeleteIcon />
+															</IconButton>
+														</ListItemSecondaryAction>
+													</SecondaryActionWrapper>
+												</ListItem>
+											</ListItemWrapper>
+										))}
+									</List>
+									{newTaskDeadline === deadline[0].deadline ? (
+										<form onSubmit={handleSubmit}>
+											<Autosuggest
+												{...autosuggestProps}
+												inputProps={{
+													classes,
+													placeholder: 'Add a task',
+													value: state.newTask,
+													onChange: handleChange('newTask'),
+													autoFocus: true,
+													onBlur: () => setNewTaskDeadline(null),
+													onKeyDown: e => {
+														if (e.key === 'Escape') setNewTaskDeadline(null);
+													}
+												}}
+												theme={{
+													container: classes.container,
+													suggestionsContainerOpen:
+														classes.suggestionsContainerOpen,
+													suggestionsList: classes.suggestionsList,
+													suggestion: classes.suggestion
+												}}
+												renderSuggestionsContainer={options => (
+													<Paper {...options.containerProps} square>
+														{options.children}
+													</Paper>
+												)}
+											/>
+										</form>
+									) : (
+										<IconButton
+											aria-label="AddCircle"
+											onClick={() => {
+												setNewTaskDeadline(deadline[0].deadline);
+												setState({ newTask: '' });
+											}}
+										>
+											<AddCircle
+												className={classes.icon}
+												style={{ fontSize: 30 }}
+											/>
+										</IconButton>
+									)}
+								</React.Fragment>
+							)
+					)}
+					<Typography variant="h6" className={classes.title}>
+						Add "After Stay" List
+					</Typography>
+					<Select
+						className={classes.root}
+						value={newDeadline}
+						options={afterStayOptions.filter(
+							option => !afterStay[+option.value]
+						)}
+						onChange={option => {
+							setnewDeadline(option);
+						}}
+					/>
+					{newDeadline &&
+						(newTaskDeadline === newDeadline.value ? (
+							<form onSubmit={handleSubmit}>
+								<Autosuggest
+									{...autosuggestProps}
+									inputProps={{
+										classes,
+										placeholder: 'Add a task',
+										value: state.newTask,
+										onChange: handleChange('newTask'),
+										autoFocus: true,
+										onBlur: () => setNewTaskDeadline(null),
+										onKeyDown: e => {
+											if (e.key === 'Escape') setNewTaskDeadline(null);
+										}
+									}}
+									theme={{
+										container: classes.container,
+										suggestionsContainerOpen: classes.suggestionsContainerOpen,
+										suggestionsList: classes.suggestionsList,
+										suggestion: classes.suggestion
+									}}
+									renderSuggestionsContainer={options => (
+										<Paper {...options.containerProps} square>
+											{options.children}
+										</Paper>
+									)}
+								/>
+							</form>
+						) : (
+							<IconButton
+								aria-label="AddCircle"
+								onClick={() => {
+									setNewTaskDeadline(newDeadline.value);
+									setState({ newTask: '' });
+								}}
+							>
+								<AddCircle className={classes.icon} style={{ fontSize: 30 }} />
+							</IconButton>
+						))}
+				</AfterColumn>
+			</PropertyContainer>
+		</React.Fragment>
 	);
 };
 
@@ -518,6 +531,12 @@ export default withRouter(
 		}
 	)(withStyles(styles)(Property))
 );
+
+const TopBar = styled.div`
+	width: 100%;
+	display: flex;
+	padding: 10px 0 20px;
+`;
 
 const PropertyContainer = styled.div`
 	display: flex;
