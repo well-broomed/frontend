@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 // Redux
 import { connect } from 'react-redux';
 // Router
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link as RouterLink } from 'react-router-dom';
 
 // Components
 import { GuestList } from '../components';
@@ -18,6 +18,7 @@ import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -69,12 +70,48 @@ const Guest = props => {
 	return (
 		<React.Fragment>
 			<TopBar>
-				<Typography variant="h4">
-					{props.gettingGuest
-						? 'Loading...'
-						: props.getGuestError
-						? 'Error'
-						: props.guest.guest_name}
+				<LeftStuff>
+					<PropertyImg
+						// Change this to a file!
+						src={
+							props.guest.img_url ||
+							'https://images.freeimages.com/images/small-previews/7ea/house-1-1225482.jpg'
+						}
+						alt={props.guest.property_name || 'Property Image'}
+					/>
+
+					<TitleContainer>
+						<Typography variant="h3">
+							{props.guest.guest_name || null}
+						</Typography>
+
+						<Typography variant="h6">
+							{props.gettingGuest ? (
+								'Loading...'
+							) : props.getGuestError ? (
+								'Error'
+							) : (
+								<Link
+									component={RouterLink}
+									to={`/properties/${props.guest.property_id}`}
+								>
+									{props.guest.property_name}
+								</Link>
+							)}
+						</Typography>
+					</TitleContainer>
+				</LeftStuff>
+
+				<Typography variant="h1">
+					{props.guest.tasks &&
+						Math.floor(
+							(props.guest.tasks.reduce(
+								(sum, { completed }) => (completed ? sum + 1 : sum),
+								0
+							) /
+								props.guest.tasks.length) *
+								100
+						) + '%'}
 				</Typography>
 			</TopBar>
 
@@ -137,7 +174,27 @@ export default withRouter(
 const TopBar = styled.div`
 	width: 100%;
 	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
 	padding: 10px 0 20px;
+`;
+
+const LeftStuff = styled.div`
+	display: flex;
+	align-items: flex-end;
+`;
+
+const PropertyImg = styled.img`
+	width: 160px;
+	height: 120px;
+	background: lightgray;
+	object-fit: cover;
+`;
+
+const TitleContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	margin: 0 0 0 16px;
 `;
 
 const GuestContainer = styled.div`
