@@ -56,7 +56,7 @@ const styles = {
 };
 
 function Transition(props) {
-	return <Slide direction="down" {...props} />;
+	return <Slide direction="up" {...props} />;
 }
 
 class Properties extends React.Component {
@@ -77,22 +77,9 @@ class Properties extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			anchorEl: null,
 			addModal: false
 		};
 	}
-
-	handleMenuClick = event => {
-		this.setState({
-			anchorEl: event.currentTarget
-		});
-	};
-
-	handleClose = () => {
-		this.setState({
-			anchorEl: null
-		});
-	};
 
 	handleModalOpen = () => {
 		this.setState({

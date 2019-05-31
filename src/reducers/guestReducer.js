@@ -6,6 +6,7 @@ import {
 	UPDATED_GUEST_TASK,
 	UPDATE_GUEST_TASK_ERROR,
 	GUESTS_FETCHED,
+	GUEST_ADDED,
 } from '../actions';
 
 const initialState = {
@@ -36,6 +37,11 @@ const guestReducer = (state = initialState, action) => {
 				refreshGuests: false,
 			}
 
+		case GUEST_ADDED:
+			return {
+				...state,
+				refreshGuests: true,
+			}
 		
 
 		// updateGuestTask
