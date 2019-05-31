@@ -137,6 +137,10 @@ class Account extends React.Component {
             <div>
                 <Typography variant = 'h2'>Account</Typography>
                 {(this.props.userChecked && this.props.currentUser) ? (
+                    <div>
+                        {this.props.currentUser.auth_provider === 'auth0' ? (
+
+                        
                      <Card className = {classes.card}>
                      <CardActionArea>
                          <CardMedia className = {classes.media} 
@@ -220,9 +224,41 @@ class Account extends React.Component {
  
  
                  </Card>
-                ) : <h1>Lodaing...</h1>}
-               
+                 ) : (
+                    <div>
+                        <Card className = {classes.card}>
+                     <CardActionArea>
+                         <CardMedia className = {classes.media} 
+                         image = {this.props.currentUser.img_url} 
+                         title = 'Profile Picture'/>
+                     </CardActionArea>
+                     <CardContent>
+                        <Typography variant = 'overline'>Username</Typography>
+                        <Typography variant = 'h6'>{this.props.currentUser.user_name}</Typography>
+                        
 
+                        <Typography variant = 'overline'>Email</Typography>
+                        <Typography variant = 'h6'>{this.props.currentUser.email}</Typography>
+
+                        <Typography variant = 'overline'>Account Type</Typography>
+                        <Typography variant = 'h6'>{this.props.currentUser.role}</Typography>
+
+                        <Typography variant = 'overline'>Login Provider</Typography>
+                        <Typography variant = 'h6'>{this.props.currentUser.auth_provider}</Typography>
+                        <br></br>
+                        <Typography variant = 'subtitle2' color = 'textSecondary'>Because you are logged in via a social login provider, your user profile data is read-only.</Typography>
+                        
+                     </CardContent>
+ 
+                 </Card>
+                    </div>
+                )}
+
+                 </div>
+                ) : <h1>Loading...</h1>}
+               
+            
+            
 
             </div>
         )
