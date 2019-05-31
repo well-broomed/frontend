@@ -14,6 +14,9 @@ export const FETCHING_GUESTS = 'FETCHING_GUESTS';
 export const GUESTS_FETCHED = 'GUESTS_FETCHED';
 export const ERROR = 'ERROR';
 
+export const ADDING_GUEST = 'ADDING_GUEST';
+export const GUEST_ADDED = 'GUEST_ADDED';
+
 const backendUrl = process.env.REACT_APP_BACKEND_URL || `http://localhost:5000`;
 
 const token = localStorage.getItem('jwt');
@@ -69,7 +72,7 @@ export const fetchAllGuests = () => {
 		dispatch({type: FETCHING_GUESTS});
 
 		endpoint.then(res => {
-			console.log(res);
+			console.log(res.data, 'fetch guests res');
 			dispatch({type: GUESTS_FETCHED, payload: res.data.guests});
 	
 		}).catch(error => {
@@ -79,6 +82,19 @@ export const fetchAllGuests = () => {
 	}
 }
 
-export const addGuest = (guest) => {
+export const addGuest = (property_id, guest) => {
 
+	const endpoint = axios.post(`${backendUrl}/api/guests/${property_id}`, guest, options);
+
+	return dispatch => {
+		dispatch({type: ADDING_GUEST});
+
+		endpoint.then(res => {
+			console.log(res.data, 'add guest res');
+			dispatch({type: GUEST_ADDED, payload: res.data}) // payload is new guest ID
+		}).catch(error => {
+			console.log(error);
+			dispatch({type: ERROR});
+		})
+	}
 }
