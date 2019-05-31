@@ -26,9 +26,6 @@ import Paper from '@material-ui/core/Paper';
 
 import Typography from '@material-ui/core/Typography';
 
-import IconButton from '@material-ui/core/IconButton';
-import AddCircle from '@material-ui/icons/AddCircle';
-
 import Autosuggest from 'react-autosuggest';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
@@ -179,7 +176,7 @@ const Property = props => {
 		setSuggestions([]);
 	};
 
-	const handleChange = () => (event, { newValue }) => {
+	const handleChange = (event, { newValue }) => {
 		setNewTask(newValue);
 	};
 
@@ -194,8 +191,6 @@ const Property = props => {
 
 	const handleSubmit = (newTask, deadline) => {
 		props.addTask(props.property.property_id, newTask, deadline);
-
-		setNewDeadline(null);
 
 		// at the moment, errors eat your input with no feedback
 	};
@@ -306,14 +301,20 @@ const Property = props => {
 						}}
 					/>
 					{newDeadline && (
-						<form onSubmit={() => handleSubmit(newTask, newDeadline.value)}>
+						<form
+							onSubmit={() => {
+								handleSubmit(newTask, newDeadline.value);
+								setNewDeadline(null);
+							}}
+						>
+							{/* onChange is kinda choppy here compared to the other lists. Not sure why. */}
 							<Autosuggest
 								{...autosuggestProps}
 								inputProps={{
 									classes,
 									placeholder: 'Add a task',
 									value: newTask,
-									onChange: handleChange('newTask'),
+									onChange: handleChange,
 									autoFocus: true,
 									onBlur: () => setNewDeadline(null),
 									onKeyDown: e => {
