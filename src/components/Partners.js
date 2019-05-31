@@ -66,6 +66,11 @@ class Partners extends React.Component {
 		this.props.getPartners();
 	}
 
+	componentDidMount() {
+		this.props.getUserProperties();
+		this.props.getPartners();
+	}
+
 	handleInputChange = event => {
 		this.setState({
 			[event.target.name]: event.target.value

@@ -13,6 +13,7 @@ import {
 	Property,
 	Partners,
 	Guests,
+	Guest,
 	Reports,
 	Account,
 	Callback,
@@ -33,7 +34,7 @@ const ComponentContainer = styled.div`
 class App extends Component {
 	componentDidMount() {
 		if (!this.props.userInfo) {
-			this.props.checkIfUserExists(null);
+			this.props.checkIfUserExists(localStorage.getItem('accountType') || localStorage.getItem('role'));
 		}
 	}
 
@@ -50,6 +51,7 @@ class App extends Component {
 						<Route path="/properties/:property_id" component={Property} />
 						<Route exact path="/partners" component={Partners} />
 						<Route exact path="/guests" component={Guests} />
+						<Route path="/guests/:guest_id" component={Guest} />
 						<Route exact path="/reports" component={Reports} />
 						<Route exact path="/account" component={Account} />
 						<Route path="/callback" component={Callback} />

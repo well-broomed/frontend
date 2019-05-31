@@ -16,7 +16,17 @@ export const CLEANERS_FETCHED = 'CLEANERS_FETCHED';
 export const UPDATING_CLEANER = 'UPDATING_CLEANER';
 export const CLEANER_UPDATED = 'CLEANER_UPDATED';
 export const PARTNERS_FETCHED = 'PARTNERS_FETCHED';
-export const FETCHING_PARTNERS = 'FETCHING_PARTNERS'
+export const FETCHING_PARTNERS = 'FETCHING_PARTNERS';
+
+// addTask
+export const ADDING_TASK = 'ADDING_TASK';
+export const ADDED_TASK = 'ADDED_TASK';
+export const ADD_TASK_ERROR = 'ADD_TASK_ERROR';
+
+// removeTask
+export const DELETING_TASK = 'DELETING_TASK';
+export const DELETED_TASK = 'DELETED_TASK';
+export const DELETE_TASK_ERROR = 'DELETE_TASK_ERROR';
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || `http://localhost:5000`;
 
@@ -187,13 +197,14 @@ export const changeAvailableCleaner = (property_id, cleaner_id, available) =>{
         endpoint.then(res => {
             console.log('cleaner update', res.data);
 
-            dispatch({type: CLEANER_UPDATED, payload: res.data.updated});
-        }).catch(err => {
-            console.log(err);
-            dispatch({type: ERROR});
-        })
-    }
-}
+				dispatch({ type: CLEANER_UPDATED, paload: res.data.updated });
+			})
+			.catch(err => {
+				console.log(err);
+				dispatch({ type: ERROR });
+			});
+	};
+};
 
 export const changeCleaner = (property_id, cleaner_id) => {
 
@@ -222,3 +233,54 @@ export const changeCleaner = (property_id, cleaner_id) => {
         })
     }
 }
+
+// Tasks
+export const addTask = (property_id, text, deadline) => {
+	const token = localStorage.getItem('jwt');
+	const userInfo = localStorage.getItem('userInfo');
+
+	const options = {
+		headers: { Authorization: `Bearer ${token}`, 'user-info': userInfo }
+	};
+
+	return dispatch => {
+		dispatch({ type: ADDING_TASK });
+
+		axios
+			.post(
+				`${backendUrl}/api/tasks/${property_id}`,
+				{ text, deadline },
+				options
+			)
+			.then(res => {
+				dispatch({ type: ADDED_TASK, payload: res.data.task });
+			})
+			.catch(error => {
+				console.log(error);
+				dispatch({ type: ADD_TASK_ERROR, payload: error });
+			});
+	};
+};
+
+export const deleteTask = task_id => {
+	const token = localStorage.getItem('jwt');
+	const userInfo = localStorage.getItem('userInfo');
+
+	const options = {
+		headers: { Authorization: `Bearer ${token}`, 'user-info': userInfo }
+	};
+
+	return dispatch => {
+		dispatch({ type: DELETING_TASK });
+
+		axios
+			.delete(`${backendUrl}/api/tasks/${task_id}`, options)
+			.then(res => {
+				dispatch({ type: DELETED_TASK, payload: res.data.task_id });
+			})
+			.catch(error => {
+				console.log(error);
+				dispatch({ type: DELETE_TASK_ERROR, payload: error });
+			});
+	};
+};

@@ -3,6 +3,8 @@ import axios from 'axios';
 export const ERROR = 'ERROR';
 export const CHECKING_USER = 'CHECKING_USER';
 export const USER_CHECKED = 'USER_CHECKED';
+export const UPDATING_USER = 'UPDATING_USER';
+export const USER_UPDATED = 'USER_UPDATED';
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || `http://localhost:5000`
 
@@ -36,6 +38,31 @@ export const checkIfUserExists = (role) => {
         }).catch(err => {
             console.log(err);
             dispatch({type: ERROR})
+        })
+    }
+}
+
+export const updateUserProfile = (user_id, changes) => {
+    
+    let token = localStorage.getItem('jwt');
+	let userInfo = localStorage.getItem('userInfo');
+
+	let options = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+			'user-info': userInfo
+		}
+	};
+    const endpoint = axios.put(`${backendUrl}/api/users/${user_id}`, changes, options);
+
+    return dispatch => {
+        dispatch({type: UPDATING_USER});
+
+        endpoint.then(res => {
+            dispatch({type: USER_UPDATED, payload: res.data});
+        }).catch(err => {
+            console.log(err);
+            dispatch({type: ERROR});
         })
     }
 }

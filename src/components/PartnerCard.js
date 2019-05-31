@@ -3,7 +3,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 //Redux actions
-import { changeCleaner, changeAvailableCleaner,getUserProperties } from '../actions/propertyActions'
+import { changeCleaner, changeAvailableCleaner } from '../actions/propertyActions'
 
 //Material-ui
 import Button from '@material-ui/core/Button';
@@ -219,7 +219,7 @@ class PartnerCard extends React.Component {
 const mapStateToProps = state => {
 	return {
 		// state items
-		properties: state.propertyReducer.properties,
+		properties: state.propertyReducer.properties
 	};
 };
 
