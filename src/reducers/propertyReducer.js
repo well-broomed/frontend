@@ -7,7 +7,13 @@ import {
 	CLEANER_UPDATED,
 	GETTING_PROPERTY,
 	GOT_PROPERTY,
-	GET_PROPERTY_ERROR
+	GET_PROPERTY_ERROR,
+	ADDING_TASK,
+	ADDED_TASK,
+	ADD_TASK_ERROR,
+	DELETING_TASK,
+	DELETED_TASK,
+	DELETE_TASK_ERROR
 } from '../actions';
 
 const initialState = {
@@ -44,11 +50,50 @@ const propertyReducer = (state = initialState, action) => {
 			return { ...state, cleaners: action.payload };
 
 		case CLEANER_UPDATED:
-			return {...state, refreshCleaners: true}
-		
+			return { ...state, refreshCleaners: true };
+
 		case PARTNERS_FETCHED:
-			return {...state, partners: action.payload};
-		
+			return { ...state, partners: action.payload };
+
+		// Tasks
+		case ADDING_TASK:
+			return { ...state, addingTask: true };
+
+		case ADDED_TASK:
+			return {
+				...state,
+				addingTask: undefined,
+				property: {
+					...state.property,
+					tasks: [...state.property.tasks, action.payload]
+				}
+			};
+
+		case ADD_TASK_ERROR:
+			return { ...state, addingTask: undefined, addTaskError: action.payload };
+
+		case DELETING_TASK:
+			return { ...state, deleting_task: true };
+
+		case DELETED_TASK:
+			return {
+				...state,
+				deleting_task: undefined,
+				property: {
+					...state.property,
+					tasks: state.property.tasks.filter(
+						({ task_id }) => task_id !== parseInt(action.payload)
+					)
+				}
+			};
+
+		case DELETE_TASK_ERROR:
+			return {
+				...state,
+				deleting_task: undefined,
+				deleteTaskError: action.payload
+			};
+
 		default:
 			return state;
 	}
