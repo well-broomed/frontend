@@ -5,6 +5,8 @@ import {connect} from 'react-redux';
 // Router
 import {withRouter} from 'react-router-dom';
 
+import {updateUserProfile} from '../actions/index';
+
 // FlexBox
 
 // Card
@@ -50,15 +52,18 @@ const styles = {
 
 class Account extends React.Component {
 
-    // set default input values
     componentDidUpdate(prevProps){
-        if(this.props.currentUser !== prevProps.currentUser){
+        if(this.props.userChecked !== prevProps.userChecked){
             this.setState({
-                username: this.props.currentUser.user_name
+                username: this.props.currentUser.user_name,
+                email: this.props.currentUser.email,
+                passwordOpen: false,
+                usernameOpen: false,
+                emailOpen: false,
             })
         }
     }
-
+    // set default input values
     constructor(props){
         super(props);
         this.state = {
@@ -104,7 +109,26 @@ class Account extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        console.log('submit');
+        let changes = {};
+        let user_id = this.props.currentUser.user_id;
+        if(event.target.name === 'username'){
+            changes.user_name = this.state.username;
+            this.props.updateUserProfile(user_id, changes);
+        } else if(event.target.name === 'password'){
+            if(this.state.password1 === this.state.password2){
+                changes.password = this.state.password2;
+                this.props.updateUserProfile(user_id, changes);
+            } else {
+                window.alert('Passwords must match! Please re-enter your passwords.');
+            }
+        } else if (event.target.name = 'email'){
+            /**
+             * TODO: MAKE SURE THE EMAIL IS A VALID ADDRESS
+             */
+
+            changes.email = this.state.email;
+            this.props.updateUserProfile(user_id, changes);
+        }
     }
 
     render(){
@@ -112,7 +136,7 @@ class Account extends React.Component {
         return (
             <div>
                 <Typography variant = 'h2'>Account</Typography>
-                {this.props.currentUser ? (
+                {(this.props.userChecked && this.props.currentUser) ? (
                      <Card className = {classes.card}>
                      <CardActionArea>
                          <CardMedia className = {classes.media} 
@@ -130,7 +154,7 @@ class Account extends React.Component {
 
                         
                         {this.state.usernameOpen ? (
-                            <form onSubmit = {this.handleSubmit}>
+                            <form name = 'username' onSubmit = {this.handleSubmit}>
                             <FlexColNoWrap>
                             <TextField variant = 'outlined' label = 'New Username' name = 'username' value = {this.state.username} onChange = {this.handleInput}></TextField>
                         
@@ -144,7 +168,26 @@ class Account extends React.Component {
                         
 
                         <Typography variant = 'overline'>Email</Typography>
-                        <Typography variant = 'h6'>{this.props.currentUser.email}</Typography>
+                        {!this.state.emailOpen ? (
+                            <FlexRowNoWrap>
+                            <Typography variant = 'h6'>{this.props.currentUser.email}</Typography>
+                            <IconButton onClick = {this.toggleInput} name = 'emailOpen'><EditTwoTone name = 'emailOpen'/></IconButton>
+                            </FlexRowNoWrap>
+                        ) : null}
+
+                        
+                        {this.state.emailOpen ? (
+                            <form name = 'email' onSubmit = {this.handleSubmit}>
+                            <FlexColNoWrap>
+                            <TextField variant = 'outlined' label = 'New Email' name = 'email' value = {this.state.email} onChange = {this.handleInput}></TextField>
+                        
+                            <FlexRowNoWrap>
+                            <Button onClick = {this.toggleInput} name = 'emailOpen'><div name = 'emailOpen' onClick = {this.toggleInput}>Cancel</div></Button>
+                            <Button type = 'submit'>Submit</Button>
+                            </FlexRowNoWrap>
+                            </FlexColNoWrap>
+                        </form>
+                        ) : null}
 
                         <Typography variant = 'overline'>Account Type</Typography>
                         <Typography variant = 'h6'>{this.props.currentUser.role}</Typography>
@@ -160,10 +203,10 @@ class Account extends React.Component {
                         ) : null}
                         
                         {this.state.passwordOpen ? (
-                            <form onSubmit = {this.handleSubmit}>
+                            <form name = 'password' onSubmit = {this.handleSubmit}>
                             <FlexColNoWrap>
-                                <TextField variant = 'outlined' label = 'New Password' type = 'password' name = 'password1' value = {this.state.password1}></TextField>
-                                <TextField variant = 'outlined' label = 'New Password (Again)' type = 'password' name = 'password2' value = {this.state.password2}></TextField>    
+                                <TextField variant = 'outlined' label = 'New Password' type = 'password' name = 'password1' value = {this.state.password1} onChange = {this.handleInput}></TextField>
+                                <TextField variant = 'outlined' label = 'New Password (Again)' type = 'password' name = 'password2' value = {this.state.password2} onChange = {this.handleInput}></TextField>    
                                 
                                 <FlexRowNoWrap>
                                     <Button><div name = 'passwordOpen' onClick = {this.toggleInput}>Cancel</div></Button>
@@ -177,7 +220,7 @@ class Account extends React.Component {
  
  
                  </Card>
-                ) : null}
+                ) : <h1>Lodaing...</h1>}
                
 
 
@@ -190,11 +233,13 @@ class Account extends React.Component {
 const mapStateToProps = state => {
     return {
         // state items
-        currentUser: state.authReducer.currentUser
+        currentUser: state.authReducer.currentUser,
+        userChecked: state.authReducer.userChecked,
     }
 }
 
 export default withRouter(connect(mapStateToProps, {
     // actions
+    updateUserProfile,
     
 })(withStyles(styles)(Account)));
