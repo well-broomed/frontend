@@ -3,7 +3,10 @@ import React, { useEffect } from 'react';
 // Redux
 import { connect } from 'react-redux';
 // Router
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link as RouterLink } from 'react-router-dom';
+
+// Components
+import { GuestList } from '../components';
 
 // Actions
 import { getGuest, updateGuestTask } from '../actions';
@@ -15,13 +18,7 @@ import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
-
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-
-import Checkbox from '@material-ui/core/Checkbox';
+import Link from '@material-ui/core/Link';
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -66,118 +63,85 @@ const Guest = props => {
 		}
 	}
 
+	const checkHandler = (task_id, completed) => {
+		props.updateGuestTask(props.guest.guest_id, task_id, completed);
+	};
+
 	return (
 		<React.Fragment>
 			<TopBar>
-				<Typography variant="h4">
-					{props.gettingGuest
-						? 'Loading...'
-						: props.getGuestError
-						? 'Error'
-						: props.guest.guest_name}
+				<LeftStuff>
+					<PropertyImg
+						// Change this to a file!
+						src={
+							props.guest.img_url ||
+							'https://images.freeimages.com/images/small-previews/7ea/house-1-1225482.jpg'
+						}
+						alt={props.guest.property_name || 'Property Image'}
+					/>
+
+					<TitleContainer>
+						<Typography variant="h3">
+							{props.guest.guest_name || null}
+						</Typography>
+
+						<Typography variant="h6">
+							{props.gettingGuest ? (
+								'Loading...'
+							) : props.getGuestError ? (
+								'Error'
+							) : (
+								<Link
+									component={RouterLink}
+									to={`/properties/${props.guest.property_id}`}
+								>
+									{props.guest.property_name}
+								</Link>
+							)}
+						</Typography>
+					</TitleContainer>
+				</LeftStuff>
+
+				<Typography variant="h1">
+					{props.guest.tasks &&
+						Math.floor(
+							(props.guest.tasks.reduce(
+								(sum, { completed }) => (completed ? sum + 1 : sum),
+								0
+							) /
+								props.guest.tasks.length) *
+								100
+						) + '%'}
 				</Typography>
 			</TopBar>
+
 			<GuestContainer>
 				<BeforeAndDuringColumn>
-					<Typography variant="h6" className={classes.title}>
-						Before Stay
-					</Typography>
-					<List className={classes.root}>
-						{beforeStay.map(({ task_id, text, completed }) => (
-							<ListItem
-								role={undefined}
-								key={task_id}
-								dense
-								button
-								onClick={() => {
-									props.updateGuestTask(
-										props.guest.guest_id,
-										task_id,
-										!completed
-									);
-								}}
-							>
-								<ListItemIcon>
-									<Checkbox
-										edge="start"
-										checked={completed}
-										tabIndex={-1}
-										disableRipple
-									/>
-								</ListItemIcon>
-								<ListItemText primary={text} />
-							</ListItem>
-						))}
-					</List>
+					<GuestList
+						classes={classes}
+						listTitle="Before Stay"
+						taskList={beforeStay}
+						checkHandler={checkHandler}
+					/>
 
-					<Typography variant="h6" className={classes.title}>
-						During Stay
-					</Typography>
-					<List className={classes.root}>
-						{duringStay.map(({ task_id, text, completed }) => (
-							<ListItem
-								role={undefined}
-								key={task_id}
-								dense
-								button
-								onClick={() => {
-									props.updateGuestTask(
-										props.guest.guest_id,
-										task_id,
-										!completed
-									);
-								}}
-							>
-								<ListItemIcon>
-									<Checkbox
-										edge="start"
-										checked={completed}
-										tabIndex={-1}
-										disableRipple
-									/>
-								</ListItemIcon>
-								<ListItemText primary={text} />
-							</ListItem>
-						))}
-					</List>
+					<GuestList
+						classes={classes}
+						listTitle="During Stay"
+						taskList={duringStay}
+						checkHandler={checkHandler}
+					/>
 				</BeforeAndDuringColumn>
 
 				<AfterColumn>
 					{afterStay.map(
 						(list, deadline) =>
 							list && (
-								<React.Fragment key={deadline}>
-									<Typography variant="h6" className={classes.title}>
-										{hourConverter(deadline)}
-									</Typography>
-									<List className={classes.root}>
-										{list.map(({ task_id, text, completed }) => (
-											<ListItem
-												role={undefined}
-												key={task_id}
-												dense
-												button
-												onClick={() => {
-													props.updateGuestTask(
-														props.guest.guest_id,
-														task_id,
-														!completed
-													);
-												}}
-											>
-												<ListItemIcon>
-													<Checkbox
-														edge="start"
-														checked={completed}
-														tabIndex={-1}
-														disableRipple
-													/>
-												</ListItemIcon>
-												<ListItemText primary={text} />
-											</ListItem>
-										))}
-									</List>
-								</React.Fragment>
+								<GuestList
+									classes={classes}
+									listTitle={hourConverter(deadline)}
+									taskList={list}
+									checkHandler={checkHandler}
+								/>
 							)
 					)}
 				</AfterColumn>
@@ -210,7 +174,27 @@ export default withRouter(
 const TopBar = styled.div`
 	width: 100%;
 	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
 	padding: 10px 0 20px;
+`;
+
+const LeftStuff = styled.div`
+	display: flex;
+	align-items: flex-end;
+`;
+
+const PropertyImg = styled.img`
+	width: 160px;
+	height: 120px;
+	background: lightgray;
+	object-fit: cover;
+`;
+
+const TitleContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	margin: 0 0 0 16px;
 `;
 
 const GuestContainer = styled.div`
