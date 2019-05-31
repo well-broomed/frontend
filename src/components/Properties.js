@@ -30,7 +30,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
 // Actions
-import { getUserProperties } from '../actions';
+import { getUserProperties, getCleaners } from '../actions';
 import PropertyPreview from './PropertyPreview';
 
 const TopBar = styled.div`
@@ -64,9 +64,13 @@ class Properties extends React.Component {
 		this.props.getUserProperties();
 	}
 
-	componentDidUpdate() {
-		if (this.props.refreshProperties) {
+	componentDidUpdate(prevProps) {
+		if (prevProps.refreshProperties !== this.props.refreshProperties) {
 			this.props.getUserProperties();
+		}
+
+		if(prevProps.refreshCleaners !== this.props.refreshCleaners){
+			this.props.getCleaners();
 		}
 	}
 
@@ -153,7 +157,8 @@ const mapStateToProps = state => {
 		properties: state.propertyReducer.properties,
 		refreshProperties: state.propertyReducer.refreshProperties,
 		cleaners: state.propertyReducer.cleaners,
-		userInfo: state.authReducer.userInfo
+		userInfo: state.authReducer.userInfo,
+		refreshCleaners: state.propertyReducer.refreshCleaners
 	};
 };
 
@@ -162,7 +167,8 @@ export default withRouter(
 		mapStateToProps,
 		{
 			// actions
-			getUserProperties
+			getUserProperties,
+			getCleaners,
 		}
 	)(withStyles(styles)(Properties))
 );
