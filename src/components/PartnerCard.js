@@ -3,7 +3,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 //Redux actions
-import { changeCleaner } from '../actions/propertyActions'
+import { changeCleaner, changeAvailableCleaner,getUserProperties } from '../actions/propertyActions'
 
 //Material-ui
 import Button from '@material-ui/core/Button';
@@ -64,17 +64,18 @@ class PartnerCard extends React.Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		if (prevProps.properties !== this.props.properties || this.state.properties !== this.props.properties) {
+		if (prevProps.properties !== this.props.properties) {
 			const properties = this.props.properties;
-			const defaultproperties = this.props.properties.filter(
-				property => property.cleaner_id === this.props.partner.user_id
-			);
+			let defaultproperties = [];
+			let availableproperties = [];
 
-			const availableproperties = defaultproperties.filter(property =>
-				property.available_cleaners.some(
-					cleaner => cleaner['cleaner_id'] === this.props.partner.user_id
-				)
-			);
+			properties.map(property => {
+				if(property.cleaner_id === this.props.partner.user_id)
+					defaultproperties.push(property);
+				if(property.available_cleaners.some(cleaner => cleaner['cleaner_id'] === this.props.partner.user_id))
+					availableproperties.push(property);
+			})
+
 			this.setState({ defaultproperties, availableproperties, properties})
 		}
 	}
@@ -93,9 +94,13 @@ class PartnerCard extends React.Component {
 		this.setState({availableDialog:true});
 	}
 
-	handleAvailableDialogClose = property_id => {
-		if(property_id)
-			//Change available cleaner function would go here
+	handleAvailableDialogClose = property => {
+		if(property){
+			if(this.state.availableproperties.includes(property))
+				this.props.changeAvailableCleaner(property.property_id, this.props.partner.user_id, false)
+			else
+				this.props.changeAvailableCleaner(property.property_id, this.props.partner.user_id, true)
+		}
 		this.setState({availableDialog:false});
 	}
 
@@ -165,7 +170,7 @@ class PartnerCard extends React.Component {
 							<DialogTitle>Your Properties</DialogTitle>
 							<List>
 								{this.props.properties.map(property => (
-									<ListItem button onClick={() => this.handleDefaultDialogClose(property.property_id)} key={property.property_id}>
+									<ListItem button selected={this.state.defaultproperties.includes(property) ? true : false } onClick={() => this.handleDefaultDialogClose(property.property_id)} key={property.property_id}>
 									<ListItemText primary={property.property_name}/>
 									</ListItem>
 								))}
@@ -198,7 +203,7 @@ class PartnerCard extends React.Component {
 							<DialogTitle>Your Properties</DialogTitle>
 							<List>
 								{this.props.properties.map(property => (
-									<ListItem button onClick={() => this.handleAvailableDialogClose(property.property_id)} key={property.property_id}>
+									<ListItem button selected={this.state.availableproperties.includes(property) ? true : false } onClick={() => this.handleAvailableDialogClose(property)} key={property.property_id}>
 									<ListItemText primary={property.property_name}/>
 									</ListItem>
 								))}
@@ -214,7 +219,7 @@ class PartnerCard extends React.Component {
 const mapStateToProps = state => {
 	return {
 		// state items
-		properties: state.propertyReducer.properties
+		properties: state.propertyReducer.properties,
 	};
 };
 
@@ -223,7 +228,8 @@ export default withRouter(
 		mapStateToProps,
 		{
 			// actions
-			changeCleaner
+			changeCleaner,
+			changeAvailableCleaner
 		}
 	)(withStyles(styles)(PartnerCard))
 );

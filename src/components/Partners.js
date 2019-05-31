@@ -49,8 +49,16 @@ class Partners extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			partners: this.props.cleaners,
 			email: ''
 		};
+	}
+	
+	componentDidUpdate(prevProps){
+		if(this.props.refreshCleaners){
+			this.props.getUserProperties();
+			this.props.getPartners();
+		}
 	}
 
 	componentDidMount() {
@@ -129,7 +137,8 @@ const mapStateToProps = state => {
 	return {
 		// state items
 		properties: state.propertyReducer.properties,
-		cleaners: state.propertyReducer.partners
+		cleaners: state.propertyReducer.partners,
+		refreshCleaners: state.propertyReducer.refreshCleaners
 	};
 };
 
