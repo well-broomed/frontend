@@ -16,13 +16,14 @@ export const ERROR = 'ERROR';
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || `http://localhost:5000`;
 
-export const getGuest = guest_id => {
-	const token = localStorage.getItem('jwt');
-	const userInfo = localStorage.getItem('userInfo');
+const token = localStorage.getItem('jwt');
+const userInfo = localStorage.getItem('userInfo');
 
-	const options = {
-		headers: { Authorization: `Bearer ${token}`, 'user-info': userInfo }
-	};
+const options = {
+	headers: { Authorization: `Bearer ${token}`, 'user-info': userInfo }
+};
+
+export const getGuest = guest_id => {
 
 	return dispatch => {
 		dispatch({ type: GETTING_GUEST });
@@ -40,12 +41,6 @@ export const getGuest = guest_id => {
 };
 
 export const updateGuestTask = (guest_id, task_id, completed) => {
-	const token = localStorage.getItem('jwt');
-	const userInfo = localStorage.getItem('userInfo');
-
-	const options = {
-		headers: { Authorization: `Bearer ${token}`, 'user-info': userInfo }
-	};
 
 	return dispatch => {
 		dispatch({ type: UPDATING_GUEST_TASK });
@@ -67,12 +62,6 @@ export const updateGuestTask = (guest_id, task_id, completed) => {
 };
 
 export const fetchAllGuests = () => {
-	const token = localStorage.getItem('jwt');
-	const userInfo = localStorage.getItem('userInfo');
-
-	const options = {
-		headers: { Authorization: `Bearer ${token}`, 'user-info': userInfo }
-	};
 
 	const endpoint = axios.get(`${backendUrl}/api/guests`, options);
 
@@ -88,4 +77,8 @@ export const fetchAllGuests = () => {
 			dispatch({type: ERROR});
 		})
 	}
+}
+
+export const addGuest = (guest) => {
+
 }
