@@ -4,6 +4,7 @@ import {
 	PROPERTIES_FETCHED,
 	PROPERTY_ADDED,
 	CLEANERS_FETCHED,
+	FETCHING_PARTNERS,
 	PARTNERS_FETCHED,
 	CLEANER_UPDATED,
 	GETTING_PROPERTY,
@@ -52,6 +53,9 @@ const propertyReducer = (state = initialState, action) => {
 
 		case CLEANER_UPDATED:
 			return { ...state, refreshCleaners: true };
+		
+		case FETCHING_PARTNERS:
+			return {...state, refreshCleaners: false};
 
 		case PARTNERS_FETCHED:
 			return { ...state, partners: action.payload };

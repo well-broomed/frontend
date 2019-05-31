@@ -153,55 +153,49 @@ export const getCleaners = () => {
 };
 
 export const getPartners = () => {
+
+    let token = localStorage.getItem('jwt');
+    let userInfo = localStorage.getItem('userInfo');
+
+    let options = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'user-info': userInfo,
+        }
+    }
+
+    const endpoint = axios.get(`${backendUrl}/api/cleaners/partners`, options);
+
+    return dispatch => {
+        dispatch({type: FETCHING_PARTNERS});
+
+        endpoint.then(res => {
+            dispatch({type: PARTNERS_FETCHED, payload: res.data.partners});
+        }).catch(err => {
+            console.log(err);
+            dispatch({type: ERROR})
+        })
+    }
+}
+
+export const changeAvailableCleaner = (property_id, cleaner_id, available) =>{
 	let token = localStorage.getItem('jwt');
-	let userInfo = localStorage.getItem('userInfo');
+    let userInfo = localStorage.getItem('userInfo');
 
-	let options = {
-		headers: {
-			Authorization: `Bearer ${token}`,
-			'user-info': userInfo
-		}
-	};
+    let options = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'user-info': userInfo,
+        }
+    }
 
-	const endpoint = axios.get(`${backendUrl}/api/cleaners/partners`, options);
+    const endpoint = axios.put(`${backendUrl}/api/properties/${property_id}/available/${cleaner_id}`, {available}, options)
 
-	return dispatch => {
-		dispatch({ type: FETCHING_PARTNERS });
+    return dispatch => {
+        dispatch({type: UPDATING_CLEANER});
 
-		endpoint
-			.then(res => {
-				dispatch({ type: PARTNERS_FETCHED, payload: res.data.partners });
-			})
-			.catch(err => {
-				console.log(err);
-				dispatch({ type: ERROR });
-			});
-	};
-};
-
-export const changeCleaner = (property_id, cleaner_id) => {
-	let token = localStorage.getItem('jwt');
-	let userInfo = localStorage.getItem('userInfo');
-
-	let options = {
-		headers: {
-			Authorization: `Bearer ${token}`,
-			'user-info': userInfo
-		}
-	};
-
-	const endpoint = axios.put(
-		`${backendUrl}/api/cleaners/update/${property_id}`,
-		{ cleaner_id },
-		options
-	);
-
-	return dispatch => {
-		dispatch({ type: UPDATING_CLEANER });
-
-		endpoint
-			.then(res => {
-				console.log('cleaner update', res.data);
+        endpoint.then(res => {
+            console.log('cleaner update', res.data);
 
 				dispatch({ type: CLEANER_UPDATED, paload: res.data.updated });
 			})
@@ -211,6 +205,34 @@ export const changeCleaner = (property_id, cleaner_id) => {
 			});
 	};
 };
+
+export const changeCleaner = (property_id, cleaner_id) => {
+
+    let token = localStorage.getItem('jwt');
+    let userInfo = localStorage.getItem('userInfo');
+
+    let options = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'user-info': userInfo,
+        }
+    }
+
+    const endpoint = axios.put(`${backendUrl}/api/cleaners/update/${property_id}`, {cleaner_id}, options)
+
+    return dispatch => {
+        dispatch({type: UPDATING_CLEANER});
+
+        endpoint.then(res => {
+            console.log('cleaner update', res.data);
+
+            dispatch({type: CLEANER_UPDATED, payload: res.data.updated});
+        }).catch(err => {
+            console.log(err);
+            dispatch({type: ERROR});
+        })
+    }
+}
 
 // Tasks
 export const addTask = (property_id, text, deadline) => {
