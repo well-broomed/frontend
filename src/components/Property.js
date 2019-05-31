@@ -7,10 +7,14 @@ import { withRouter } from 'react-router-dom';
 // PropTypes
 import PropTypes from 'prop-types';
 
-import Select from 'react-select';
+// Components
+import { PropertyChecklist } from '../components';
 
 // Actions
 import { getProperty, addTask, deleteTask } from '../actions';
+
+// React-Select
+import Select from 'react-select';
 
 // Styled Components
 import styled from 'styled-components';
@@ -22,13 +26,7 @@ import Paper from '@material-ui/core/Paper';
 
 import Typography from '@material-ui/core/Typography';
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-
 import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircle from '@material-ui/icons/AddCircle';
 
 import Autosuggest from 'react-autosuggest';
@@ -198,14 +196,10 @@ const Property = props => {
 		renderSuggestion
 	};
 
-	const handleSubmit = event => {
-		event.preventDefault();
+	const handleSubmit = (newTask, deadline) => {
+		props.addTask(props.property.property_id, newTask, deadline);
 
-		props.addTask(props.property.property_id, state.newTask, newTaskDeadline);
-
-		// clear newTaskDeadline on success but not on failure (somehow)
 		setnewDeadline(null);
-		setNewTaskDeadline(null);
 
 		// at the moment, errors eat your input with no feedback
 	};
@@ -231,7 +225,12 @@ const Property = props => {
 		}
 	}
 
-	console.log('afterStay:', afterStay);
+	const ProperyListProps = {
+		classes,
+		suggestedTasks,
+		handleSubmit,
+		handleDelete
+	};
 
 	return (
 		<React.Fragment>
@@ -246,210 +245,44 @@ const Property = props => {
 			</TopBar>
 			<PropertyContainer>
 				<BeforeAndDuringColumn>
-					<Typography variant="h6" className={classes.title}>
-						Before Stay
-					</Typography>
-					<List className={classes.root}>
-						{beforeStay.map(({ task_id, text }) => (
-							<ListItemWrapper key={task_id}>
-								<ListItem role={undefined} button>
-									<ListItemText primary={text} />
-									<SecondaryActionWrapper>
-										<ListItemSecondaryAction
-											onClick={() => handleDelete(task_id)}
-										>
-											<IconButton aria-label="Delete">
-												<DeleteIcon />
-											</IconButton>
-										</ListItemSecondaryAction>
-									</SecondaryActionWrapper>
-								</ListItem>
-							</ListItemWrapper>
-						))}
-					</List>
-					{newTaskDeadline < 0 ? (
-						<form onSubmit={handleSubmit}>
-							<Autosuggest
-								{...autosuggestProps}
-								inputProps={{
-									classes,
-									placeholder: 'Add a task',
-									value: state.newTask,
-									onChange: handleChange('newTask'),
-									autoFocus: true,
-									onBlur: () => setNewTaskDeadline(null),
-									onKeyDown: e => {
-										if (e.key === 'Escape') setNewTaskDeadline(null);
-									}
-								}}
-								theme={{
-									container: classes.container,
-									suggestionsContainerOpen: classes.suggestionsContainerOpen,
-									suggestionsList: classes.suggestionsList,
-									suggestion: classes.suggestion
-								}}
-								renderSuggestionsContainer={options => (
-									<Paper {...options.containerProps} square>
-										{options.children}
-									</Paper>
-								)}
-							/>
-						</form>
-					) : (
-						<IconButton
-							aria-label="AddCircle"
-							onClick={() => {
-								setNewTaskDeadline(-1);
-								setState({ newTask: '' });
-							}}
-						>
-							<AddCircle className={classes.icon} style={{ fontSize: 30 }} />
-						</IconButton>
-					)}
-					<Typography variant="h6" className={classes.title}>
-						After Stay
-					</Typography>
-					<List className={classes.root}>
-						{duringStay.map(({ task_id, text }) => (
-							<ListItemWrapper key={task_id}>
-								<ListItem role={undefined} button>
-									<ListItemText primary={text} />
-									<SecondaryActionWrapper>
-										<ListItemSecondaryAction
-											onClick={() => handleDelete(task_id)}
-										>
-											<IconButton aria-label="Delete">
-												<DeleteIcon />
-											</IconButton>
-										</ListItemSecondaryAction>
-									</SecondaryActionWrapper>
-								</ListItem>
-							</ListItemWrapper>
-						))}
-					</List>
-					{newTaskDeadline === 0 ? (
-						<form onSubmit={handleSubmit}>
-							<Autosuggest
-								{...autosuggestProps}
-								inputProps={{
-									classes,
-									placeholder: 'Add a task',
-									value: state.newTask,
-									onChange: handleChange('newTask'),
-									autoFocus: true,
-									onBlur: () => setNewTaskDeadline(null),
-									onKeyDown: e => {
-										if (e.key === 'Escape') setNewTaskDeadline(null);
-									}
-								}}
-								theme={{
-									container: classes.container,
-									suggestionsContainerOpen: classes.suggestionsContainerOpen,
-									suggestionsList: classes.suggestionsList,
-									suggestion: classes.suggestion
-								}}
-								renderSuggestionsContainer={options => (
-									<Paper {...options.containerProps} square>
-										{options.children}
-									</Paper>
-								)}
-							/>
-						</form>
-					) : (
-						<IconButton
-							aria-label="AddCircle"
-							onClick={() => {
-								setNewTaskDeadline(0);
-								setState({ newTask: '' });
-							}}
-						>
-							<AddCircle className={classes.icon} style={{ fontSize: 30 }} />
-						</IconButton>
-					)}
+					<PropertyChecklist
+						{...ProperyListProps}
+						listTitle="Before Stay"
+						deadline={-1}
+						taskList={beforeStay}
+					/>
+
+					<PropertyChecklist
+						{...ProperyListProps}
+						listTitle="During Stay"
+						deadline={0}
+						taskList={duringStay}
+					/>
 				</BeforeAndDuringColumn>
 
 				<AfterColumn>
 					<Typography variant="h6" className={classes.title}>
 						After Stay
 					</Typography>
+
 					{afterStay.map(
-						deadline =>
-							deadline && (
-								<React.Fragment key={deadline[0].deadline}>
-									<AfterStaySelect
-										className={classes.root}
-										value={afterStayOptions.find(
-											option => +option.value === deadline[0].deadline
-										)}
-										options={afterStayOptions}
-									/>
-									<List className={classes.root}>
-										{deadline.map(({ task_id, text }) => (
-											<ListItemWrapper key={task_id}>
-												<ListItem role={undefined} button>
-													<ListItemText primary={text} />
-													<SecondaryActionWrapper>
-														<ListItemSecondaryAction
-															onClick={() => handleDelete(task_id)}
-														>
-															<IconButton aria-label="Delete">
-																<DeleteIcon />
-															</IconButton>
-														</ListItemSecondaryAction>
-													</SecondaryActionWrapper>
-												</ListItem>
-											</ListItemWrapper>
-										))}
-									</List>
-									{newTaskDeadline === deadline[0].deadline ? (
-										<form onSubmit={handleSubmit}>
-											<Autosuggest
-												{...autosuggestProps}
-												inputProps={{
-													classes,
-													placeholder: 'Add a task',
-													value: state.newTask,
-													onChange: handleChange('newTask'),
-													autoFocus: true,
-													onBlur: () => setNewTaskDeadline(null),
-													onKeyDown: e => {
-														if (e.key === 'Escape') setNewTaskDeadline(null);
-													}
-												}}
-												theme={{
-													container: classes.container,
-													suggestionsContainerOpen:
-														classes.suggestionsContainerOpen,
-													suggestionsList: classes.suggestionsList,
-													suggestion: classes.suggestion
-												}}
-												renderSuggestionsContainer={options => (
-													<Paper {...options.containerProps} square>
-														{options.children}
-													</Paper>
-												)}
-											/>
-										</form>
-									) : (
-										<IconButton
-											aria-label="AddCircle"
-											onClick={() => {
-												setNewTaskDeadline(deadline[0].deadline);
-												setState({ newTask: '' });
-											}}
-										>
-											<AddCircle
-												className={classes.icon}
-												style={{ fontSize: 30 }}
-											/>
-										</IconButton>
-									)}
-								</React.Fragment>
+						(taskList, deadline) =>
+							taskList && (
+								<PropertyChecklist
+									{...ProperyListProps}
+									key={deadline}
+									deadline={deadline}
+									taskList={taskList}
+									afterStayOptions={afterStayOptions}
+								/>
 							)
 					)}
+
 					<Typography variant="h6" className={classes.title}>
 						Add "After Stay" List
 					</Typography>
+
+					{/* TODO: Move this to PropertyChecklist */}
 					<Select
 						className={classes.root}
 						value={newDeadline}
@@ -548,16 +381,4 @@ const BeforeAndDuringColumn = styled.div`
 
 const AfterColumn = styled.div`
 	width: 50%;
-`;
-
-const AfterStaySelect = styled(Select)``;
-
-const ListItemWrapper = styled.div``;
-
-const SecondaryActionWrapper = styled.div`
-	display: none;
-
-	${ListItemWrapper}:hover & {
-		display: block;
-	}
 `;

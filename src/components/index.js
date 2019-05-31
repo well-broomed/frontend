@@ -5,6 +5,7 @@ export { default as Guests } from './Guests';
 export { default as Partners } from './Partners';
 export { default as Properties } from './Properties';
 export { default as Property } from './Property';
+export { default as PropertyChecklist } from './PropertyChecklist';
 export { default as Guest } from './Guest';
 export { default as GuestList } from './GuestList';
 export { default as Account } from './Account';
