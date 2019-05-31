@@ -18,7 +18,8 @@ import {
 	Account,
 	Callback,
 	Navigation,
-	Redirect
+	Redirect,
+	Invite
 } from '../../components';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -56,6 +57,7 @@ class App extends Component {
 						<Route exact path="/account" component={Account} />
 						<Route path="/callback" component={Callback} />
 						<Route path="/redirect" component={Redirect} />
+						<Route path="/invite/:invite_code" component={Invite} />
 					</Switch>
 				</ComponentContainer>
 			</div>
