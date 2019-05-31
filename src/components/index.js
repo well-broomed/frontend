@@ -6,6 +6,7 @@ export { default as Partners } from './Partners';
 export { default as Properties } from './Properties';
 export { default as Property } from './Property';
 export { default as Guest } from './Guest';
+export { default as GuestList } from './GuestList';
 export { default as Account } from './Account';
 export { default as Reports } from './Reports';
 export { default as Callback } from './Callback';
