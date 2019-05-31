@@ -3,7 +3,10 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 //Redux actions
-import { changeCleaner, changeAvailableCleaner } from '../actions/propertyActions'
+import {
+	changeCleaner,
+	changeAvailableCleaner
+} from '../actions/propertyActions';
 
 //Material-ui
 import Button from '@material-ui/core/Button';
@@ -18,13 +21,11 @@ import Icon from '@material-ui/core/Icon';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 
 import { withStyles } from '@material-ui/core';
-
 
 const styles = {
 	card: {
@@ -70,39 +71,51 @@ class PartnerCard extends React.Component {
 			let availableproperties = [];
 
 			properties.map(property => {
-				if(property.cleaner_id === this.props.partner.user_id)
+				if (property.cleaner_id === this.props.partner.user_id)
 					defaultproperties.push(property);
-				if(property.available_cleaners.some(cleaner => cleaner['cleaner_id'] === this.props.partner.user_id))
+				if (
+					property.available_cleaners.some(
+						cleaner => cleaner['cleaner_id'] === this.props.partner.user_id
+					)
+				)
 					availableproperties.push(property);
-			})
+			});
 
-			this.setState({ defaultproperties, availableproperties, properties})
+			this.setState({ defaultproperties, availableproperties, properties });
 		}
 	}
 
 	handleDefaultDialogOpen = () => {
-		this.setState({defaultDialog:true});
-	}
+		this.setState({ defaultDialog: true });
+	};
 
 	handleDefaultDialogClose = property_id => {
-		if(property_id)
+		if (property_id)
 			this.props.changeCleaner(property_id, this.props.partner.user_id);
-		this.setState({defaultDialog:false});
-	}
+		this.setState({ defaultDialog: false });
+	};
 
 	handleAvailableDialogOpen = () => {
-		this.setState({availableDialog:true});
-	}
+		this.setState({ availableDialog: true });
+	};
 
 	handleAvailableDialogClose = property => {
-		if(property){
-			if(this.state.availableproperties.includes(property))
-				this.props.changeAvailableCleaner(property.property_id, this.props.partner.user_id, false)
+		if (property) {
+			if (this.state.availableproperties.includes(property))
+				this.props.changeAvailableCleaner(
+					property.property_id,
+					this.props.partner.user_id,
+					false
+				);
 			else
-				this.props.changeAvailableCleaner(property.property_id, this.props.partner.user_id, true)
+				this.props.changeAvailableCleaner(
+					property.property_id,
+					this.props.partner.user_id,
+					true
+				);
 		}
-		this.setState({availableDialog:false});
-	}
+		this.setState({ availableDialog: false });
+	};
 
 	handlePartnerHouse = event => {
 		this.setState({
@@ -161,17 +174,33 @@ class PartnerCard extends React.Component {
 								This partner currently has no default properties
 							</Typography>
 						)}
-						<Button variant="contained" color="secondary" onClick={this.handleDefaultDialogOpen}>
+						<Button
+							variant="contained"
+							color="secondary"
+							onClick={this.handleDefaultDialogOpen}
+						>
 							<Icon>add_circle</Icon>
 						</Button>
-						<Dialog open={this.state.defaultDialog}
-								onClose={() => this.handleDefaultDialogClose()}
-								>
+						<Dialog
+							open={this.state.defaultDialog}
+							onClose={() => this.handleDefaultDialogClose()}
+						>
 							<DialogTitle>Your Properties</DialogTitle>
 							<List>
 								{this.props.properties.map(property => (
-									<ListItem button selected={this.state.defaultproperties.includes(property) ? true : false } onClick={() => this.handleDefaultDialogClose(property.property_id)} key={property.property_id}>
-									<ListItemText primary={property.property_name}/>
+									<ListItem
+										button
+										selected={
+											this.state.defaultproperties.includes(property)
+												? true
+												: false
+										}
+										onClick={() =>
+											this.handleDefaultDialogClose(property.property_id)
+										}
+										key={property.property_id}
+									>
+										<ListItemText primary={property.property_name} />
 									</ListItem>
 								))}
 							</List>
@@ -194,17 +223,31 @@ class PartnerCard extends React.Component {
 								This partner currently has no available properties
 							</Typography>
 						)}
-						<Button variant="contained" color="secondary" onClick={this.handleAvailableDialogOpen}>
+						<Button
+							variant="contained"
+							color="secondary"
+							onClick={this.handleAvailableDialogOpen}
+						>
 							<Icon>add_circle</Icon>
 						</Button>
-						<Dialog open={this.state.availableDialog}
-								onClose={() => this.handleAvailableDialogClose()}
-								>
+						<Dialog
+							open={this.state.availableDialog}
+							onClose={() => this.handleAvailableDialogClose()}
+						>
 							<DialogTitle>Your Properties</DialogTitle>
 							<List>
 								{this.props.properties.map(property => (
-									<ListItem button selected={this.state.availableproperties.includes(property) ? true : false } onClick={() => this.handleAvailableDialogClose(property)} key={property.property_id}>
-									<ListItemText primary={property.property_name}/>
+									<ListItem
+										button
+										selected={
+											this.state.availableproperties.includes(property)
+												? true
+												: false
+										}
+										onClick={() => this.handleAvailableDialogClose(property)}
+										key={property.property_id}
+									>
+										<ListItemText primary={property.property_name} />
 									</ListItem>
 								))}
 							</List>
