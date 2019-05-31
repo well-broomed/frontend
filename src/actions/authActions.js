@@ -15,6 +15,7 @@ export const checkIfUserExists = (role) => {
     // The role selected by the user is passed upon account validation.
 
     let token = localStorage.getItem('jwt');
+    console.log('login attempt');
 
     let options = {
         headers: {
