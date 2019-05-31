@@ -235,13 +235,28 @@ const Property = props => {
 	return (
 		<React.Fragment>
 			<TopBar>
-				<Typography variant="h4">
-					{props.gettingProperty
-						? 'Loading...'
-						: props.getPropertyError
-						? 'Error'
-						: props.property.property_name}
-				</Typography>
+				<PropertyImg
+					// Change this to a file!
+					src={
+						props.property.img_url ||
+						'https://images.freeimages.com/images/small-previews/7ea/house-1-1225482.jpg'
+					}
+					alt={props.property.property_name || 'Property Image'}
+				/>
+
+				<TitleContainer>
+					<Typography variant="h3">
+						{props.property.property_name || null}
+					</Typography>
+
+					<Typography variant="h6">
+						{props.gettingProperty
+							? 'Loading...'
+							: props.getPropertyError
+							? 'Error'
+							: props.property.address}
+					</Typography>
+				</TitleContainer>
 			</TopBar>
 			<PropertyContainer>
 				<BeforeAndDuringColumn>
@@ -368,7 +383,21 @@ export default withRouter(
 const TopBar = styled.div`
 	width: 100%;
 	display: flex;
+	align-items: flex-end;
 	padding: 10px 0 20px;
+`;
+
+const PropertyImg = styled.img`
+	width: 160px;
+	height: 120px;
+	background: lightgray;
+	object-fit: cover;
+`;
+
+const TitleContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	margin: 0 0 0 16px;
 `;
 
 const PropertyContainer = styled.div`
