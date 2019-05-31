@@ -49,8 +49,11 @@ class Partners extends React.Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		if (this.props.refreshCleaners) {
+		if(!this.props.properties){
 			this.props.getUserProperties();
+		}
+
+		if (this.props.refreshCleaners !== prevProps.refreshCleaners) {
 			this.props.getPartners();
 		}
 	}
