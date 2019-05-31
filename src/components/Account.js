@@ -197,7 +197,7 @@ class Account extends React.Component {
                         <Typography variant = 'h6'>{this.props.currentUser.role}</Typography>
 
                         <Typography variant = 'overline'>Password</Typography>
-
+                            <br></br>
                         {!this.state.passwordOpen ? (
                             <Button variant = 'contained' color = 'secondary' onClick = {this.toggleInput} name = 'passwordOpen'>
                                 <div style = {{width: '100%'}} className = 'password-btn' name = 'passwordOpen' onClick = {this.toggleInput}>

@@ -10,6 +10,10 @@ export const UPDATING_GUEST_TASK = 'UPDATING_GUEST_TASK';
 export const UPDATED_GUEST_TASK = 'UPDATED_GUEST_TASK';
 export const UPDATE_GUEST_TASK_ERROR = 'UPDATE_GUEST_TASK_ERROR';
 
+export const FETCHING_GUESTS = 'FETCHING_GUESTS';
+export const GUESTS_FETCHED = 'GUESTS_FETCHED';
+export const ERROR = 'ERROR';
+
 const backendUrl = process.env.REACT_APP_BACKEND_URL || `http://localhost:5000`;
 
 export const getGuest = guest_id => {
@@ -61,3 +65,27 @@ export const updateGuestTask = (guest_id, task_id, completed) => {
 			});
 	};
 };
+
+export const fetchAllGuests = () => {
+	const token = localStorage.getItem('jwt');
+	const userInfo = localStorage.getItem('userInfo');
+
+	const options = {
+		headers: { Authorization: `Bearer ${token}`, 'user-info': userInfo }
+	};
+
+	const endpoint = axios.get(`${backendUrl}/api/guests`, options);
+
+	return dispatch => {
+		dispatch({type: FETCHING_GUESTS});
+
+		endpoint.then(res => {
+			console.log(res);
+			dispatch({type: GUESTS_FETCHED, payload: res.data.guests});
+	
+		}).catch(error => {
+			console.log(error);
+			dispatch({type: ERROR});
+		})
+	}
+}
