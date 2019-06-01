@@ -9,13 +9,11 @@ import {fetchAllGuests, getUserProperties, getCleaners} from '../actions/index';
 
 import AddGuestForm from './AddGuestForm';
 
+import GuestPreview from './GuestPreview';
+
 import styled from 'styled-components';
 
 import {withStyles} from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 import Dialog from '@material-ui/core/Dialog';
@@ -98,8 +96,6 @@ class Guests extends React.Component {
     };
     
     handleTab = value => event => {
-        console.log(event.target);
-        console.log(value);
         this.setState({
             tab: value,
         })
@@ -107,6 +103,7 @@ class Guests extends React.Component {
 
     render(){
         const {classes} = this.props;
+
         return (
             <div>
                 <TopBar>
@@ -138,15 +135,28 @@ class Guests extends React.Component {
 
                     <div>
                         <AppBar position="static">
-                            <Tabs value={this.state.tab}>
+                            <Tabs value={this.state.tab} variant = 'fullWidth'>
                             <Tab label="Upcoming" value = {0} onClick = {this.handleTab(0)} />
                             <Tab label="Incomplete" value = {1} onClick = {this.handleTab(1)} />
                             <Tab label="Complete" value = {2} onClick = {this.handleTab(2)} />
                             </Tabs>
                         </AppBar>
+
+                        {this.props.guests ? (
+                            <div>
+                                {this.props.guests.map(guest => {
+                                    return <GuestPreview guest = {guest} tab = {this.state.tab}></GuestPreview>
+                                })}
+
+                            </div>
+                        ) : null}
+
                         {this.state.tab === 0 && <TabContainer>Upcoming</TabContainer>}
+
                         {this.state.tab === 1 && <TabContainer>Incomplete</TabContainer>}
+
                         {this.state.tab === 2 && <TabContainer>Complete</TabContainer>}
+
                         </div>
                     
                 ): null}

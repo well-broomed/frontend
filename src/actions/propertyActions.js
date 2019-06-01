@@ -42,7 +42,7 @@ let options = {
 
 export const getUserProperties = () => {
 	// This function passes the auth0 jwt to the backend, and validates whether an entry
-	// for this user exists in the database.
+    // for this user exists in the database.
 
 	// The role selected by the user is passed upon account validation.
 	const fetchUrl = axios.get(`${backendUrl}/api/properties`, options);
@@ -113,7 +113,6 @@ export const getCleaners = () => {
 
 		endpoint
 			.then(res => {
-				console.log('get cleaners', res.data);
 
 				dispatch({
 					type: CLEANERS_FETCHED,
@@ -151,7 +150,6 @@ export const changeAvailableCleaner = (property_id, cleaner_id, available) =>{
         dispatch({type: UPDATING_CLEANER});
 
         endpoint.then(res => {
-            console.log('cleaner update', res.data);
 
 				dispatch({ type: CLEANER_UPDATED, paload: res.data.updated });
 			})
@@ -170,7 +168,6 @@ export const changeCleaner = (property_id, cleaner_id) => {
         dispatch({type: UPDATING_CLEANER});
 
         endpoint.then(res => {
-            console.log('cleaner update', res.data);
 
             dispatch({type: CLEANER_UPDATED, payload: res.data.updated});
         }).catch(err => {

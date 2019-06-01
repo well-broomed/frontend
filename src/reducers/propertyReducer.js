@@ -25,12 +25,13 @@ const initialState = {
 	refreshProperties: false,
 	cleaners: null,
 	refreshCleaners: false,
-	partners: null
+	partners: null,
+	tasks: null,
 };
 
 const propertyReducer = (state = initialState, action) => {
 	switch (action.type) {
-		
+
 		case USER_CHECKED:
 			return {
 				...state,

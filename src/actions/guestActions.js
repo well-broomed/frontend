@@ -72,9 +72,7 @@ export const fetchAllGuests = () => {
 		dispatch({type: FETCHING_GUESTS});
 
 		endpoint.then(res => {
-			console.log(res.data, 'fetch guests res');
-			dispatch({type: GUESTS_FETCHED, payload: res.data.guests});
-	
+			dispatch({type: GUESTS_FETCHED, payload: res.data.guests})
 		}).catch(error => {
 			console.log(error);
 			dispatch({type: ERROR});

@@ -12,7 +12,6 @@ import {updateUserProfile} from '../actions/index';
 // Card
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
@@ -23,7 +22,6 @@ import { withStyles } from '@material-ui/core';
 
 // Icons 
 import EditTwoTone from '@material-ui/icons/EditTwoTone';
-import Icon from '@material-ui/core/Icon';
 
 // Styled Components
 import styled from 'styled-components';
@@ -121,7 +119,7 @@ class Account extends React.Component {
             } else {
                 window.alert('Passwords must match! Please re-enter your passwords.');
             }
-        } else if (event.target.name = 'email'){
+        } else if (event.target.name === 'email'){
             /**
              * TODO: MAKE SURE THE EMAIL IS A VALID ADDRESS
              */
