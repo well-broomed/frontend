@@ -26,6 +26,9 @@ import Slide from '@material-ui/core/Slide';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 
 const styles = {
@@ -46,7 +49,12 @@ const TopBar = styled.div`
 	align-items: center;
 `;
 
+const TabContainer = styled.div`
 
+    display: flex;
+    flex-flow: column nowrap;
+    border: 2px solid black;
+    `;
 
 function Transition(props) {
 	return <Slide direction="up" {...props} />;
@@ -58,24 +66,21 @@ class Guests extends React.Component {
         if(!this.props.guests){
             this.props.fetchAllGuests();
         }
+
+        if(!this.props.properties){
+            this.props.getUserProperties();
+        }
+
+        if(!this.props.cleaners){
+            this.props.getCleaners();
+        }
     }
-
-
-    componentDidUpdate(prevProps) {
-
-		if (prevProps.refreshProperties !== this.props.refreshProperties) {
-			this.props.getUserProperties();
-		}
-
-		if(prevProps.refreshCleaners !== this.props.refreshCleaners){
-			this.props.getCleaners();
-		}
-	}
 
     constructor(props){
         super(props);
         this.state = {
             addModal: false,
+            tab: 0,
         };
 
     }
@@ -90,7 +95,15 @@ class Guests extends React.Component {
 		this.setState({
 			addModal: false
 		});
-	};
+    };
+    
+    handleTab = value => event => {
+        console.log(event.target);
+        console.log(value);
+        this.setState({
+            tab: value,
+        })
+    }
 
     render(){
         const {classes} = this.props;
@@ -119,6 +132,24 @@ class Guests extends React.Component {
 						<AddGuestForm close={this.handleModalClose} />
 					</DialogContent>
 				</Dialog>
+
+
+                {this.props.guests ? (
+
+                    <div>
+                        <AppBar position="static">
+                            <Tabs value={this.state.tab}>
+                            <Tab label="Upcoming" value = {0} onClick = {this.handleTab(0)} />
+                            <Tab label="Incomplete" value = {1} onClick = {this.handleTab(1)} />
+                            <Tab label="Complete" value = {2} onClick = {this.handleTab(2)} />
+                            </Tabs>
+                        </AppBar>
+                        {this.state.tab === 0 && <TabContainer>Upcoming</TabContainer>}
+                        {this.state.tab === 1 && <TabContainer>Incomplete</TabContainer>}
+                        {this.state.tab === 2 && <TabContainer>Complete</TabContainer>}
+                        </div>
+                    
+                ): null}
 
 
 

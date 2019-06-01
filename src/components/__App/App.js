@@ -37,7 +37,7 @@ const ComponentContainer = styled.div`
 
 class App extends Component {
 	componentDidMount() {
-		if (!this.props.userInfo) {
+		if (!this.props.userInfo || !localStorage.getItem('userInfo')) {
 			this.props.checkIfUserExists(localStorage.getItem('accountType') || localStorage.getItem('role'));
 		}
 	}

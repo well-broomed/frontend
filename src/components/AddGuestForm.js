@@ -71,17 +71,17 @@ class AddGuestForm extends React.Component {
 		event.preventDefault();
 
 		const guestInfo = {
-            property_id: null,
+            property_id: this.state.property_id,
             guest_name: this.state.guest_name,
             checkin: this.state.checkin,
             checkout: this.state.checkout,
-            email: this.state.email,
-            cleaner_id: null
+            email: this.state.email || null,
+            cleaner_id: this.state.cleaner_id,
         };
 
         console.log(guestInfo);
-		// this.props.addGuest(guestInfo);
-		// this.props.close();
+		this.props.addGuest(this.state.property_id, guestInfo);
+		this.props.close();
     };
     
     handleCheckin = event => {
@@ -97,10 +97,21 @@ class AddGuestForm extends React.Component {
     }
 
     handleSelect = name => event => {
-        console.log(event.target.value);
-        this.setState({
-            [name]: event.target.value,
-        })
+        if(name === 'property'){
+            let property = this.props.properties.find(p => p.property_id === event.target.value);
+            this.setState({
+                [name]: property,
+                property_id: event.target.value,
+            })
+        } else if (name === 'cleaner'){
+            let cleaner = this.props.cleaners.find(c => c.cleaner_id === event.target.value);
+            this.setState({
+                [name]: cleaner,
+                cleaner_id: event.target.value
+            })
+        }
+
+        console.log(this.state);
     }
 
 	render() {
@@ -120,7 +131,7 @@ class AddGuestForm extends React.Component {
                     </Typography>
 
                     <NativeSelect
-                        value={this.state.property} // placholder == assigned cleaner's name
+                        value={this.state.property} 
                         onChange={this.handleSelect('property')}
                         input={
                             <Input
@@ -129,11 +140,11 @@ class AddGuestForm extends React.Component {
                             />
                         }
                     >
-                        <option value = '' >{'(none)'}</option>
+                        <option value = {null} >{'Select a Property'}</option>
                         {this.props.properties
                             ? this.props.properties.map(property => {
                                     return (
-                                        <option value={property} key={property.property_id}>
+                                        <option value={property.property_id} key={property.property_id}>
                                             {property.property_name}
                                             {' - '}
                                             {property.address}
@@ -149,8 +160,8 @@ class AddGuestForm extends React.Component {
                     </Typography> 
 
                         <NativeSelect
-                        value={this.state.cleaner} // placholder == assigned cleaner's name
-                        onChange={this.handleSelect}
+                        value={this.state.cleaner} 
+                        onChange={this.handleSelect('cleaner')}
                         input={
                             <Input
                                 name="cleaner"
@@ -158,11 +169,11 @@ class AddGuestForm extends React.Component {
                             />
                         }
                     >
-                        <option value = '' >{'(none)'}</option>
+                        <option value = '' >{'Select a Cleaner'}</option>
                         {this.props.cleaners
                             ? this.props.cleaners.map(cleaner => {
                                     return (
-                                        <option value={cleaner} key={cleaner.user_id}>
+                                        <option value={cleaner.user_id} key={cleaner.user_id}>
                                             {cleaner.user_name}
                                         </option>
                                     );
