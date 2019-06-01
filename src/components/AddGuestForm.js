@@ -15,7 +15,8 @@ import { DateTimePicker } from "@material-ui/pickers";
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-
+import NativeSelect from '@material-ui/core/NativeSelect';
+import Input from '@material-ui/core/Input';
 import Typography from '@material-ui/core/Typography';
 
 const styles = {
@@ -43,6 +44,7 @@ class AddGuestForm extends React.Component {
         })
     }
 
+
 	constructor(props) {
 		super(props);
 
@@ -53,7 +55,9 @@ class AddGuestForm extends React.Component {
 			checkin: null,
 			checkout: null,
 			email: null,
-			cleaner_id: null
+            cleaner_id: null,
+            cleaner: null,
+            property: null,
 		};
 	}
 
@@ -92,6 +96,13 @@ class AddGuestForm extends React.Component {
         })
     }
 
+    handleSelect = name => event => {
+        console.log(event.target.value);
+        this.setState({
+            [name]: event.target.value,
+        })
+    }
+
 	render() {
 		const { classes } = this.props;
 		return (
@@ -103,6 +114,64 @@ class AddGuestForm extends React.Component {
 					autoComplete="off"
 				>
 					<Typography variant="h4">Add a New Guest</Typography>
+
+                    <Typography variant = 'overline'>
+                        Property
+                    </Typography>
+
+                    <NativeSelect
+                        value={this.state.property} // placholder == assigned cleaner's name
+                        onChange={this.handleSelect('property')}
+                        input={
+                            <Input
+                                name="property"
+                                id="property-native-label-placeolder"
+                            />
+                        }
+                    >
+                        <option value = '' >{'(none)'}</option>
+                        {this.props.properties
+                            ? this.props.properties.map(property => {
+                                    return (
+                                        <option value={property} key={property.property_id}>
+                                            {property.property_name}
+                                            {' - '}
+                                            {property.address}
+                                        </option>
+                                    );
+                                })
+                            : null}
+                    </NativeSelect>   
+
+
+                    <Typography variant = 'overline'>
+                        Cleaner
+                    </Typography> 
+
+                        <NativeSelect
+                        value={this.state.cleaner} // placholder == assigned cleaner's name
+                        onChange={this.handleSelect}
+                        input={
+                            <Input
+                                name="cleaner"
+                                id="cleaner-native-label-placeolder"
+                            />
+                        }
+                    >
+                        <option value = '' >{'(none)'}</option>
+                        {this.props.cleaners
+                            ? this.props.cleaners.map(cleaner => {
+                                    return (
+                                        <option value={cleaner} key={cleaner.user_id}>
+                                            {cleaner.user_name}
+                                        </option>
+                                    );
+                                })
+                            : null}
+                    </NativeSelect> 
+
+
+                                        
 
 					<TextField
 						className={classes.formField}

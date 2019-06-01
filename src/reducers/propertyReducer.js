@@ -30,6 +30,7 @@ const initialState = {
 
 const propertyReducer = (state = initialState, action) => {
 	switch (action.type) {
+		
 		case USER_CHECKED:
 			return {
 				...state,
