@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 // Router
 import {withRouter} from 'react-router-dom';
 
-import {fetchAllGuests} from '../actions/index';
+import {fetchAllGuests, getUserProperties, getCleaners} from '../actions/index';
 
 import AddGuestForm from './AddGuestForm';
 
@@ -59,6 +59,18 @@ class Guests extends React.Component {
             this.props.fetchAllGuests();
         }
     }
+
+
+    componentDidUpdate(prevProps) {
+
+		if (prevProps.refreshProperties !== this.props.refreshProperties) {
+			this.props.getUserProperties();
+		}
+
+		if(prevProps.refreshCleaners !== this.props.refreshCleaners){
+			this.props.getCleaners();
+		}
+	}
 
     constructor(props){
         super(props);
@@ -120,12 +132,16 @@ const mapStateToProps = state => {
         // state items
         guests: state.guestReducer.guests,
         refreshGuests: state.guestReducer.refreshGuests,
+        refreshProperties: state.propertyReducer.refreshProperties,
+        refreshCleaners: state.propertyReducer.refreshCleaners,
     }
 }
 
 export default withRouter(connect(mapStateToProps, {
     // actions
     fetchAllGuests,
+    getUserProperties,
+    getCleaners,
 }
 
 )(withStyles(styles)(Guests)));

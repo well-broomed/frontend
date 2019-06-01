@@ -23,10 +23,11 @@ const styles = {
 		display: 'flex',
 		flexFlow: 'column nowrap',
 		padding: '5%',
-		height: '50vh'
+        height: '70vh',
+        width: '70vw',
 	},
 	formField: {
-		margin: '10px 0px'
+        margin: '10px 0px',
 	},
 	formButton: {
 		margin: '10px 0px'
@@ -34,6 +35,14 @@ const styles = {
 };
 
 class AddGuestForm extends React.Component {
+
+    componentDidMount(){
+        this.setState({
+            checkin: moment(),
+            checkout: moment(),
+        })
+    }
+
 	constructor(props) {
 		super(props);
 
@@ -66,18 +75,21 @@ class AddGuestForm extends React.Component {
             cleaner_id: null
         };
 
-		this.props.addGuest(guestInfo);
-		this.props.close();
+        console.log(guestInfo);
+		// this.props.addGuest(guestInfo);
+		// this.props.close();
     };
     
     handleCheckin = event => {
-        console.log(event._d);
-        let date = event._d;
-        console.log(moment().format(date));
+        this.setState({
+            checkin: event.format(),
+        })
     }
 
     handleCheckout = event => {
-        console.log(moment().format(event._d));
+        this.setState({
+            checkout: event.format(),
+        })
     }
 
 	render() {
@@ -100,33 +112,33 @@ class AddGuestForm extends React.Component {
 						onChange={this.handleInput('guest_name')}
 					/>
 
-                    CHECK-IN
+                    <Typography variant = 'overline'>
+                        Check-In
+                    </Typography>
                     <DateTimePicker
-                        label="DateTimePicker"
                         inputVariant="outlined"
                         name = 'checkin'
                         value={this.state.checkin}
                         onChange={this.handleCheckin}
                     />
 
-                    CHECK OUT
+                    <Typography variant = 'overline'>
+                        Check-Out
+                    </Typography>
                     <DateTimePicker
-                        label="DateTimePicker"
                         inputVariant="outlined"
                         name = 'checkout'
                         value={this.state.checkout}
                         onChange={this.handleCheckout}
                     />
 					
-                    Date Picker goes here
-
 					<Button
 						className={classes.formButton}
 						variant="outlined"
 						color="primary"
 						type="submit"
 					>
-						Submit
+						Add Reservation
 					</Button>
 				</form>
 			</div>
@@ -136,7 +148,10 @@ class AddGuestForm extends React.Component {
 
 const mapStateToProps = state => {
 	return {
-		// state items
+        // state items
+        properties: state.propertyReducer.properties,
+        cleaners: state.propertyReducer.cleaners,
+
 	};
 };
 

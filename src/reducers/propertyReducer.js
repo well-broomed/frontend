@@ -15,7 +15,8 @@ import {
 	ADD_TASK_ERROR,
 	DELETING_TASK,
 	DELETED_TASK,
-	DELETE_TASK_ERROR
+	DELETE_TASK_ERROR,
+	USER_CHECKED,
 } from '../actions';
 
 const initialState = {
@@ -29,6 +30,12 @@ const initialState = {
 
 const propertyReducer = (state = initialState, action) => {
 	switch (action.type) {
+		case USER_CHECKED:
+			return {
+				...state,
+				refreshProperties: true,
+			}
+
 		case GETTING_PROPERTY:
 			return { ...state, gettingProperty: true };
 
