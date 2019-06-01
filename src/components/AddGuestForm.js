@@ -7,6 +7,10 @@ import { withStyles } from '@material-ui/core';
 
 import { addGuest } from '../actions/index';
 
+import moment from 'moment';
+
+import { DateTimePicker } from "@material-ui/pickers";
+
 // Form Components
 
 import TextField from '@material-ui/core/TextField';
@@ -64,7 +68,17 @@ class AddGuestForm extends React.Component {
 
 		this.props.addGuest(guestInfo);
 		this.props.close();
-	};
+    };
+    
+    handleCheckin = event => {
+        console.log(event._d);
+        let date = event._d;
+        console.log(moment().format(date));
+    }
+
+    handleCheckout = event => {
+        console.log(moment().format(event._d));
+    }
 
 	render() {
 		const { classes } = this.props;
@@ -85,6 +99,24 @@ class AddGuestForm extends React.Component {
 						value={this.state.guest_name}
 						onChange={this.handleInput('guest_name')}
 					/>
+
+                    CHECK-IN
+                    <DateTimePicker
+                        label="DateTimePicker"
+                        inputVariant="outlined"
+                        name = 'checkin'
+                        value={this.state.checkin}
+                        onChange={this.handleCheckin}
+                    />
+
+                    CHECK OUT
+                    <DateTimePicker
+                        label="DateTimePicker"
+                        inputVariant="outlined"
+                        name = 'checkout'
+                        value={this.state.checkout}
+                        onChange={this.handleCheckout}
+                    />
 					
                     Date Picker goes here
 
