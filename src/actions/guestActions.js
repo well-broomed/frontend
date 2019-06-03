@@ -19,14 +19,23 @@ export const GUEST_ADDED = 'GUEST_ADDED';
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || `http://localhost:5000`;
 
-const token = localStorage.getItem('jwt');
-const userInfo = localStorage.getItem('userInfo');
 
-const options = {
-	headers: { Authorization: `Bearer ${token}`, 'user-info': userInfo }
-};
+function setHeaders(){
+	const token = localStorage.getItem('jwt');
+	const userInfo = localStorage.getItem('userInfo');
+	
+	const options = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+			'user-info': userInfo
+		}
+	};
+
+	return options;
+}
 
 export const getGuest = guest_id => {
+	let options = setHeaders();
 
 	return dispatch => {
 		dispatch({ type: GETTING_GUEST });
@@ -44,6 +53,7 @@ export const getGuest = guest_id => {
 };
 
 export const updateGuestTask = (guest_id, task_id, completed) => {
+	let options = setHeaders();
 
 	return dispatch => {
 		dispatch({ type: UPDATING_GUEST_TASK });
@@ -65,6 +75,7 @@ export const updateGuestTask = (guest_id, task_id, completed) => {
 };
 
 export const fetchAllGuests = () => {
+	let options = setHeaders();
 
 	const endpoint = axios.get(`${backendUrl}/api/guests`, options);
 
@@ -81,6 +92,7 @@ export const fetchAllGuests = () => {
 }
 
 export const addGuest = (property_id, guest) => {
+	let options = setHeaders();
 
 	const endpoint = axios.post(`${backendUrl}/api/guests/${property_id}`, guest, options);
 

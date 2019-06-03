@@ -28,23 +28,33 @@ export const DELETING_TASK = 'DELETING_TASK';
 export const DELETED_TASK = 'DELETED_TASK';
 export const DELETE_TASK_ERROR = 'DELETE_TASK_ERROR';
 
+
+function setHeaders(){
+	const token = localStorage.getItem('jwt');
+	const userInfo = localStorage.getItem('userInfo');
+	
+	const options = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+			'user-info': userInfo
+		}
+	};
+
+	return options;
+}
+
 const backendUrl = process.env.REACT_APP_BACKEND_URL || `http://localhost:5000`;
 
-const token = localStorage.getItem('jwt');
-const userInfo = localStorage.getItem('userInfo');
 
-const options = {
-    headers: {
-        Authorization: `Bearer ${token}`,
-        'user-info': userInfo
-    }
-};
 
 export const getUserProperties = () => {
 	// This function passes the auth0 jwt to the backend, and validates whether an entry
     // for this user exists in the database.
 
 	// The role selected by the user is passed upon account validation.
+	
+	let options = setHeaders();
+
 	const fetchUrl = axios.get(`${backendUrl}/api/properties`, options);
 
 	return dispatch => {
@@ -65,6 +75,8 @@ export const getUserProperties = () => {
 
 export const getProperty = property_id => {
 
+	let options = setHeaders();
+
 	return dispatch => {
 		dispatch({ type: GETTING_PROPERTY });
 
@@ -81,6 +93,8 @@ export const getProperty = property_id => {
 };
 
 export const addProperty = property => {
+
+	let options = setHeaders();
 
 	const endpoint = axios.post(
 		`${backendUrl}/api/properties`,
@@ -106,6 +120,8 @@ export const addProperty = property => {
 
 export const getCleaners = () => {
 
+	let options = setHeaders();
+
 	const endpoint = axios.get(`${backendUrl}/api/cleaners`, options);
 
 	return dispatch => {
@@ -128,6 +144,8 @@ export const getCleaners = () => {
 
 export const getPartners = () => {
 
+	let options = setHeaders();
+
     const endpoint = axios.get(`${backendUrl}/api/cleaners/partners`, options);
 
     return dispatch => {
@@ -143,6 +161,8 @@ export const getPartners = () => {
 }
 
 export const changeAvailableCleaner = (property_id, cleaner_id, available) =>{
+
+	let options = setHeaders();
 
     const endpoint = axios.put(`${backendUrl}/api/properties/${property_id}/available/${cleaner_id}`, {available}, options)
 
@@ -161,8 +181,9 @@ export const changeAvailableCleaner = (property_id, cleaner_id, available) =>{
 };
 
 export const changeCleaner = (property_id, cleaner_id) => {
-
-    const endpoint = axios.put(`${backendUrl}/api/cleaners/update/${property_id}`, {cleaner_id}, options)
+	let options = setHeaders();
+	
+	const endpoint = axios.put(`${backendUrl}/api/cleaners/update/${property_id}`, {cleaner_id}, options)
 
     return dispatch => {
         dispatch({type: UPDATING_CLEANER});
@@ -179,6 +200,8 @@ export const changeCleaner = (property_id, cleaner_id) => {
 
 // Tasks
 export const addTask = (property_id, text, deadline) => {
+
+	let options = setHeaders();
 
 	return dispatch => {
 		dispatch({ type: ADDING_TASK });
@@ -200,6 +223,8 @@ export const addTask = (property_id, text, deadline) => {
 };
 
 export const deleteTask = task_id => {
+
+	let options = setHeaders();
 
 	return dispatch => {
 		dispatch({ type: DELETING_TASK });
