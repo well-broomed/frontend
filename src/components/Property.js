@@ -241,7 +241,7 @@ const Property = props => {
 					</Typography>
 
 					<Typography variant="h6">
-						{props.gettingProperty
+						{props.gettingProperty && !props.property.address
 							? 'Loading...'
 							: props.getPropertyError
 							? 'Error'
@@ -267,9 +267,11 @@ const Property = props => {
 				</BeforeAndDuringColumn>
 
 				<AfterColumn>
-					<Typography variant="h6" className={classes.title}>
-						After Stay
-					</Typography>
+					{!!afterStay.length && (
+						<Typography variant="h6" className={classes.title}>
+							After Stay
+						</Typography>
+					)}
 
 					{afterStay.map(
 						(taskList, deadline) =>
