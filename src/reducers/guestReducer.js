@@ -7,6 +7,9 @@ import {
 	UPDATE_GUEST_TASK_ERROR,
 	GUESTS_FETCHED,
 	GUEST_ADDED,
+	REQUESTING_REASSIGNMENT,
+	REQUESTED_REASSIGNMENT,
+	REQUEST_REASSIGNMENT_ERROR
 } from '../actions';
 
 const initialState = {
@@ -67,6 +70,25 @@ const guestReducer = (state = initialState, action) => {
 				...state,
 				updatingGuestTask: undefined,
 				updateGuestTaskError: action.payload
+			};
+
+		case REQUESTING_REASSIGNMENT:
+			return {
+				...state,
+				requestingReassignment: true
+			};
+
+		case REQUESTED_REASSIGNMENT:
+			return {
+				...state,
+				requestingReassignment: undefined
+			};
+
+		case REQUEST_REASSIGNMENT_ERROR:
+			return {
+				...state,
+				requestingReassignment: undefined,
+				requestReassignmentError: action.payload
 			};
 
 		default:

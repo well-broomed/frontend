@@ -17,6 +17,11 @@ export const ERROR = 'ERROR';
 export const ADDING_GUEST = 'ADDING_GUEST';
 export const GUEST_ADDED = 'GUEST_ADDED';
 
+// reassignCleaner
+export const REQUESTING_REASSIGNMENT = 'REQUESTING_REASSIGNMENT';
+export const REQUESTED_REASSIGNMENT = 'REQUESTED_REASSIGNMENT';
+export const REQUEST_REASSIGNMENT_ERROR = 'REQUEST_REASSIGNMENT_ERROR';
+
 const backendUrl = process.env.REACT_APP_BACKEND_URL || `http://localhost:5000`;
 
 
@@ -108,3 +113,28 @@ export const addGuest = (property_id, guest) => {
 		})
 	}
 }
+
+export const reassignCleaner = (guest_id, cleaner_id) => {
+	let options = setHeaders();
+
+	return dispatch => {
+		dispatch({ type: REQUESTING_REASSIGNMENT });
+
+		axios
+			.post(
+				`${backendUrl}/api/guests/${guest_id}/reassign/${cleaner_id}`,
+				{},
+				options
+			)
+			.then(res => {
+				dispatch({ type: REQUESTED_REASSIGNMENT, payload: res.data });
+
+				return dispatch(getGuest(guest_id));
+			})
+
+			.catch(error => {
+				console.log(error);
+				dispatch({ type: REQUEST_REASSIGNMENT_ERROR, payload: error });
+			});
+	};
+};
