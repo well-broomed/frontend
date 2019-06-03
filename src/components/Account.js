@@ -5,14 +5,13 @@ import {connect} from 'react-redux';
 // Router
 import {withRouter} from 'react-router-dom';
 
-import {updateUserProfile} from '../actions/index';
+import {updateUserProfile, checkIfUserExists} from '../actions/index';
 
 // FlexBox
 
 // Card
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
@@ -23,7 +22,6 @@ import { withStyles } from '@material-ui/core';
 
 // Icons 
 import EditTwoTone from '@material-ui/icons/EditTwoTone';
-import Icon from '@material-ui/core/Icon';
 
 // Styled Components
 import styled from 'styled-components';
@@ -51,6 +49,10 @@ const styles = {
 }
 
 class Account extends React.Component {
+
+    componentDidMount(){
+        this.props.checkIfUserExists(localStorage.getItem('role'));
+    }
 
     componentDidUpdate(prevProps){
         if(this.props.userChecked !== prevProps.userChecked){
@@ -121,7 +123,7 @@ class Account extends React.Component {
             } else {
                 window.alert('Passwords must match! Please re-enter your passwords.');
             }
-        } else if (event.target.name = 'email'){
+        } else if (event.target.name === 'email'){
             /**
              * TODO: MAKE SURE THE EMAIL IS A VALID ADDRESS
              */
@@ -197,7 +199,7 @@ class Account extends React.Component {
                         <Typography variant = 'h6'>{this.props.currentUser.role}</Typography>
 
                         <Typography variant = 'overline'>Password</Typography>
-
+                            <br></br>
                         {!this.state.passwordOpen ? (
                             <Button variant = 'contained' color = 'secondary' onClick = {this.toggleInput} name = 'passwordOpen'>
                                 <div style = {{width: '100%'}} className = 'password-btn' name = 'passwordOpen' onClick = {this.toggleInput}>
@@ -256,10 +258,7 @@ class Account extends React.Component {
 
                  </div>
                 ) : <h1>Loading...</h1>}
-               
             
-            
-
             </div>
         )
     }
@@ -277,5 +276,6 @@ const mapStateToProps = state => {
 export default withRouter(connect(mapStateToProps, {
     // actions
     updateUserProfile,
+    checkIfUserExists,
     
 })(withStyles(styles)(Account)));

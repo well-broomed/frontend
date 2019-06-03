@@ -6,6 +6,9 @@ import styled from 'styled-components';
 
 import { checkIfUserExists } from '../../actions/index';
 
+import MomentUtils from '@date-io/moment';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+
 // Components
 import {
 	Home,
@@ -34,7 +37,7 @@ const ComponentContainer = styled.div`
 
 class App extends Component {
 	componentDidMount() {
-		if (!this.props.userInfo) {
+		if (localStorage.getItem('isLoggedIn') && !localStorage.getItem('userInfo')) {
 			this.props.checkIfUserExists(localStorage.getItem('accountType') || localStorage.getItem('role'));
 		}
 	}
@@ -42,6 +45,7 @@ class App extends Component {
 	render() {
 		return (
 			<div>
+				<MuiPickersUtilsProvider utils={MomentUtils}>
 				<CssBaseline />
 				<Navigation />
 				{/* Declare Routes */}
@@ -60,6 +64,7 @@ class App extends Component {
 						<Route path="/invite/:invite_code" component={Invite} />
 					</Switch>
 				</ComponentContainer>
+				</MuiPickersUtilsProvider>
 			</div>
 		);
 	}

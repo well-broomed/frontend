@@ -5,13 +5,16 @@ import {
 	UPDATING_GUEST_TASK,
 	UPDATED_GUEST_TASK,
 	UPDATE_GUEST_TASK_ERROR,
+	GUESTS_FETCHED,
+	GUEST_ADDED,
 	REQUESTING_REASSIGNMENT,
 	REQUESTED_REASSIGNMENT,
 	REQUEST_REASSIGNMENT_ERROR
 } from '../actions';
 
 const initialState = {
-	guest: {}
+	guest: {},
+	refreshGuests: false,
 };
 
 const guestReducer = (state = initialState, action) => {
@@ -29,6 +32,20 @@ const guestReducer = (state = initialState, action) => {
 				gettingGuest: undefined,
 				getGuestError: action.payload
 			};
+
+		case GUESTS_FETCHED:
+			return {
+				...state,
+				guests: action.payload,
+				refreshGuests: false,
+			}
+
+		case GUEST_ADDED:
+			return {
+				...state,
+				refreshGuests: true,
+			}
+		
 
 		// updateGuestTask
 		case UPDATING_GUEST_TASK:

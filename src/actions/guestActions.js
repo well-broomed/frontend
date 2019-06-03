@@ -10,6 +10,13 @@ export const UPDATING_GUEST_TASK = 'UPDATING_GUEST_TASK';
 export const UPDATED_GUEST_TASK = 'UPDATED_GUEST_TASK';
 export const UPDATE_GUEST_TASK_ERROR = 'UPDATE_GUEST_TASK_ERROR';
 
+export const FETCHING_GUESTS = 'FETCHING_GUESTS';
+export const GUESTS_FETCHED = 'GUESTS_FETCHED';
+export const ERROR = 'ERROR';
+
+export const ADDING_GUEST = 'ADDING_GUEST';
+export const GUEST_ADDED = 'GUEST_ADDED';
+
 // reassignCleaner
 export const REQUESTING_REASSIGNMENT = 'REQUESTING_REASSIGNMENT';
 export const REQUESTED_REASSIGNMENT = 'REQUESTED_REASSIGNMENT';
@@ -17,13 +24,23 @@ export const REQUEST_REASSIGNMENT_ERROR = 'REQUEST_REASSIGNMENT_ERROR';
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || `http://localhost:5000`;
 
-export const getGuest = guest_id => {
+
+function setHeaders(){
 	const token = localStorage.getItem('jwt');
 	const userInfo = localStorage.getItem('userInfo');
-
+	
 	const options = {
-		headers: { Authorization: `Bearer ${token}`, 'user-info': userInfo }
+		headers: {
+			Authorization: `Bearer ${token}`,
+			'user-info': userInfo
+		}
 	};
+
+	return options;
+}
+
+export const getGuest = guest_id => {
+	let options = setHeaders();
 
 	return dispatch => {
 		dispatch({ type: GETTING_GUEST });
@@ -41,12 +58,7 @@ export const getGuest = guest_id => {
 };
 
 export const updateGuestTask = (guest_id, task_id, completed) => {
-	const token = localStorage.getItem('jwt');
-	const userInfo = localStorage.getItem('userInfo');
-
-	const options = {
-		headers: { Authorization: `Bearer ${token}`, 'user-info': userInfo }
-	};
+	let options = setHeaders();
 
 	return dispatch => {
 		dispatch({ type: UPDATING_GUEST_TASK });
@@ -67,13 +79,43 @@ export const updateGuestTask = (guest_id, task_id, completed) => {
 	};
 };
 
-export const reassignCleaner = (guest_id, cleaner_id) => {
-	const token = localStorage.getItem('jwt');
-	const userInfo = localStorage.getItem('userInfo');
+export const fetchAllGuests = () => {
+	let options = setHeaders();
 
-	const options = {
-		headers: { Authorization: `Bearer ${token}`, 'user-info': userInfo }
-	};
+	const endpoint = axios.get(`${backendUrl}/api/guests`, options);
+
+	return dispatch => {
+		dispatch({type: FETCHING_GUESTS});
+
+		endpoint.then(res => {
+			dispatch({type: GUESTS_FETCHED, payload: res.data.guests})
+		}).catch(error => {
+			console.log(error);
+			dispatch({type: ERROR});
+		})
+	}
+}
+
+export const addGuest = (property_id, guest) => {
+	let options = setHeaders();
+
+	const endpoint = axios.post(`${backendUrl}/api/guests/${property_id}`, guest, options);
+
+	return dispatch => {
+		dispatch({type: ADDING_GUEST});
+
+		endpoint.then(res => {
+			console.log(res.data, 'add guest res');
+			dispatch({type: GUEST_ADDED, payload: res.data}) // payload is new guest ID
+		}).catch(error => {
+			console.log(error);
+			dispatch({type: ERROR});
+		})
+	}
+}
+
+export const reassignCleaner = (guest_id, cleaner_id) => {
+	let options = setHeaders();
 
 	return dispatch => {
 		dispatch({ type: REQUESTING_REASSIGNMENT });

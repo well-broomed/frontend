@@ -133,7 +133,7 @@ class PartnerCard extends React.Component {
 						subheader={this.props.partner.address}
 						avatar={
 							<Avatar>
-								<img className={classes.img} src={this.props.partner.img_url} />
+								<img alt = 'partner avatar' className={classes.img} src={this.props.partner.img_url} />
 							</Avatar>
 						}
 						action={

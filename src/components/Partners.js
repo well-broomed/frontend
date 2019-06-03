@@ -49,15 +49,22 @@ class Partners extends React.Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		if (this.props.refreshCleaners) {
+		if(this.props.refreshProperties !== prevProps.refreshProperties){
 			this.props.getUserProperties();
+		}
+
+		if (this.props.refreshCleaners !== prevProps.refreshCleaners) {
 			this.props.getPartners();
 		}
 	}
 
 	componentDidMount() {
-		this.props.getUserProperties();
-		this.props.getPartners();
+		if(!this.props.properties){
+			this.props.getUserProperties();
+		}
+		if(!this.props.cleaners){
+			this.props.getPartners();
+		}
 	}
 
 	handleInputChange = event => {
@@ -88,6 +95,7 @@ class Partners extends React.Component {
 		const backendUrl = process.env.backendURL || 'http://localhost:5000';
 		try {
 			const res = await axios.post(`${backendUrl}/api/invites/`, body, options);
+			console.log(res);
 		} catch (err) {
 			console.log(err);
 		}

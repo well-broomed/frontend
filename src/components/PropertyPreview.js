@@ -15,14 +15,14 @@ import NativeSelect from '@material-ui/core/NativeSelect';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core';
 
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { changeCleaner } from '../actions/propertyActions';
 
 const styles = {
 	card: {
-		maxWidth: 600,
+		maxWidth: '100%',
 		margin: '20px auto'
 	},
 	media: {
@@ -76,8 +76,6 @@ class PropertyPreview extends React.Component {
 			cleaner: event.target.value
 		});
 
-		console.log(event.target.value.id);
-
 		this.props.changeCleaner(this.props.property.id, event.target.value.id);
 	};
 
@@ -86,17 +84,18 @@ class PropertyPreview extends React.Component {
 		return (
 			<div>
 				<Card className={classes.card} key={this.props.property.id}>
+					<Link to = {`/properties/${this.props.property.property_id}`}>
 					<CardHeader
 						title={this.props.property.property_name}
 						subheader={this.props.property.address}
 					/>
+					</Link>
 
 					<CardContent>
-						<Typography variant="overline">Select Cleaner</Typography>
 
 						<FormControl className={classes.formControl}>
 							<InputLabel shrink htmlFor="cleaner-native-label-placeholder">
-								Assigned Cleaner
+								Select Default Cleaner
 							</InputLabel>
 							{this.state.cleaner ? (
 								<NativeSelect
