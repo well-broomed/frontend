@@ -74,6 +74,12 @@ class Guests extends React.Component {
         }
     }
 
+    componentDidUpdate(prevProps){
+        if(prevProps.refreshGuests !== this.props.refreshGuests){
+            this.props.fetchAllGuests();
+        }
+    }
+
     constructor(props){
         super(props);
         this.state = {
