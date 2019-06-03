@@ -116,6 +116,7 @@ class Guests extends React.Component {
 						<AddIcon />
 					</Fab>
 				</TopBar>
+                <br></br>
 
                 <Dialog
 					open={this.state.addModal}
@@ -150,12 +151,12 @@ class Guests extends React.Component {
 
                             </div>
                         ) : null}
-
+{/* 
                         {this.state.tab === 0 && <TabContainer>Upcoming</TabContainer>}
 
                         {this.state.tab === 1 && <TabContainer>Incomplete</TabContainer>}
 
-                        {this.state.tab === 2 && <TabContainer>Complete</TabContainer>}
+                        {this.state.tab === 2 && <TabContainer>Complete</TabContainer>} */}
 
                         </div>
                     

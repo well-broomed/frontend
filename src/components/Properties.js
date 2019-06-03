@@ -61,6 +61,9 @@ function Transition(props) {
 
 class Properties extends React.Component {
 	componentDidMount() {
+		if(!localStorage.getItem('userInfo')){
+			this.props.checkIfUserExists(localStorage.getItem('role') || localStorage.getItem('accountType'));
+		}
 		this.props.getUserProperties();
 	}
 

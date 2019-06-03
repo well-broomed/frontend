@@ -30,10 +30,10 @@ export const DELETE_TASK_ERROR = 'DELETE_TASK_ERROR';
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || `http://localhost:5000`;
 
-let token = localStorage.getItem('jwt');
-let userInfo = localStorage.getItem('userInfo');
+const token = localStorage.getItem('jwt');
+const userInfo = localStorage.getItem('userInfo');
 
-let options = {
+const options = {
     headers: {
         Authorization: `Bearer ${token}`,
         'user-info': userInfo

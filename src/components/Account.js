@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 // Router
 import {withRouter} from 'react-router-dom';
 
-import {updateUserProfile} from '../actions/index';
+import {updateUserProfile, checkIfUserExists} from '../actions/index';
 
 // FlexBox
 
@@ -49,6 +49,10 @@ const styles = {
 }
 
 class Account extends React.Component {
+
+    componentDidMount(){
+        this.props.checkIfUserExists(localStorage.getItem('role'));
+    }
 
     componentDidUpdate(prevProps){
         if(this.props.userChecked !== prevProps.userChecked){
@@ -254,10 +258,7 @@ class Account extends React.Component {
 
                  </div>
                 ) : <h1>Loading...</h1>}
-               
             
-            
-
             </div>
         )
     }
@@ -275,5 +276,6 @@ const mapStateToProps = state => {
 export default withRouter(connect(mapStateToProps, {
     // actions
     updateUserProfile,
+    checkIfUserExists,
     
 })(withStyles(styles)(Account)));

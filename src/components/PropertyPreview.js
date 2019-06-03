@@ -22,7 +22,7 @@ import { changeCleaner } from '../actions/propertyActions';
 
 const styles = {
 	card: {
-		maxWidth: 600,
+		maxWidth: '100%',
 		margin: '20px auto'
 	},
 	media: {
@@ -76,8 +76,6 @@ class PropertyPreview extends React.Component {
 			cleaner: event.target.value
 		});
 
-		console.log(event.target.value.id);
-
 		this.props.changeCleaner(this.props.property.id, event.target.value.id);
 	};
 
@@ -94,11 +92,10 @@ class PropertyPreview extends React.Component {
 					</Link>
 
 					<CardContent>
-						<Typography variant="overline">Select Cleaner</Typography>
 
 						<FormControl className={classes.formControl}>
 							<InputLabel shrink htmlFor="cleaner-native-label-placeholder">
-								Assigned Cleaner
+								Select Default Cleaner
 							</InputLabel>
 							{this.state.cleaner ? (
 								<NativeSelect
