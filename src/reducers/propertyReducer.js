@@ -4,6 +4,7 @@ import {
 	PROPERTIES_FETCHED,
 	PROPERTY_ADDED,
 	CLEANERS_FETCHED,
+	FETCHING_PARTNERS,
 	PARTNERS_FETCHED,
 	CLEANER_UPDATED,
 	GETTING_PROPERTY,
@@ -14,7 +15,8 @@ import {
 	ADD_TASK_ERROR,
 	DELETING_TASK,
 	DELETED_TASK,
-	DELETE_TASK_ERROR
+	DELETE_TASK_ERROR,
+	USER_CHECKED,
 } from '../actions';
 
 const initialState = {
@@ -23,11 +25,19 @@ const initialState = {
 	refreshProperties: false,
 	cleaners: null,
 	refreshCleaners: false,
-	partners: null
+	partners: null,
+	tasks: null,
 };
 
 const propertyReducer = (state = initialState, action) => {
 	switch (action.type) {
+
+		case USER_CHECKED:
+			return {
+				...state,
+				refreshProperties: true,
+			}
+
 		case GETTING_PROPERTY:
 			return { ...state, gettingProperty: true };
 
@@ -52,6 +62,9 @@ const propertyReducer = (state = initialState, action) => {
 
 		case CLEANER_UPDATED:
 			return { ...state, refreshCleaners: true };
+		
+		case FETCHING_PARTNERS:
+			return {...state, refreshCleaners: false};
 
 		case PARTNERS_FETCHED:
 			return { ...state, partners: action.payload };

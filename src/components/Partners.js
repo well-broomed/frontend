@@ -11,12 +11,6 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import Avatar from '@material-ui/core/Avatar';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import Paper from '@material-ui/core/Paper';
-
 import { withStyles } from '@material-ui/core';
 
 //Actions
@@ -49,20 +43,36 @@ class Partners extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			partners: this.props.cleaners,
 			email: ''
 		};
 	}
 
+	componentDidUpdate(prevProps) {
+		if(this.props.refreshProperties !== prevProps.refreshProperties){
+			this.props.getUserProperties();
+		}
+
+		if (this.props.refreshCleaners !== prevProps.refreshCleaners) {
+			this.props.getPartners();
+		}
+	}
+
 	componentDidMount() {
-		this.props.getUserProperties();
-		this.props.getPartners();
+		if(!this.props.properties){
+			this.props.getUserProperties();
+		}
+		if(!this.props.cleaners){
+			this.props.getPartners();
+		}
 	}
 
 	handleInputChange = event => {
 		this.setState({
 			[event.target.name]: event.target.value
 		});
-	};
+	}
+
 	sendEmail = async e => {
 		if (!this.state.email) return;
 		e.preventDefault();
@@ -85,6 +95,7 @@ class Partners extends React.Component {
 		const backendUrl = process.env.backendURL || 'http://localhost:5000';
 		try {
 			const res = await axios.post(`${backendUrl}/api/invites/`, body, options);
+			console.log(res);
 		} catch (err) {
 			console.log(err);
 		}
@@ -129,7 +140,8 @@ const mapStateToProps = state => {
 	return {
 		// state items
 		properties: state.propertyReducer.properties,
-		cleaners: state.propertyReducer.partners
+		cleaners: state.propertyReducer.partners,
+		refreshCleaners: state.propertyReducer.refreshCleaners
 	};
 };
 

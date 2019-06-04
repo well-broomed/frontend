@@ -18,7 +18,7 @@ const GuestList = props => {
 			<Typography variant="h6" className={classes.title}>
 				{listTitle}
 			</Typography>
-			<List className={classes.root}>
+			<List className={classes.checkList}>
 				{taskList.map(({ task_id, text, completed }) => (
 					<ListItem
 						role={undefined}

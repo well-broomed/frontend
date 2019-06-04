@@ -14,15 +14,15 @@ export const checkIfUserExists = (role) => {
 
     // The role selected by the user is passed upon account validation.
 
-    let token = localStorage.getItem('jwt');
+    const token = localStorage.getItem('jwt');
 
-    let options = {
+    const options = {
         headers: {
             Authorization: `Bearer ${token}`,
         }
     }
 
-    let body = {
+    const body = {
         role: role,
     }
 

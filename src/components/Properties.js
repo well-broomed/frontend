@@ -56,11 +56,14 @@ const styles = {
 };
 
 function Transition(props) {
-	return <Slide direction="down" {...props} />;
+	return <Slide direction="up" {...props} />;
 }
 
 class Properties extends React.Component {
 	componentDidMount() {
+		if(!localStorage.getItem('userInfo')){
+			this.props.checkIfUserExists(localStorage.getItem('role') || localStorage.getItem('accountType'));
+		}
 		this.props.getUserProperties();
 	}
 
@@ -77,22 +80,9 @@ class Properties extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			anchorEl: null,
 			addModal: false
 		};
 	}
-
-	handleMenuClick = event => {
-		this.setState({
-			anchorEl: event.currentTarget
-		});
-	};
-
-	handleClose = () => {
-		this.setState({
-			anchorEl: null
-		});
-	};
 
 	handleModalOpen = () => {
 		this.setState({

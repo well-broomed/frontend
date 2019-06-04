@@ -80,13 +80,15 @@ const PropertyChecklist = props => {
 		taskList,
 		deadline,
 		suggestedTasks,
+		addingTask,
+		setAddingTask,
 		handleSubmit,
 		handleDelete,
 		afterStayOptions
 	} = props;
 
 	const [newTask, setNewTask] = useState('');
-	const [addingTask, setAddingTask] = useState(false);
+	// const [addingTask, setAddingTask] = useState(false);
 	const [stateSuggestions, setSuggestions] = React.useState([]);
 
 	const handleSuggestionsFetchRequested = ({ value }) => {
@@ -170,11 +172,16 @@ const PropertyChecklist = props => {
 					</ListItemWrapper>
 				))}
 			</List>
-			{addingTask ? (
-				<form
-					onSubmit={() => {
-						handleSubmit(newTask, deadline);
-						setAddingTask(false);
+			{addingTask === deadline ? (
+				<NewTaskForm
+					className={classes.root}
+					onSubmit={event => {
+						event.preventDefault();
+
+						if (newTask.replace(/\s/g, '').length) {
+							handleSubmit(event, newTask, deadline);
+							setNewTask('');
+						}
 					}}
 				>
 					<Autosuggest
@@ -185,7 +192,7 @@ const PropertyChecklist = props => {
 							value: newTask,
 							onChange: handleChange,
 							autoFocus: true,
-							onBlur: () => setAddingTask(false),
+							onBlur: () => newTask || setAddingTask(false),
 							onKeyDown: e => {
 								if (e.key === 'Escape') setAddingTask(false);
 							}
@@ -202,12 +209,12 @@ const PropertyChecklist = props => {
 							</Paper>
 						)}
 					/>
-				</form>
+				</NewTaskForm>
 			) : (
 				<IconButton
 					aria-label="AddCircle"
 					onClick={() => {
-						setAddingTask(true);
+						setAddingTask(deadline);
 						setNewTask('');
 					}}
 				>
@@ -228,4 +235,9 @@ const SecondaryActionWrapper = styled.div`
 	${ListItemWrapper}:hover & {
 		display: block;
 	}
+`;
+
+const NewTaskForm = styled.form`
+	padding: 0 70px 14px 16px;
+	margin: 0 0 8px;
 `;

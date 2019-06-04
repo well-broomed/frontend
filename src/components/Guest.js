@@ -5,11 +5,17 @@ import { connect } from 'react-redux';
 // Router
 import { withRouter, Link as RouterLink } from 'react-router-dom';
 
+// React-Select
+import Select from 'react-select';
+
+// Moment.js
+import moment from 'moment';
+
 // Components
 import { GuestList } from '../components';
 
 // Actions
-import { getGuest, updateGuestTask } from '../actions';
+import { getGuest, updateGuestTask, reassignCleaner } from '../actions';
 
 // Styled Components
 import styled from 'styled-components';
@@ -17,15 +23,31 @@ import styled from 'styled-components';
 // Material-UI
 import { makeStyles } from '@material-ui/core/styles';
 
+import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 
+import DescriptionOutlined from '@material-ui/icons/DescriptionOutlined';
+
 const useStyles = makeStyles(theme => ({
-	root: {
+	checkList: {
 		width: '100%',
 		maxWidth: 360,
 		backgroundColor: theme.palette.background.paper
-	}
+	},
+	guestInfo: {
+		display: 'flex',
+		justifyContent: 'space-between',
+		width: '100%',
+		maxWidth: 400,
+		backgroundColor: theme.palette.background.paper,
+		padding: theme.spacing(2, 2),
+		borderRadius: 0,
+		boxShadow: 'none'
+	},
+	guide: { fontSize: '64px', padding: 0 },
+	reassignmentText: { margin: '0 0 -2.5rem 0.9rem' },
+	otherCleaner: { color: 'red' }
 }));
 
 const hourConverter = hours => {
@@ -37,14 +59,24 @@ const hourConverter = hours => {
 };
 
 const Guest = props => {
+	const {
+		guest,
+		match,
+		getGuest,
+		gettingGuest,
+		getGuestError,
+		updateGuestTask,
+		reassignCleaner
+	} = props;
+
 	const classes = useStyles();
 
 	useEffect(() => {
-		props.getGuest(props.match.params.guest_id);
+		getGuest(match.params.guest_id);
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 	// Empty array = componentDidMount functionality
 
-	const tasks = props.guest.tasks || [];
+	const tasks = guest.tasks || [];
 
 	const beforeStay = [];
 	const duringStay = [];
@@ -63,8 +95,18 @@ const Guest = props => {
 		}
 	}
 
+	const availableCleaners = guest.availableCleaners
+		? guest.availableCleaners.concat(
+				guest.otherCleaners.map(cleaner => ({
+					...cleaner,
+					// Can't figure out a way to style individual options. Help!
+					label: cleaner.label + ' (color: gray)'
+				}))
+		  )
+		: [];
+
 	const checkHandler = (task_id, completed) => {
-		props.updateGuestTask(props.guest.guest_id, task_id, completed);
+		updateGuestTask(guest.guest_id, task_id, completed);
 	};
 
 	return (
@@ -74,28 +116,26 @@ const Guest = props => {
 					<PropertyImg
 						// Change this to a file!
 						src={
-							props.guest.img_url ||
+							guest.img_url ||
 							'https://images.freeimages.com/images/small-previews/7ea/house-1-1225482.jpg'
 						}
-						alt={props.guest.property_name || 'Property Image'}
+						alt={guest.property_name || 'Property Image'}
 					/>
 
 					<TitleContainer>
-						<Typography variant="h3">
-							{props.guest.guest_name || null}
-						</Typography>
+						<Typography variant="h3">{guest.guest_name || null}</Typography>
 
 						<Typography variant="h6">
-							{props.gettingGuest ? (
+							{gettingGuest && !guest.property_name ? (
 								'Loading...'
-							) : props.getGuestError ? (
+							) : getGuestError ? (
 								'Error'
 							) : (
 								<Link
 									component={RouterLink}
-									to={`/properties/${props.guest.property_id}`}
+									to={`/properties/${guest.property_id}`}
 								>
-									{props.guest.property_name}
+									{guest.property_name}
 								</Link>
 							)}
 						</Typography>
@@ -103,20 +143,20 @@ const Guest = props => {
 				</LeftStuff>
 
 				<Typography variant="h1">
-					{props.guest.tasks &&
+					{guest.tasks &&
 						Math.floor(
-							(props.guest.tasks.reduce(
+							(guest.tasks.reduce(
 								(sum, { completed }) => (completed ? sum + 1 : sum),
 								0
 							) /
-								props.guest.tasks.length) *
+								guest.tasks.length) *
 								100
 						) + '%'}
 				</Typography>
 			</TopBar>
 
 			<GuestContainer>
-				<BeforeAndDuringColumn>
+				<Checklists>
 					<GuestList
 						classes={classes}
 						listTitle="Before Stay"
@@ -130,13 +170,12 @@ const Guest = props => {
 						taskList={duringStay}
 						checkHandler={checkHandler}
 					/>
-				</BeforeAndDuringColumn>
 
-				<AfterColumn>
 					{afterStay.map(
 						(list, deadline) =>
 							list && (
 								<GuestList
+									key={deadline}
 									classes={classes}
 									listTitle={hourConverter(deadline)}
 									taskList={list}
@@ -144,7 +183,79 @@ const Guest = props => {
 								/>
 							)
 					)}
-				</AfterColumn>
+				</Checklists>
+
+				<GuestInfo>
+					<Paper className={classes.guestInfo}>
+						<LeftColumn>
+							<Dates>
+								<DateColumn>
+									<Typography component="p">Check-In</Typography>
+									<Typography variant="h4">
+										{guest.checkin
+											? moment(guest.checkin).format('M/D')
+											: '--/--'}
+									</Typography>
+								</DateColumn>
+
+								<DateColumn>
+									<Typography component="p">Check-Out</Typography>
+									<Typography variant="h4">
+										{guest.checkout
+											? moment(guest.checkout).format('M/D')
+											: '--/--'}
+									</Typography>
+								</DateColumn>
+							</Dates>
+
+							<Typography variant="body2" className={classes.reassignmentText}>
+								Assign cleaner
+							</Typography>
+							<CleanerSelect
+								value={
+									guest.cleaner_id && {
+										value: guest.cleaner_id,
+										label: guest.cleaner_name
+									}
+								}
+								options={availableCleaners}
+								onChange={({ value }) => reassignCleaner(guest.guest_id, value)}
+							/>
+						</LeftColumn>
+
+						<RightColumn>
+							<GuestGuideIcon
+								target="_blank"
+								active={!!guest.guest_guide}
+								href={guest.guest_guide}
+							>
+								<DescriptionOutlined className={classes.guide} />
+							</GuestGuideIcon>
+							<GuideLink
+								target="_blank"
+								active={!!guest.guest_guide}
+								href={guest.guest_guide}
+							>
+								Guest Guide
+							</GuideLink>
+
+							<AssistantGuideIcon
+								target="_blank"
+								active={!!guest.assistant_guide}
+								href={guest.assistant_guide}
+							>
+								<DescriptionOutlined className={classes.guide} />
+							</AssistantGuideIcon>
+							<GuideLink
+								target="_blank"
+								active={!!guest.assistant_guide}
+								href={guest.assistant_guide}
+							>
+								Assistant Guide
+							</GuideLink>
+						</RightColumn>
+					</Paper>
+				</GuestInfo>
 			</GuestContainer>
 		</React.Fragment>
 	);
@@ -152,12 +263,15 @@ const Guest = props => {
 
 const mapStateToProps = state => {
 	return {
-		userInfo: state.authReducer.userInfo,
+		currentUser: state.authReducer.currentUser,
 
 		guest: state.guestReducer.guest,
 
 		gettingGuest: state.guestReducer.gettingGuest,
-		getGuestError: state.guestReducer.getGuestError
+		getGuestError: state.guestReducer.getGuestError,
+
+		reassigningCleaner: state.guestReducer.reassigningCleaner,
+		reassignCleanerError: state.guestReducer.reassignCleanerError
 	};
 };
 
@@ -166,7 +280,8 @@ export default withRouter(
 		mapStateToProps,
 		{
 			getGuest,
-			updateGuestTask
+			updateGuestTask,
+			reassignCleaner
 		}
 	)(Guest)
 );
@@ -201,10 +316,60 @@ const GuestContainer = styled.div`
 	display: flex;
 `;
 
-const BeforeAndDuringColumn = styled.div`
+const Checklists = styled.div`
 	width: 50%;
 `;
 
-const AfterColumn = styled.div`
+const GuestInfo = styled.div`
 	width: 50%;
+	/* padding: 32px 0 0; */
+	padding: 2rem 0 0;
+`;
+
+const LeftColumn = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	min-width: 60%;
+	padding: 4px 0 0;
+`;
+
+const Dates = styled.div`
+	display: flex;
+`;
+
+const DateColumn = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 50%;
+`;
+
+const CleanerSelect = styled(Select)`
+	margin: 0 0 0.7rem 0.7rem;
+`;
+
+const RightColumn = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	/* margin-top: -4px; */
+`;
+
+const GuestGuideIcon = styled.a`
+	color: ${props => (props.active ? '#3f51b5' : '#cccccc')};
+	text-decoration: none;
+`;
+
+const AssistantGuideIcon = styled.a`
+	color: ${props => (props.active ? '#3f51b5' : '#cccccc')};
+	text-decoration: none;
+	margin: 5px 0 0;
+`;
+
+const GuideLink = styled.a`
+	color: ${props => (props.active ? '#3f51b5' : '#cccccc')};
+	text-decoration: none;
+	cursor: ${props => (props.active ? 'pointer' : 'default')};
+	margin-top: -4px;
 `;
