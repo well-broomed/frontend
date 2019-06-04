@@ -159,6 +159,7 @@ function getSuggestionValue(suggestion) {
 const Property = props => {
 	const classes = useStyles();
 
+	const [addingTask, setAddingTask] = useState(null);
 	const [newTask, setNewTask] = useState('');
 	const [newDeadline, setNewDeadline] = React.useState(null);
 	const [stateSuggestions, setSuggestions] = React.useState([]);
@@ -189,8 +190,12 @@ const Property = props => {
 		renderSuggestion
 	};
 
-	const handleSubmit = (newTask, deadline) => {
+	const handleSubmit = (event, newTask, deadline) => {
+		event.preventDefault();
+
 		props.addTask(props.property.property_id, newTask, deadline);
+
+		setNewTask('');
 
 		// at the moment, errors eat your input with no feedback
 	};
@@ -219,6 +224,8 @@ const Property = props => {
 	const ProperyListProps = {
 		classes,
 		suggestedTasks,
+		addingTask,
+		setAddingTask,
 		handleSubmit,
 		handleDelete
 	};
@@ -303,9 +310,11 @@ const Property = props => {
 						}}
 					/>
 					{newDeadline && (
-						<form
-							onSubmit={() => {
-								handleSubmit(newTask, newDeadline.value);
+						<NewTaskForm
+							className={classes.root}
+							onSubmit={event => {
+								handleSubmit(event, newTask, newDeadline.value);
+								setAddingTask(parseInt(newDeadline.value));
 								setNewDeadline(null);
 							}}
 						>
@@ -318,7 +327,7 @@ const Property = props => {
 									value: newTask,
 									onChange: handleChange,
 									autoFocus: true,
-									onBlur: () => setNewDeadline(null),
+									onBlur: () => newTask || setNewDeadline(null),
 									onKeyDown: e => {
 										if (e.key === 'Escape') setNewDeadline(null);
 									}
@@ -335,7 +344,7 @@ const Property = props => {
 									</Paper>
 								)}
 							/>
-						</form>
+						</NewTaskForm>
 					)}
 				</AfterColumn>
 			</PropertyContainer>
@@ -399,4 +408,9 @@ const BeforeAndDuringColumn = styled.div`
 
 const AfterColumn = styled.div`
 	width: 50%;
+`;
+
+const NewTaskForm = styled.form`
+	padding: 16px 70px 14px 16px;
+	margin: 0 0 8px;
 `;
