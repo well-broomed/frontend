@@ -17,29 +17,35 @@ import {
 	AppBar,
 	withStyles,
 	Paper,
-	withTheme
+	withTheme,
+    Divider
 } from '@material-ui/core';
 
 const styles = {
 	progressbar: {
 		width: '50%',
 		display: 'flex',
-		margin: 'auto'
+        margin: 'auto',
+        height: '200px'
 	},
 	progressBarReports: {
 		width: '75%',
 		display: 'flex'
 	},
 	appbar: {
-		marginTop: '10px'
-	},
-	reports: {
 		marginTop: '15px'
+    },
+    divider: {
+        margin: '15px 0'
+    },
+	reports: {
+		marginTop: '20px'
 	},
 	progresses: {
 		display: 'flex',
 		flexWrap: 'wrap',
-		justifyContent: 'center'
+        justifyContent: 'center',
+        margin: '10px 0'
 	},
 	singleProgress: {
 		width: '33%',
@@ -123,14 +129,15 @@ class Reports extends React.Component {
 					className={classes.reports}
 				>
 					<Typography component="div" dir={this.props.theme.direction}>
-						<div className={classes.progressbar}>
-							<CircularProgressbar value={33} text={33 + '%'} />
-						</div>
-						<Typography variant="h4" align="center">
+                    <Typography variant="h4" align="center">
 							{' '}
 							Overall Completion{' '}
 						</Typography>
-						<Typography variant="h5"> Properties </Typography>
+						<div className={classes.progressbar}>
+							<CircularProgressbar value={33} text={33 + '%'} />
+						</div>
+                        <Divider className={classes.divider}/>
+						<Typography variant="h4" align="center"> Properties </Typography>
 						<div className={classes.progresses}>
 							{dummyProperties.map(property => {
 								return (
@@ -149,7 +156,8 @@ class Reports extends React.Component {
 								);
 							})}
 						</div>
-						<Typography variant="h5"> Partners </Typography>
+                        <Divider className={classes.divider}/>
+						<Typography variant="h4" align="center"> Partners </Typography>
 						<div className={classes.progresses}>
 							{dummyPartners.map(partner => {
 								return (
@@ -169,7 +177,55 @@ class Reports extends React.Component {
 							})}
 						</div>
 					</Typography>
-					<Typography dir={this.props.theme.direction}> Past</Typography>
+					<Typography dir={this.props.theme.direction}>
+                    <Typography variant="h4" align="center">
+							{' '}
+							Overall Completion{' '}
+						</Typography>
+                    <div className={classes.progressbar}>
+							<CircularProgressbar value={33} text={33 + '%'} />
+						</div>
+                    <Divider className={classes.divider}/>
+                    <Typography variant="h5" align='center'> Properties </Typography>
+						<div className={classes.progresses}>
+							{dummyProperties.map(property => {
+								return (
+									<div className={classes.singleProgress}>
+										<div className={classes.progressBarReports}>
+											<CircularProgressbar
+												value={property.property_tasks}
+												text={`${property.property_tasks}%`}
+											/>
+										</div>
+										<Typography variant="h6" align="center">
+											{' '}
+											{property.property_name}{' '}
+										</Typography>
+									</div>
+								);
+							})}
+						</div>
+                        <Divider className={classes.divider}/>
+						<Typography variant="h5" align="center"> Partners </Typography>
+						<div className={classes.progresses}>
+							{dummyPartners.map(partner => {
+								return (
+									<div className={classes.singleProgress}>
+										<div className={classes.progressBarReports}>
+											<CircularProgressbar
+												value={partner.partner_tasks}
+												text={`${partner.partner_tasks}%`}
+											/>
+										</div>
+										<Typography variant="h6" align="center">
+											{' '}
+											{partner.partner_name}{' '}
+										</Typography>
+									</div>
+								);
+							})}
+						</div>
+					</Typography>
 				</SwipeableViews>
 			</div>
 		);
