@@ -133,7 +133,7 @@ class Guests extends React.Component {
                     maxWidth = {'70%'}
 				>
 					<DialogContent fullWidth = {false} maxWidth = {'100%'}>
-						<AddGuestForm close={this.handleModalClose} />
+						<AddGuestForm isOpen = {this.state.addModal} close={this.handleModalClose} />
 					</DialogContent>
 				</Dialog>
 

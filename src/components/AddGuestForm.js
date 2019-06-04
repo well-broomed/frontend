@@ -44,12 +44,25 @@ class AddGuestForm extends React.Component {
         })
     }
 
+    componentDidUpdate(prevProps){
+        // reset the form if it's closed
+        if(this.props.isOpen !== prevProps.isOpen){
+            this.setState({
+                guest_name: '',
+                property_id: null,
+                email: null,
+                cleaner_id: null,
+                cleaner: null,
+                property: null,
+            })
+        }
+    }
+
 
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			addModal: false,
 			guest_name: '',
 			property_id: null,
 			checkin: null,
@@ -79,9 +92,9 @@ class AddGuestForm extends React.Component {
             cleaner_id: this.state.cleaner_id,
         };
 
-        console.log(guestInfo);
-		this.props.addGuest(this.state.property_id, guestInfo);
-		this.props.close();
+        this.props.addGuest(this.state.property_id, guestInfo);
+
+        this.props.close();
     };
     
     handleCheckin = event => {
@@ -110,8 +123,6 @@ class AddGuestForm extends React.Component {
                 cleaner_id: event.target.value
             })
         }
-
-        console.log(this.state);
     }
 
 	render() {
