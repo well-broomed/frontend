@@ -11,7 +11,13 @@ import PropTypes from 'prop-types';
 import { PropertyChecklist } from '../components';
 
 // Actions
-import { getProperty, addTask, deleteTask } from '../actions';
+import {
+	getProperty,
+	addTask,
+	updateTask,
+	updateDeadline,
+	deleteTask
+} from '../actions';
 
 // React-Select
 import Select from 'react-select';
@@ -200,6 +206,16 @@ const Property = props => {
 		// at the moment, errors eat your input with no feedback
 	};
 
+	const handleUpdate = (event, task_id, text, deadline) => {
+		event.preventDefault();
+
+		props.updateDeadline(task_id, text, deadline);
+	};
+
+	const handleDeadline = (oldDeadline, newDeadline) => {
+		props.updateDeadline(props.property.property_id, oldDeadline, newDeadline);
+	};
+
 	const handleDelete = task_id => {
 		props.deleteTask(task_id);
 	};
@@ -227,6 +243,8 @@ const Property = props => {
 		addingTask,
 		setAddingTask,
 		handleSubmit,
+		handleUpdate,
+		handleDeadline,
 		handleDelete
 	};
 
@@ -373,6 +391,8 @@ export default withRouter(
 		{
 			getProperty,
 			addTask,
+			updateTask,
+			updateDeadline,
 			deleteTask
 		}
 	)(withStyles(styles)(Property))

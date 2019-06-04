@@ -83,6 +83,7 @@ const PropertyChecklist = props => {
 		addingTask,
 		setAddingTask,
 		handleSubmit,
+		handleDeadline,
 		handleDelete,
 		afterStayOptions
 	} = props;
@@ -136,7 +137,7 @@ const PropertyChecklist = props => {
 		return `${
 			hours % 24
 				? hours + (hours > 1 ? ' hours' : ' hour')
-				: hours / 24 + (hours > 24 ? 'days' : 'day')
+				: hours / 24 + (hours > 24 ? ' days' : ' day')
 		} After Stay`;
 	}
 
@@ -149,6 +150,9 @@ const PropertyChecklist = props => {
 						value: deadline,
 						label: hourConverter(deadline)
 					}}
+					onChange={({ value: newDeadline }) =>
+						handleDeadline(deadline, newDeadline)
+					}
 					options={afterStayOptions}
 				/>
 			) : (
