@@ -15,10 +15,18 @@ import {
 	Tabs,
 	Tab,
 	AppBar,
-	makeStyles,
+	withStyles,
     Paper,
     withTheme,
 } from '@material-ui/core';
+
+const styles = {
+    progressbar: {
+        width: '50%',
+        display: 'flex',
+        margin: 'auto'
+    }
+}
 
 class Reports extends React.Component {
 	constructor(props) {
@@ -32,7 +40,9 @@ class Reports extends React.Component {
 		this.setState({ tabValue: newValue });
 	};
 
-	render() {
+    render()
+        {
+            const { classes } = this.props; 
 		return (
 			<div>
 				<Typography variant="h2">Reports</Typography>
@@ -54,9 +64,11 @@ class Reports extends React.Component {
                     onChangeIndex={this.handleChangeIndex}
                 >
                 <Typography component="div" dir={this.props.theme.direction}> 
+                <div className={classes.progressbar}>
                 <CircularProgressbar value={33} text={33 +'%'} strokeWidth={8}
                     styles={buildStyles({width: '50%' })}
                 />
+                </div>
                 <Typography variant='h4' align='center'> Overall Completion </Typography>
                 <Typography variant='h5'> Properties </Typography>
                 <Typography variant='h5'> Partners </Typography>
@@ -81,5 +93,5 @@ export default withRouter(
 		{
 			// actions
 		}
-	)(withTheme(Reports))
+	)(withStyles(styles, { withTheme: true })(Reports))
 );
