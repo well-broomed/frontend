@@ -71,12 +71,13 @@ class PropertyPreview extends React.Component {
 		};
 	}
 
-	handleSelect = event => {
+	handleSelect =  event => {
+		const selectedCleaner = this.props.cleaners.filter(cleaner => cleaner.user_id === event.target.value)
 		this.setState({
-			cleaner: event.target.value
+			cleaner: selectedCleaner
 		});
 
-		this.props.changeCleaner(this.props.property.id, event.target.value.id);
+		this.props.changeCleaner(this.props.property.property_id, event.target.value);
 	};
 
 	render() {
@@ -111,7 +112,7 @@ class PropertyPreview extends React.Component {
 									{this.props.cleaners
 										? this.props.cleaners.map(cleaner => {
 												return (
-													<option value={cleaner} key={cleaner.user_id}>
+													<option value={cleaner.user_id} key={cleaner.user_id}>
 														{cleaner.user_name}
 													</option>
 												);
