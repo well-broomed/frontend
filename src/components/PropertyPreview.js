@@ -35,6 +35,27 @@ const styles = {
 };
 
 class PropertyPreview extends React.Component {
+	componentDidMount() {
+		if(this.props.cleaners){
+		let defaultCleaner;
+			if (this.props.property.cleaner_id === null) {
+				defaultCleaner = this.props.cleaners.map(cleaner => {
+					if (cleaner.user_id === this.props.property.manager_id) {
+						return cleaner;
+					}
+				});
+			} else {
+				this.props.cleaners.map(cleaner => {	
+					if (cleaner.user_id === this.props.property.cleaner_id) {
+						defaultCleaner = cleaner;
+					}
+				});
+			}
+			this.setState({
+				cleaner: defaultCleaner
+			});
+		}
+	}
 
 	componentDidUpdate(oldProps) {
 		if (
@@ -55,7 +76,6 @@ class PropertyPreview extends React.Component {
 					}
 				});
 			}
-
 			this.setState({
 				cleaner: defaultCleaner
 			});
