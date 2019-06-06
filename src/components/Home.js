@@ -18,26 +18,26 @@ import PersonAddTwoTone from '@material-ui/icons/PersonAddTwoTone';
 import TimelapseTwoTone from '@material-ui/icons/TimelapseTwoTone';
 import NotificationsActiveTwoTone from '@material-ui/icons/NotificationsActiveTwoTone';
 
-const Cta = styled.div`
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: space-between;
-    align-items: center;
-    `;
-
 const FeatureGrid = styled.div`
     display: flex;
     flex-flow: row wrap;
     width: 100%;
+    padding: 10px;
+    background: white;
+    
+    margin: 20px 0px;
 `;
 
 const Feature = styled.div`
     width: 50%;
     display: flex;
     flex-flow: row nowrap;
+    justify-content: center;
+    margin: 20px 0px;
 
     .icon{
         width: auto;
+        margin: 0px 10px;
         
         svg{
             font-size: 3rem;
@@ -50,6 +50,33 @@ const Feature = styled.div`
 
     `;
 
+const Intro = styled.div`
+    text-align: center;
+
+    h3{
+        margin: 20px 0px;
+    }
+
+    h5{
+        margin: 20px 0px;
+    }
+    `;
+
+const InfoList = styled.div`
+
+    margin: 20px 0px;
+    `;
+
+const CallToAction = styled.div`
+    margin: 20px 0px;
+    text-align: center;
+
+    button{
+        font-size: 1.5rem;
+        margin: 10px 0px;
+    }
+
+`;
 
 
 class Home extends React.Component {
@@ -62,11 +89,12 @@ class Home extends React.Component {
     render(){
         return (
             <div>
-                <Cta>
-                <Typography variant = 'h2'>Welcome to WellBroomed!</Typography>
-                <Typography variant = 'body1'>WellBroomed helps managers of short-term rental properties keep track of the various cleaning tasks that need to be completed between guest check-ins.</Typography>
-                
-                <Typography variant = 'h4'>With WellBroomed, you can:</Typography>
+                    <Intro>
+                <Typography variant = 'h3'>Welcome to WellBroomed!</Typography>
+                <Typography variant = 'h5'>WellBroomed helps managers of short-term rental properties keep track of the various cleaning tasks that need to be completed between guest check-ins.</Typography>
+                </Intro>
+
+                <Typography variant = 'h6'>With WellBroomed, you can:</Typography>
 
                 <FeatureGrid>
                 <Feature>
@@ -93,7 +121,9 @@ class Home extends React.Component {
                 </Feature>
                 </FeatureGrid>
 
-                <Typography variant = 'h4'>How does it work?</Typography>
+                <InfoList>
+
+                <Typography variant = 'h6'>How does it work?</Typography>
                 <Typography variant = 'body1'>
                     <ul>
                         <li>Each property has its own checklist template.</li>
@@ -101,16 +131,15 @@ class Home extends React.Component {
                         <li>Every time you add a reservation, a cleaning shift is generated with tasks from the template.</li>
                         <li>You can choose which assistants you want to assign to each property, and notify them whenever there is an upcoming reservation.</li>
                     </ul>
-            
-                
-                
-                
                 </Typography>
+                </InfoList>
 
-                <Typography variant = 'h4'>Ready to simplify your property management tasks?</Typography>
-                <Button variant = 'contained' color = 'primary'>Sign Me Up!</Button>
+                <CallToAction>
 
-                </Cta>
+                <Typography variant = 'h5'>Ready to simplify your property management tasks?</Typography>
+                <Button size = 'large' variant = 'contained' color = 'primary'>Sign Me Up!</Button>
+                </CallToAction>
+
                 
             </div>
         )
