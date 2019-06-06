@@ -63,35 +63,49 @@ class Home extends React.Component {
         return (
             <div>
                 <Cta>
-                <Typography variant = 'h2'>WellBroomed</Typography>
-                <Typography>WellBroomed helps managers of short-term rental properties keep track of the various cleaning tasks that need to be completed between guest check-ins.</Typography>
+                <Typography variant = 'h2'>Welcome to WellBroomed!</Typography>
+                <Typography variant = 'body1'>WellBroomed helps managers of short-term rental properties keep track of the various cleaning tasks that need to be completed between guest check-ins.</Typography>
                 
                 <Typography variant = 'h4'>With WellBroomed, you can:</Typography>
 
                 <FeatureGrid>
                 <Feature>
                     <div className = 'icon'><ListAltTwoTone/></div>
-                    <div className = 'text'>Create and manage cleaning checklists for your short-term rental properties.</div>
+                    <div className = 'text'><Typography variant = 'body1'>Create and manage cleaning checklists for your short-term rental properties.</Typography></div>
                 </Feature>
 
 
 
                 <Feature>
                     <div className = 'icon'><PersonAddTwoTone/></div>
-                    <div className = 'text'>Invite cleaning assistants and assign cleaning shifts.</div>
+                    <div className = 'text'><Typography variant = 'body1'>Invite cleaning assistants and assign cleaning shifts.</Typography></div>
                 </Feature>
 
 
                 <Feature>
                     <div className = 'icon'><TimelapseTwoTone/></div>
-                    <div className = 'text'>Check the turnover progress of all your properties from one place.</div>
+                    <div className = 'text'><Typography variant = 'body1'>Check the turnover progress of all your properties from one place.</Typography></div>
                 </Feature>
 
                 <Feature>
                     <div className = 'icon'><NotificationsActiveTwoTone/></div>
-                    <div className = 'text'>Automatically notify guests when their property is ready.</div>
+                    <div className = 'text'><Typography variant = 'body1'>Automatically notify guests when their property is ready.</Typography></div>
                 </Feature>
                 </FeatureGrid>
+
+                <Typography variant = 'h4'>How does it work?</Typography>
+                <Typography variant = 'body1'>
+                    <ul>
+                        <li>Each property has its own checklist template.</li>
+                        <li>Within each template, you can assign tasks to be completed Before, During, and After the stay.</li>
+                        <li>Every time you add a reservation, a cleaning shift is generated with tasks from the template.</li>
+                        <li>You can choose which assistants you want to assign to each property, and notify them whenever there is an upcoming reservation.</li>
+                    </ul>
+            
+                
+                
+                
+                </Typography>
 
                 <Typography variant = 'h4'>Ready to simplify your property management tasks?</Typography>
                 <Button variant = 'contained' color = 'primary'>Sign Me Up!</Button>
