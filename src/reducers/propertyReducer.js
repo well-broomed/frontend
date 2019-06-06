@@ -61,7 +61,7 @@ const propertyReducer = (state = initialState, action) => {
 			return { ...state, cleaners: action.payload, refreshCleaners: false };
 
 		case CLEANER_UPDATED:
-			return { ...state, refreshCleaners: true };
+			return { ...state, refreshCleaners: true, refreshProperties: true };
 		
 		case FETCHING_PARTNERS:
 			return {...state, refreshCleaners: false};
