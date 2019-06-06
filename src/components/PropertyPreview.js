@@ -36,10 +36,6 @@ const styles = {
 
 class PropertyPreview extends React.Component {
 
-	componentDidMount(){
-
-	}
-
 	componentDidUpdate(oldProps) {
 		if (
 			this.props.cleaners !== oldProps.cleaners 
@@ -59,7 +55,7 @@ class PropertyPreview extends React.Component {
 					}
 				});
 			}
-			console.log(defaultCleaner);
+
 			this.setState({
 				cleaner: defaultCleaner
 			});
@@ -76,7 +72,9 @@ class PropertyPreview extends React.Component {
 	}
 
 	handleSelect =  event => {
-		const selectedCleaner = this.props.cleaners.filter(cleaner => cleaner.user_id === event.target.value)
+		const selectedCleaner = this.props.cleaners.filter(
+			cleaner => cleaner.user_id === event.target.value
+		);
 		this.setState({
 			cleaner: selectedCleaner
 		});
