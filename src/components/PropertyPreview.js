@@ -51,6 +51,7 @@ class PropertyPreview extends React.Component {
 					}
 				});
 			}
+
 			this.setState({
 				cleaner: defaultCleaner
 			});
@@ -76,6 +77,7 @@ class PropertyPreview extends React.Component {
 					}
 				});
 			}
+
 			this.setState({
 				cleaner: defaultCleaner
 			});
