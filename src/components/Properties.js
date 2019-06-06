@@ -30,7 +30,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
 // Actions
-import { getUserProperties, getCleaners } from '../actions';
+import { checkIfUserExists, getUserProperties, getCleaners } from '../actions';
 import PropertyPreview from './PropertyPreview';
 
 const TopBar = styled.div`
@@ -157,6 +157,7 @@ export default withRouter(
 		mapStateToProps,
 		{
 			// actions
+			checkIfUserExists,
 			getUserProperties,
 			getCleaners,
 		}

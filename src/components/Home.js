@@ -52,6 +52,10 @@ const Feature = styled.div`
 
 const Intro = styled.div`
     text-align: center;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
 
     h3{
         margin: 20px 0px;
@@ -59,6 +63,7 @@ const Intro = styled.div`
 
     h5{
         margin: 20px 0px;
+        width: 75%;
     }
     `;
 
