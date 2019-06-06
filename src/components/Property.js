@@ -166,8 +166,9 @@ const Property = props => {
 	const classes = useStyles();
 
 	const [addingTask, setAddingTask] = useState(null);
-	const [newTask, setNewTask] = useState('');
+	const [updatingTask, setUpdatingTask] = useState(null);
 	const [newDeadline, setNewDeadline] = React.useState(null);
+	const [newTask, setNewTask] = useState('');
 	const [stateSuggestions, setSuggestions] = React.useState([]);
 
 	useEffect(() => {
@@ -209,14 +210,16 @@ const Property = props => {
 	const handleUpdate = (event, task_id, text, deadline) => {
 		event.preventDefault();
 
-		props.updateDeadline(task_id, text, deadline);
+		props.updateTask(task_id, text, deadline);
 	};
 
 	const handleDeadline = (oldDeadline, newDeadline) => {
 		props.updateDeadline(props.property.property_id, oldDeadline, newDeadline);
 	};
 
-	const handleDelete = task_id => {
+	const handleDelete = (event, task_id) => {
+		event.stopPropagation();
+
 		props.deleteTask(task_id);
 	};
 
@@ -243,6 +246,8 @@ const Property = props => {
 		addingTask,
 		setAddingTask,
 		handleSubmit,
+		updatingTask,
+		setUpdatingTask,
 		handleUpdate,
 		handleDeadline,
 		handleDelete

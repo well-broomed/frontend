@@ -83,13 +83,16 @@ const PropertyChecklist = props => {
 		addingTask,
 		setAddingTask,
 		handleSubmit,
+		updatingTask,
+		setUpdatingTask,
+		handleUpdate,
 		handleDeadline,
 		handleDelete,
 		afterStayOptions
 	} = props;
 
 	const [newTask, setNewTask] = useState('');
-	// const [addingTask, setAddingTask] = useState(false);
+	const [updatedTask, setUpdatedTask] = useState('');
 	const [stateSuggestions, setSuggestions] = React.useState([]);
 
 	const handleSuggestionsFetchRequested = ({ value }) => {
@@ -102,6 +105,10 @@ const PropertyChecklist = props => {
 
 	const handleChange = (event, { newValue }) => {
 		setNewTask(newValue);
+	};
+
+	const handleUpdatedChange = (event, { newValue }) => {
+		setUpdatedTask(newValue);
 	};
 
 	const autosuggestProps = {
@@ -163,16 +170,68 @@ const PropertyChecklist = props => {
 			<List className={classes.root}>
 				{taskList.map(({ task_id, text }) => (
 					<ListItemWrapper key={task_id}>
-						<ListItem role={undefined} button>
-							<ListItemText primary={text} />
-							<SecondaryActionWrapper>
-								<ListItemSecondaryAction onClick={() => handleDelete(task_id)}>
-									<IconButton aria-label="Delete">
-										<DeleteIcon />
-									</IconButton>
-								</ListItemSecondaryAction>
-							</SecondaryActionWrapper>
-						</ListItem>
+						{updatingTask === task_id ? (
+							<UpdateTaskForm
+								className={classes.root}
+								onSubmit={event => {
+									event.preventDefault();
+
+									if (updatedTask.replace(/\s/g, '').length) {
+										handleUpdate(event, task_id, updatedTask, deadline);
+
+										setUpdatingTask(null);
+									}
+
+									setUpdatedTask('');
+								}}
+							>
+								<Autosuggest
+									{...autosuggestProps}
+									inputProps={{
+										classes,
+										placeholder: 'Update task',
+										value: updatedTask,
+										onChange: handleUpdatedChange,
+										autoFocus: true,
+										onBlur: () => setUpdatingTask(null),
+										onKeyDown: e => {
+											if (e.key === 'Escape') setUpdatingTask(null);
+										}
+									}}
+									theme={{
+										container: classes.container,
+										suggestionsContainerOpen: classes.suggestionsContainerOpen,
+										suggestionsList: classes.suggestionsList,
+										suggestion: classes.suggestion
+									}}
+									renderSuggestionsContainer={options => (
+										<Paper {...options.containerProps} square>
+											{options.children}
+										</Paper>
+									)}
+								/>
+							</UpdateTaskForm>
+						) : (
+							<ListItem
+								role={undefined}
+								button
+								onClick={() => {
+									setUpdatedTask(text);
+									setUpdatingTask(task_id);
+								}}
+							>
+								<ListItemText primary={text} />
+								<SecondaryActionWrapper>
+									<ListItemSecondaryAction
+										onClick={event => handleDelete(event, task_id)}
+									>
+										<IconButton aria-label="Delete">
+											<DeleteIcon />
+										</IconButton>
+									</ListItemSecondaryAction>
+								</SecondaryActionWrapper>
+							</ListItem>
+						)}
 					</ListItemWrapper>
 				))}
 			</List>
@@ -244,4 +303,8 @@ const SecondaryActionWrapper = styled.div`
 const NewTaskForm = styled.form`
 	padding: 0 70px 14px 16px;
 	margin: 0 0 8px;
+`;
+
+const UpdateTaskForm = styled.form`
+	padding: 8px 70px 8px 16px;
 `;
