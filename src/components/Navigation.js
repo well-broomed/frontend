@@ -207,6 +207,9 @@ class Navigation extends React.Component {
 						<ListItemText primary="Home" />
 					</ListItem>
 
+					{localStorage.getItem('jwt') ? (
+					
+					<>
 					<ListItem button key="Properties" component={Link} to="/properties">
 						<ListItemIcon>
 							<BusinessTwoTone />
@@ -234,17 +237,38 @@ class Navigation extends React.Component {
 						</ListItemIcon>
 						<ListItemText primary="Reports" />
 					</ListItem>
-				</List>
-				<Divider />
+					</>
+					) : null}
 
-				<List>
-					<ListItem button key="Account" component={Link} to="/account">
-						<ListItemIcon>
-							<AccountCircleTwoTone />
-						</ListItemIcon>
-						<ListItemText primary="Account" />
-					</ListItem>
 				</List>
+
+				{localStorage.getItem('jwt') ? (
+					<>
+					<Divider />
+
+					<List>
+						<ListItem button key="Account" component={Link} to="/account">
+							<ListItemIcon>
+								<AccountCircleTwoTone />
+							</ListItemIcon>
+							<ListItemText primary="Account" />
+						</ListItem>
+					</List>			
+					</>
+
+				) : (
+					<>
+					<Divider />
+					<br></br>
+					<div style = {{padding: '0px 10px'}}>
+					<Typography variant = 'subtitle'>Please login to access the menu.</Typography>
+					</div>
+					</>
+				)}
+
+				
+	
+				
 			</div>
 		);
 

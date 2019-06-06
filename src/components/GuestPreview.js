@@ -5,6 +5,8 @@ import {connect} from 'react-redux';
 // Router
 import {withRouter, Link} from 'react-router-dom';
 
+import {deleteGuest} from '../actions/index';
+
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
@@ -13,6 +15,8 @@ import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 
 import moment from 'moment';
+
+import styled from 'styled-components';
 
 const token = localStorage.getItem('jwt');
 const userInfo = localStorage.getItem('userInfo');
@@ -38,6 +42,11 @@ class GuestPreview extends React.Component {
         this.state = {
             guest: null,
         };
+
+    }
+
+    handleDelete = () => {
+        console.log(this.props.guest.guest_id);
     }
     
     render(){
@@ -46,8 +55,9 @@ class GuestPreview extends React.Component {
         return (
             <div>
                 <br></br>
-                <Link to = {`/guests/${this.props.guest.guest_id}`} >
+                
                 <Card>
+                <Link to = {`/guests/${this.props.guest.guest_id}`} >
                     <CardContent>
                     {this.state.guest ? (
                         <div>
@@ -59,11 +69,13 @@ class GuestPreview extends React.Component {
                             <Typography variant = 'h6'>{moment(this.state.guest.checkin).format('L')}</Typography>
                             <Typography variant = 'overline'>Check-Out</Typography>
                             <Typography variant = 'h6'>{moment(this.state.guest.checkout).format('L')}</Typography>
+
                         </div>
                     ) : null}
                     </CardContent>
+                    </Link>
+                    <button onClick = {this.handleDelete}>DELETE</button>
                 </Card>
-                </Link>
                 <br></br>
             </div>
         )
@@ -82,6 +94,7 @@ const mapStateToProps = state => {
 
 export default withRouter(connect(mapStateToProps, {
     // actions
+    deleteGuest
     
 })(GuestPreview))
 
