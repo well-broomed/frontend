@@ -99,7 +99,14 @@ const propertyReducer = (state = initialState, action) => {
 			return {
 				...state,
 				updatingTask: undefined,
-				property: { ...state.property, tasks: action.payload }
+				property: {
+					...state.property,
+					tasks: state.property.tasks.map(task =>
+						task.task_id === action.payload.task_id
+							? action.payload.updatedTask
+							: task
+					)
+				}
 			};
 
 		case UPDATE_TASK_ERROR:

@@ -242,7 +242,10 @@ export const updateTask = (task_id, text, deadline) => {
 		axios
 			.put(`${backendUrl}/api/tasks/${task_id}`, { text, deadline }, options)
 			.then(res => {
-				dispatch({ type: UPDATED_TASK, payload: res.data.updatedTasks });
+				dispatch({
+					type: UPDATED_TASK,
+					payload: { task_id, updatedTask: res.data.updatedTask }
+				});
 			})
 			.catch(error => {
 				console.log(error);
