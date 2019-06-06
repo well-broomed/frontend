@@ -54,14 +54,12 @@ const styles = {
 		marginRight: 20
 	},
 	drawer: {
-		zIndex: 0
 	},
 	appBar: {
-		zIndex: 10
 	},
 	list: {
 		width: 250,
-		margin: '60px 0px'
+		margin: '60px 0px',
 	},
 	loginBtn: {
 		background: '#1b5e20',

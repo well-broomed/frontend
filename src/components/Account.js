@@ -51,6 +51,10 @@ const styles = {
 class Account extends React.Component {
 
     componentDidMount(){
+        if(!localStorage.getItem('jwt')){
+			this.props.history.replace('/');
+        }
+        
         this.props.checkIfUserExists(localStorage.getItem('role'));
     }
 

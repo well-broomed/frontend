@@ -40,13 +40,20 @@ const styles = {
 };
 
 class Partners extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			partners: this.props.cleaners,
-			email: ''
-		};
+
+	componentDidMount() {
+		if(!localStorage.getItem('jwt')){
+			this.props.history.replace('/');
+		}
+		
+		if(!this.props.properties){
+			this.props.getUserProperties();
+		}
+		if(!this.props.cleaners){
+			this.props.getPartners();
+		}
 	}
+
 
 	componentDidUpdate(prevProps) {
 		if(this.props.refreshProperties !== prevProps.refreshProperties){
@@ -58,14 +65,15 @@ class Partners extends React.Component {
 		}
 	}
 
-	componentDidMount() {
-		if(!this.props.properties){
-			this.props.getUserProperties();
-		}
-		if(!this.props.cleaners){
-			this.props.getPartners();
-		}
+	constructor(props) {
+		super(props);
+		this.state = {
+			partners: this.props.cleaners,
+			email: ''
+		};
 	}
+
+
 
 	handleInputChange = event => {
 		this.setState({

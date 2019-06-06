@@ -61,6 +61,11 @@ function Transition(props) {
 class Guests extends React.Component {
 
     componentDidMount(){
+
+        if(!localStorage.getItem('jwt')){
+			this.props.history.replace('/');
+        }
+        
         if(!this.props.guests){
             this.props.fetchAllGuests();
         }

@@ -6,6 +6,13 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 
 class Reports extends React.Component {
+
+    componentDidMount(){
+        if(!localStorage.getItem('jwt')){
+			this.props.history.replace('/');
+		}
+    }
+
     constructor(props){
         super(props);
         this.state = {};
