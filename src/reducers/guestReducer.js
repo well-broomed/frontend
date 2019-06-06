@@ -7,6 +7,7 @@ import {
 	UPDATE_GUEST_TASK_ERROR,
 	GUESTS_FETCHED,
 	GUEST_ADDED,
+	GUEST_DELETED,
 } from '../actions';
 
 const initialState = {
@@ -42,6 +43,12 @@ const guestReducer = (state = initialState, action) => {
 				...state,
 				refreshGuests: true,
 			}
+
+		case GUEST_DELETED:
+				return{
+					...state,
+					refreshGuests: true,
+				}
 		
 
 		// updateGuestTask

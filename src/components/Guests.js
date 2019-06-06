@@ -80,6 +80,7 @@ class Guests extends React.Component {
     }
 
     componentDidUpdate(prevProps){
+        console.log('newguests');
         if(prevProps.refreshGuests !== this.props.refreshGuests){
             this.props.fetchAllGuests();
         }
