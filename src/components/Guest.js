@@ -39,7 +39,6 @@ const useStyles = makeStyles(theme => ({
 		display: 'flex',
 		justifyContent: 'space-between',
 		width: '100%',
-		maxWidth: 400,
 		backgroundColor: theme.palette.background.paper,
 		padding: theme.spacing(2, 2),
 		borderRadius: 0,
@@ -110,7 +109,7 @@ const Guest = props => {
 	};
 
 	return (
-		<React.Fragment>
+		<GuestContainer>
 			<TopBar>
 				<LeftStuff>
 					<PropertyImg
@@ -155,109 +154,107 @@ const Guest = props => {
 				</Typography>
 			</TopBar>
 
-			<GuestContainer>
-				<Checklists>
-					<GuestList
-						classes={classes}
-						listTitle="Before Stay"
-						taskList={beforeStay}
-						checkHandler={checkHandler}
-					/>
+			<Checklists>
+				<GuestList
+					classes={classes}
+					listTitle="Before Stay"
+					taskList={beforeStay}
+					checkHandler={checkHandler}
+				/>
 
-					<GuestList
-						classes={classes}
-						listTitle="During Stay"
-						taskList={duringStay}
-						checkHandler={checkHandler}
-					/>
+				<GuestList
+					classes={classes}
+					listTitle="During Stay"
+					taskList={duringStay}
+					checkHandler={checkHandler}
+				/>
 
-					{afterStay.map(
-						(list, deadline) =>
-							list && (
-								<GuestList
-									key={deadline}
-									classes={classes}
-									listTitle={hourConverter(deadline)}
-									taskList={list}
-									checkHandler={checkHandler}
-								/>
-							)
-					)}
-				</Checklists>
-
-				<GuestInfo>
-					<Paper className={classes.guestInfo}>
-						<LeftColumn>
-							<Dates>
-								<DateColumn>
-									<Typography component="p">Check-In</Typography>
-									<Typography variant="h4">
-										{guest.checkin
-											? moment(guest.checkin).format('M/D')
-											: '--/--'}
-									</Typography>
-								</DateColumn>
-
-								<DateColumn>
-									<Typography component="p">Check-Out</Typography>
-									<Typography variant="h4">
-										{guest.checkout
-											? moment(guest.checkout).format('M/D')
-											: '--/--'}
-									</Typography>
-								</DateColumn>
-							</Dates>
-
-							<Typography variant="body2" className={classes.reassignmentText}>
-								Assign cleaner
-							</Typography>
-							<CleanerSelect
-								value={
-									guest.cleaner_id && {
-										value: guest.cleaner_id,
-										label: guest.cleaner_name
-									}
-								}
-								options={availableCleaners}
-								onChange={({ value }) => reassignCleaner(guest.guest_id, value)}
+				{afterStay.map(
+					(list, deadline) =>
+						list && (
+							<GuestList
+								key={deadline}
+								classes={classes}
+								listTitle={hourConverter(deadline)}
+								taskList={list}
+								checkHandler={checkHandler}
 							/>
-						</LeftColumn>
+						)
+				)}
+			</Checklists>
 
-						<RightColumn>
-							<GuestGuideIcon
-								target="_blank"
-								active={!!guest.guest_guide}
-								href={guest.guest_guide}
-							>
-								<DescriptionOutlined className={classes.guide} />
-							</GuestGuideIcon>
-							<GuideLink
-								target="_blank"
-								active={!!guest.guest_guide}
-								href={guest.guest_guide}
-							>
-								Guest Guide
-							</GuideLink>
+			<GuestInfo>
+				<Paper className={classes.guestInfo}>
+					<LeftColumn>
+						<Dates>
+							<DateColumn>
+								<Typography component="p">Check-In</Typography>
+								<Typography variant="h4">
+									{guest.checkin
+										? moment(guest.checkin).format('M/D')
+										: '--/--'}
+								</Typography>
+							</DateColumn>
 
-							<AssistantGuideIcon
-								target="_blank"
-								active={!!guest.assistant_guide}
-								href={guest.assistant_guide}
-							>
-								<DescriptionOutlined className={classes.guide} />
-							</AssistantGuideIcon>
-							<GuideLink
-								target="_blank"
-								active={!!guest.assistant_guide}
-								href={guest.assistant_guide}
-							>
-								Assistant Guide
-							</GuideLink>
-						</RightColumn>
-					</Paper>
-				</GuestInfo>
-			</GuestContainer>
-		</React.Fragment>
+							<DateColumn>
+								<Typography component="p">Check-Out</Typography>
+								<Typography variant="h4">
+									{guest.checkout
+										? moment(guest.checkout).format('M/D')
+										: '--/--'}
+								</Typography>
+							</DateColumn>
+						</Dates>
+
+						<Typography variant="body2" className={classes.reassignmentText}>
+							Assign cleaner
+						</Typography>
+						<CleanerSelect
+							value={
+								guest.cleaner_id && {
+									value: guest.cleaner_id,
+									label: guest.cleaner_name
+								}
+							}
+							options={availableCleaners}
+							onChange={({ value }) => reassignCleaner(guest.guest_id, value)}
+						/>
+					</LeftColumn>
+
+					<RightColumn>
+						<GuestGuideIcon
+							target="_blank"
+							active={!!guest.guest_guide}
+							href={guest.guest_guide}
+						>
+							<DescriptionOutlined className={classes.guide} />
+						</GuestGuideIcon>
+						<GuideLink
+							target="_blank"
+							active={!!guest.guest_guide}
+							href={guest.guest_guide}
+						>
+							Guest Guide
+						</GuideLink>
+
+						<AssistantGuideIcon
+							target="_blank"
+							active={!!guest.assistant_guide}
+							href={guest.assistant_guide}
+						>
+							<DescriptionOutlined className={classes.guide} />
+						</AssistantGuideIcon>
+						<GuideLink
+							target="_blank"
+							active={!!guest.assistant_guide}
+							href={guest.assistant_guide}
+						>
+							Assistant Guide
+						</GuideLink>
+					</RightColumn>
+				</Paper>
+			</GuestInfo>
+		</GuestContainer>
 	);
 };
 
@@ -286,6 +283,12 @@ export default withRouter(
 	)(Guest)
 );
 
+const GuestContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	max-width: 880px;
+`;
+
 const TopBar = styled.div`
 	width: 100%;
 	display: flex;
@@ -312,15 +315,22 @@ const TitleContainer = styled.div`
 	margin: 0 0 0 16px;
 `;
 
-const GuestContainer = styled.div`
-	display: flex;
-`;
-
 const Checklists = styled.div`
 	width: 50%;
+	max-width: 360px;
+	overflow-y: auto;
+	position: fixed;
+	top: 262px;
+	bottom: 30px;
+
+	/* ::-webkit-scrollbar {
+		width: 0px;
+		background: transparent;
+	} */
 `;
 
 const GuestInfo = styled.div`
+	align-self: flex-end;
 	width: 50%;
 	/* padding: 32px 0 0; */
 	padding: 2rem 0 0;
