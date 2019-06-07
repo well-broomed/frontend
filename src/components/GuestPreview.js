@@ -100,6 +100,7 @@ class GuestPreview extends React.Component {
     
     render(){
         // tab 0 = upcoming, 1 = incomplete, 2 = complete
+        console.log(this.props.guest);
         return (
             <div>
                 <br></br>
@@ -114,10 +115,14 @@ class GuestPreview extends React.Component {
                                 {this.state.guest.guest_name}
                                 </Typography>
 
+                                <Typography variant = 'h6'>
+                                {this.state.guest.property_name}
+                                </Typography>
+
                                 <Typography variant = 'overline'>Check-In</Typography>
-                                <Typography variant = 'h6'>{moment(this.state.guest.checkin).format('L')}</Typography>
+                                <Typography variant = 'h6'>{moment(this.state.guest.checkin).format('LLL')}</Typography>
                                 <Typography variant = 'overline'>Check-Out</Typography>
-                                <Typography variant = 'h6'>{moment(this.state.guest.checkout).format('L')}</Typography>
+                                <Typography variant = 'h6'>{moment(this.state.guest.checkout).format('LLL')}</Typography>
                         </CardText>
                         </Link>
 
