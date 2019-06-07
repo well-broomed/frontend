@@ -118,8 +118,9 @@ class Reports extends React.Component {
 						textColor="primary"
 						centered
 					>
-						<Tab label="Upcoming" />
-						<Tab label="Past" />
+						<Tab label="Before Stay" />
+						<Tab label="During Stay" />
+						<Tab label="After Stay" />
 					</Tabs>
 				</AppBar>
 				<SwipeableViews
