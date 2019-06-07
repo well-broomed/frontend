@@ -11,7 +11,13 @@ import PropTypes from 'prop-types';
 import { PropertyChecklist } from '../components';
 
 // Actions
-import { getProperty, addTask, deleteTask } from '../actions';
+import {
+	getProperty,
+	addTask,
+	updateTask,
+	updateDeadline,
+	deleteTask
+} from '../actions';
 
 // React-Select
 import Select from 'react-select';
@@ -160,8 +166,9 @@ const Property = props => {
 	const classes = useStyles();
 
 	const [addingTask, setAddingTask] = useState(null);
-	const [newTask, setNewTask] = useState('');
+	const [updatingTask, setUpdatingTask] = useState(null);
 	const [newDeadline, setNewDeadline] = React.useState(null);
+	const [newTask, setNewTask] = useState('');
 	const [stateSuggestions, setSuggestions] = React.useState([]);
 
 	useEffect(() => {
@@ -200,7 +207,19 @@ const Property = props => {
 		// at the moment, errors eat your input with no feedback
 	};
 
-	const handleDelete = task_id => {
+	const handleUpdate = (event, task_id, text, deadline) => {
+		event.preventDefault();
+
+		props.updateTask(task_id, text, deadline);
+	};
+
+	const handleDeadline = (oldDeadline, newDeadline) => {
+		props.updateDeadline(props.property.property_id, oldDeadline, newDeadline);
+	};
+
+	const handleDelete = (event, task_id) => {
+		event.stopPropagation();
+
 		props.deleteTask(task_id);
 	};
 
@@ -227,6 +246,10 @@ const Property = props => {
 		addingTask,
 		setAddingTask,
 		handleSubmit,
+		updatingTask,
+		setUpdatingTask,
+		handleUpdate,
+		handleDeadline,
 		handleDelete
 	};
 
@@ -373,6 +396,8 @@ export default withRouter(
 		{
 			getProperty,
 			addTask,
+			updateTask,
+			updateDeadline,
 			deleteTask
 		}
 	)(withStyles(styles)(Property))
