@@ -9,7 +9,9 @@ import {
 	GUEST_ADDED,
 	REQUESTING_REASSIGNMENT,
 	REQUESTED_REASSIGNMENT,
-	REQUEST_REASSIGNMENT_ERROR
+	REQUEST_REASSIGNMENT_ERROR,
+	GUEST_UPDATED,
+	GUEST_DELETED,
 } from '../actions';
 
 const initialState = {
@@ -46,6 +48,17 @@ const guestReducer = (state = initialState, action) => {
 				refreshGuests: true,
 			}
 		
+		case GUEST_UPDATED:
+			return {
+				...state,
+				refreshGuests: true,
+			}
+
+		case GUEST_DELETED:
+			return {
+				...state,
+				refreshGuests: true,
+			}
 
 		// updateGuestTask
 		case UPDATING_GUEST_TASK:

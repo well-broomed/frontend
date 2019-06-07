@@ -30,7 +30,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
 // Actions
-import { getUserProperties, getCleaners } from '../actions';
+import { checkIfUserExists, getUserProperties, getCleaners } from '../actions';
 import PropertyPreview from './PropertyPreview';
 
 const TopBar = styled.div`
@@ -61,7 +61,10 @@ function Transition(props) {
 
 class Properties extends React.Component {
 	componentDidMount() {
-		if(!localStorage.getItem('userInfo')){
+
+		if(!localStorage.getItem('jwt')){
+			this.props.history.replace('/');
+		} else if(!localStorage.getItem('userInfo')){
 			this.props.checkIfUserExists(localStorage.getItem('role') || localStorage.getItem('accountType'));
 		}
 		this.props.getUserProperties();
@@ -157,6 +160,7 @@ export default withRouter(
 		mapStateToProps,
 		{
 			// actions
+			checkIfUserExists,
 			getUserProperties,
 			getCleaners,
 		}

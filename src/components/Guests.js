@@ -61,6 +61,11 @@ function Transition(props) {
 class Guests extends React.Component {
 
     componentDidMount(){
+
+        if(!localStorage.getItem('jwt')){
+			this.props.history.replace('/');
+        }
+        
         if(!this.props.guests){
             this.props.fetchAllGuests();
         }
@@ -75,6 +80,7 @@ class Guests extends React.Component {
     }
 
     componentDidUpdate(prevProps){
+        console.log('newguests');
         if(prevProps.refreshGuests !== this.props.refreshGuests){
             this.props.fetchAllGuests();
         }
@@ -127,13 +133,12 @@ class Guests extends React.Component {
                 <Dialog
 					open={this.state.addModal}
 					TransitionComponent={Transition}
-					keepMounted
                     onClose={this.handleModalClose}
                     fullWidth = {false}
                     maxWidth = {'70%'}
 				>
 					<DialogContent fullWidth = {false} maxWidth = {'100%'}>
-						<AddGuestForm close={this.handleModalClose} />
+						<AddGuestForm isOpen = {this.state.addModal} close={this.handleModalClose} />
 					</DialogContent>
 				</Dialog>
 
