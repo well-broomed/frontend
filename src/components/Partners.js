@@ -51,20 +51,16 @@ class Partners extends React.Component {
 	componentDidUpdate(prevProps) {
 		if(this.props.refreshProperties !== prevProps.refreshProperties){
 			this.props.getUserProperties();
-		}
-
-		if (this.props.refreshCleaners !== prevProps.refreshCleaners) {
 			this.props.getPartners();
 		}
 	}
 
 	componentDidMount() {
-		if(!this.props.properties){
+		if(!this.props.partners){
 			this.props.getUserProperties();
-		}
-		if(!this.props.cleaners){
 			this.props.getPartners();
-		}
+	}
+		
 	}
 
 	handleInputChange = event => {
@@ -141,7 +137,8 @@ const mapStateToProps = state => {
 		// state items
 		properties: state.propertyReducer.properties,
 		cleaners: state.propertyReducer.partners,
-		refreshCleaners: state.propertyReducer.refreshCleaners
+		refreshCleaners: state.propertyReducer.refreshCleaners,
+		refreshProperties: state.propertyReducer.refreshProperties
 	};
 };
 
