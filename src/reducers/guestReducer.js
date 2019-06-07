@@ -8,6 +8,7 @@ import {
 	GUESTS_FETCHED,
 	GUEST_ADDED,
 	GUEST_DELETED,
+	GUEST_UPDATED,
 } from '../actions';
 
 const initialState = {
@@ -39,6 +40,12 @@ const guestReducer = (state = initialState, action) => {
 			}
 
 		case GUEST_ADDED:
+			return {
+				...state,
+				refreshGuests: true,
+			}
+
+		case GUEST_UPDATED:
 			return {
 				...state,
 				refreshGuests: true,

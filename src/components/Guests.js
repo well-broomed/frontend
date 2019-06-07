@@ -133,7 +133,6 @@ class Guests extends React.Component {
                 <Dialog
 					open={this.state.addModal}
 					TransitionComponent={Transition}
-					keepMounted
                     onClose={this.handleModalClose}
                     fullWidth = {false}
                     maxWidth = {'70%'}

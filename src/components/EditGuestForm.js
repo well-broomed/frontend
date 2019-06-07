@@ -1,11 +1,12 @@
 import React from 'react';
-// import styled from 'styled-components';
 
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core';
 
-import { addGuest } from '../actions/index';
+import { updateGuest } from '../actions/index';
+
+import styled from 'styled-components';
 
 import moment from 'moment';
 
@@ -31,73 +32,73 @@ const styles = {
         margin: '10px 0px',
 	},
 	formButton: {
-        margin: '10px 0px',
-        padding: '20px',
+		margin: '10px 0px'
 	}
 };
 
-class AddGuestForm extends React.Component {
+const FormButtons = styled.div`
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+
+    button{
+        width: 45%;
+        padding: 20px;
+    }
+`;
+
+class EditGuestForm extends React.Component {
 
     componentDidMount(){
+        // set the initial state to be the passed guest prop
+        // the property is fixed, as the checklist is dependent on this
+        // to change the property, a new reservation must be created
+        // this form only manages date changes, cleaner changes, and name/email changes
+
         this.setState({
-            checkin: moment(),
-            checkout: moment(),
+            guest_name: this.props.guest.guest_name,
+            email: this.props.guest.email,
+            checkin: this.props.guest.checkin,
+            checkout: this.props.guest.checkout,
+            cleaner_id: this.props.guest.cleaner_id,
         })
     }
 
-    componentDidUpdate(prevProps){
-        // reset the form if it's closed
-        if(this.props.isOpen !== prevProps.isOpen){
-            this.setState({
-                guest_name: '',
-                property_id: null,
-                email: null,
-                cleaner_id: null,
-                cleaner: null,
-                property: null,
-            })
+    constructor(props){
+        super(props);
+
+        this.state = {
+            guest_name: '',
+            email: null,
+            checkin: null,
+            checkout: null,
+            cleaner_id: null,
         }
     }
 
+    handleInput = name => event => {
+        this.setState({
+            [name]: event.target.value
+        })
+    }
 
-	constructor(props) {
-		super(props);
+    handleSubmit = event => {
+        event.preventDefault();
 
-		this.state = {
-			guest_name: '',
-			property_id: null,
-			checkin: null,
-			checkout: null,
-			email: null,
-            cleaner_id: null,
-            cleaner: null,
-            property: null,
-		};
-	}
-
-	handleInput = name => event => {
-		this.setState({
-			[name]: event.target.value
-		});
-	};
-
-	handleSubmit = event => {
-		event.preventDefault();
-
-		const guestInfo = {
-            property_id: this.state.property_id,
+        const guestChanges = {
+            property_id: this.props.guest.property_id,
             guest_name: this.state.guest_name,
             checkin: this.state.checkin,
             checkout: this.state.checkout,
             email: this.state.email || null,
             cleaner_id: this.state.cleaner_id,
         };
-
-        this.props.addGuest(this.state.property_id, guestInfo);
+        this.props.updateGuest(this.props.guest.guest_id, guestChanges);
 
         this.props.close();
-    };
-    
+    }
+
     handleCheckin = event => {
         this.setState({
             checkin: event.format(),
@@ -126,45 +127,25 @@ class AddGuestForm extends React.Component {
         }
     }
 
-	render() {
-		const { classes } = this.props;
-		return (
-			<div>
-				<form
+    render(){
+        const {classes} = this.props;
+        console.log(this.props, 'GUEST FORM PROPS');
+
+        return (
+            <div>
+                <form
 					onSubmit={this.handleSubmit}
 					className={classes.container}
 					noValidate
 					autoComplete="off"
 				>
-					<Typography variant="h4">Add a New Guest</Typography>
+					<Typography variant="h4">Edit Guest Information</Typography>
 
                     <Typography variant = 'overline'>
                         Property
                     </Typography>
 
-                    <NativeSelect
-                        value={this.state.property} 
-                        onChange={this.handleSelect('property')}
-                        input={
-                            <Input
-                                name="property"
-                                id="property-native-label-placeolder"
-                            />
-                        }
-                    >
-                        <option value = {null} >{'Select a Property'}</option>
-                        {this.props.properties
-                            ? this.props.properties.map(property => {
-                                    return (
-                                        <option value={property.property_id} key={property.property_id}>
-                                            {property.property_name}
-                                            {' - '}
-                                            {property.address}
-                                        </option>
-                                    );
-                                })
-                            : null}
-                    </NativeSelect>   
+                    <Typography variant = 'h6'>{this.props.guest.property_name}</Typography>
 
 
                     <Typography variant = 'overline'>
@@ -181,14 +162,17 @@ class AddGuestForm extends React.Component {
                             />
                         }
                     >
-                        <option value = '' >{'Select a Cleaner'}</option>
+                        <option value = {this.props.guest.cleaner_id} >{this.props.guest.cleaner_name}</option>
                         {this.props.cleaners
                             ? this.props.cleaners.map(cleaner => {
+                                if(cleaner.user_id !== this.props.guest.cleaner_id){
                                     return (
                                         <option value={cleaner.user_id} key={cleaner.user_id}>
                                             {cleaner.user_name}
                                         </option>
                                     );
+                                }
+                                    
                                 })
                             : null}
                     </NativeSelect> 
@@ -224,26 +208,32 @@ class AddGuestForm extends React.Component {
                         onChange={this.handleCheckout}
                     />
 					
+                    <FormButtons>
+                    <Button className = {classes.formButton} variant = 'outlined' type = 'submit' onClick = {this.props.close}>
+                        Cancel
+                    </Button>
 					<Button
 						className={classes.formButton}
 						variant="contained"
 						color="primary"
-                        type="submit"
+						type="submit"
 					>
-						Add Reservation
+						Submit Changes
 					</Button>
+                    </FormButtons>
 				</form>
-			</div>
-		);
-	}
+
+            </div>
+        )
+    }
 }
+
 
 const mapStateToProps = state => {
 	return {
         // state items
         properties: state.propertyReducer.properties,
         cleaners: state.propertyReducer.cleaners,
-
 	};
 };
 
@@ -252,7 +242,7 @@ export default withRouter(
 		mapStateToProps,
 		{
 			// actions
-			addGuest
+			updateGuest,
 		}
-	)(withStyles(styles)(AddGuestForm))
+	)(withStyles(styles)(EditGuestForm))
 );

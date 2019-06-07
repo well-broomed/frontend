@@ -23,7 +23,10 @@ import moment from 'moment';
 import styled from 'styled-components';
 
 import DeleteForeverTwoTone from '@material-ui/icons/DeleteForeverTwoTone';
+import EditTwoTone from '@material-ui/icons/EditTwoTone';
 
+
+import EditGuestForm from './EditGuestForm';
 
 const CardContainer = styled.div`
     width: 100%;
@@ -74,12 +77,23 @@ class GuestPreview extends React.Component {
             })
         })
     }
+
+    componentDidUpdate(prevProps){
+        if(prevProps.refreshGuests !== this.props.refreshGuests){
+            axios.get(`${backendUrl}/api/guests/${this.props.guest.guest_id}`, options).then(res => {
+                this.setState({
+                    guest: res.data.guest
+                })
+            })
+        }
+    }
     
     constructor(props){
         super(props);
         this.state = {
             guest: null,
             modalOpen: false,
+            editModal: false,
         };
 
     }
@@ -97,10 +111,16 @@ class GuestPreview extends React.Component {
             modalOpen: !this.state.modalOpen
         })
     }
+
+    toggleEdit = event => {
+        this.setState({
+            editModal: !this.state.editModal
+        })
+    }
     
     render(){
         // tab 0 = upcoming, 1 = incomplete, 2 = complete
-        console.log(this.props.guest);
+        // console.log(this.props.guest);
         return (
             <div>
                 <br></br>
@@ -127,6 +147,7 @@ class GuestPreview extends React.Component {
                         </Link>
 
                     <CardActions>
+                    <EditTwoTone onClick = {this.toggleEdit} />
                     <DeleteForeverTwoTone onClick = {this.toggleModal}/>
                     </CardActions>
                     </CardContainer>
@@ -151,6 +172,14 @@ class GuestPreview extends React.Component {
                     </DialogActions>
                 </Dialog>
 
+                <Dialog open = {this.state.editModal} onClose = {this.toggleEdit} fullWidth = {false} maxWidth = {'70%'}>
+                    <DialogContent>
+                        <EditGuestForm close = {this.toggleEdit} guest = {this.state.guest} />
+                    </DialogContent>
+                </Dialog>
+
+
+
             </div>
         )
     }
@@ -161,7 +190,8 @@ const mapStateToProps = state => {
     return {
         // state items
         tasks: state.propertyReducer.tasks,
-        guests: state.guestReducer.guests
+        guests: state.guestReducer.guests,
+        refreshGuests: state.guestReducer.refreshGuests,
 
     }
 }
