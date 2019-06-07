@@ -40,6 +40,33 @@ const styles = {
 };
 
 class Partners extends React.Component {
+
+	componentDidMount() {
+		if(!localStorage.getItem('jwt')){
+			this.props.history.replace('/');
+		}
+		
+		if(!this.props.properties){
+			this.props.getUserProperties();
+		}
+		if(!this.props.cleaners){
+			this.props.getPartners();
+		}
+		
+		if(!this.props.partners){
+			this.props.getUserProperties();
+			this.props.getPartners();
+		}	
+	}
+
+
+	componentDidUpdate(prevProps) {
+		if(this.props.refreshProperties !== prevProps.refreshProperties){
+			this.props.getUserProperties();
+			this.props.getPartners();
+		}
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -48,24 +75,7 @@ class Partners extends React.Component {
 		};
 	}
 
-	componentDidUpdate(prevProps) {
-		if(this.props.refreshProperties !== prevProps.refreshProperties){
-			this.props.getUserProperties();
-		}
 
-		if (this.props.refreshCleaners !== prevProps.refreshCleaners) {
-			this.props.getPartners();
-		}
-	}
-
-	componentDidMount() {
-		if(!this.props.properties){
-			this.props.getUserProperties();
-		}
-		if(!this.props.cleaners){
-			this.props.getPartners();
-		}
-	}
 
 	handleInputChange = event => {
 		this.setState({
@@ -141,7 +151,8 @@ const mapStateToProps = state => {
 		// state items
 		properties: state.propertyReducer.properties,
 		cleaners: state.propertyReducer.partners,
-		refreshCleaners: state.propertyReducer.refreshCleaners
+		refreshCleaners: state.propertyReducer.refreshCleaners,
+		refreshProperties: state.propertyReducer.refreshProperties
 	};
 };
 

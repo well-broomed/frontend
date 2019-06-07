@@ -17,6 +17,13 @@ export const ERROR = 'ERROR';
 export const ADDING_GUEST = 'ADDING_GUEST';
 export const GUEST_ADDED = 'GUEST_ADDED';
 
+
+export const UPDATING_GUEST = 'UPDATING_GUEST';
+export const GUEST_UPDATED = 'GUEST_UPDATED';
+
+export const DELETING_GUEST = 'DELETING_GUEST';
+export const GUEST_DELETED = 'GUEST_DELETED';
+
 // reassignCleaner
 export const REQUESTING_REASSIGNMENT = 'REQUESTING_REASSIGNMENT';
 export const REQUESTED_REASSIGNMENT = 'REQUESTED_REASSIGNMENT';
@@ -110,6 +117,43 @@ export const addGuest = (property_id, guest) => {
 		}).catch(error => {
 			console.log(error);
 			dispatch({type: ERROR});
+		})
+	}
+}
+
+
+export const updateGuest = (guest_id, guest) => {
+	let options = setHeaders();
+
+	const endpoint = axios.put(`${backendUrl}/api/guests/${guest_id}`, guest, options);
+
+	return dispatch => {
+		dispatch({type: UPDATING_GUEST});
+
+		endpoint.then(res => {
+			console.log('update guest res', res.data);
+
+			dispatch({type: GUEST_UPDATED, payload: res.data});
+		}).catch(error => {
+			console.log(error);
+			dispatch({type: ERROR})
+		})
+	}
+}
+
+export const deleteGuest = (guest_id) => {
+	let options = setHeaders();
+
+	const endpoint = axios.delete(`${backendUrl}/api/guests/${guest_id}`, options);
+
+	return dispatch => {
+		dispatch({type: DELETING_GUEST});
+
+		endpoint.then(res => {
+			dispatch({type: GUEST_DELETED})
+		}).catch(error => {
+			console.log(error);
+			dispatch({type: ERROR})
 		})
 	}
 }

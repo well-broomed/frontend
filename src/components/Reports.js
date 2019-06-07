@@ -63,6 +63,12 @@ class Reports extends React.Component {
 		};
 	}
 
+	componentDidMount(){
+        if(!localStorage.getItem('jwt')){
+			this.props.history.replace('/');
+		}
+    }
+
 	handleTabChange = (event, newValue) => {
 		this.setState({ tabValue: newValue });
 	};

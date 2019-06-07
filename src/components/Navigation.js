@@ -24,8 +24,6 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-// import InboxIcon from '@material-ui/icons/MoveToInbox';
-// import MailIcon from '@material-ui/icons/Mail';
 
 // Icons
 import AccountCircleTwoTone from '@material-ui/icons/AccountCircleTwoTone';
@@ -56,15 +54,12 @@ const styles = {
 		marginRight: 20
 	},
 	drawer: {
-		zIndex: 0
 	},
-
 	appBar: {
-		zIndex: 10
 	},
 	list: {
 		width: 250,
-		margin: '60px 0px'
+		margin: '60px 0px',
 	},
 	loginBtn: {
 		background: '#1b5e20',
@@ -212,6 +207,9 @@ class Navigation extends React.Component {
 						<ListItemText primary="Home" />
 					</ListItem>
 
+					{localStorage.getItem('jwt') ? (
+					
+					<>
 					<ListItem button key="Properties" component={Link} to="/properties">
 						<ListItemIcon>
 							<BusinessTwoTone />
@@ -239,17 +237,38 @@ class Navigation extends React.Component {
 						</ListItemIcon>
 						<ListItemText primary="Reports" />
 					</ListItem>
-				</List>
-				<Divider />
+					</>
+					) : null}
 
-				<List>
-					<ListItem button key="Account" component={Link} to="/account">
-						<ListItemIcon>
-							<AccountCircleTwoTone />
-						</ListItemIcon>
-						<ListItemText primary="Account" />
-					</ListItem>
 				</List>
+
+				{localStorage.getItem('jwt') ? (
+					<>
+					<Divider />
+
+					<List>
+						<ListItem button key="Account" component={Link} to="/account">
+							<ListItemIcon>
+								<AccountCircleTwoTone />
+							</ListItemIcon>
+							<ListItemText primary="Account" />
+						</ListItem>
+					</List>			
+					</>
+
+				) : (
+					<>
+					<Divider />
+					<br></br>
+					<div style = {{padding: '0px 10px'}}>
+					<Typography variant = 'subtitle'>Please login to access the menu.</Typography>
+					</div>
+					</>
+				)}
+
+				
+	
+				
 			</div>
 		);
 
