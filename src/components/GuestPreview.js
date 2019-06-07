@@ -79,7 +79,7 @@ class GuestPreview extends React.Component {
     }
 
     componentDidUpdate(prevProps){
-        if(prevProps.refreshGuests !== this.props.refreshGuests){
+        if((prevProps.refreshGuests !== this.props.refreshGuests) && this.props.refreshGuests){
             axios.get(`${backendUrl}/api/guests/${this.props.guest.guest_id}`, options).then(res => {
                 this.setState({
                     guest: res.data.guest
@@ -106,13 +106,13 @@ class GuestPreview extends React.Component {
         })
     }
 
-    toggleModal = event => {
+    toggleModal = () => {
         this.setState({
             modalOpen: !this.state.modalOpen
         })
     }
 
-    toggleEdit = event => {
+    toggleEdit = () => {
         this.setState({
             editModal: !this.state.editModal
         })
@@ -192,7 +192,6 @@ const mapStateToProps = state => {
         tasks: state.propertyReducer.tasks,
         guests: state.guestReducer.guests,
         refreshGuests: state.guestReducer.refreshGuests,
-
     }
 }
 

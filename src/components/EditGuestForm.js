@@ -44,7 +44,9 @@ const FormButtons = styled.div`
 
     button{
         width: 45%;
-        padding: 20px;
+        min-height: 80px;
+        padding: 10px;
+        
     }
 `;
 
@@ -94,6 +96,7 @@ class EditGuestForm extends React.Component {
             email: this.state.email || null,
             cleaner_id: this.state.cleaner_id,
         };
+        
         this.props.updateGuest(this.props.guest.guest_id, guestChanges);
 
         this.props.close();
@@ -127,10 +130,12 @@ class EditGuestForm extends React.Component {
         }
     }
 
+    handleClose = event => {
+        this.props.close();
+    }
+
     render(){
         const {classes} = this.props;
-        console.log(this.props, 'GUEST FORM PROPS');
-
         return (
             <div>
                 <form
@@ -209,7 +214,7 @@ class EditGuestForm extends React.Component {
                     />
 					
                     <FormButtons>
-                    <Button className = {classes.formButton} variant = 'outlined' type = 'submit' onClick = {this.props.close}>
+                    <Button className = {classes.formButton} variant = 'outlined' onClick = {this.handleClose}>
                         Cancel
                     </Button>
 					<Button
