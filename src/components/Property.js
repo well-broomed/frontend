@@ -11,7 +11,13 @@ import PropTypes from 'prop-types';
 import { PropertyChecklist } from '../components';
 
 // Actions
-import { getProperty, addTask, deleteTask } from '../actions';
+import {
+	getProperty,
+	addTask,
+	updateTask,
+	updateDeadline,
+	deleteTask
+} from '../actions';
 
 // React-Select
 import Select from 'react-select';
@@ -25,9 +31,6 @@ import { withStyles } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 
 import Typography from '@material-ui/core/Typography';
-
-import IconButton from '@material-ui/core/IconButton';
-import AddCircle from '@material-ui/icons/AddCircle';
 
 import Autosuggest from 'react-autosuggest';
 import match from 'autosuggest-highlight/match';
@@ -162,10 +165,11 @@ function getSuggestionValue(suggestion) {
 const Property = props => {
 	const classes = useStyles();
 
-	const [newTaskDeadline, setNewTaskDeadline] = useState(null);
-	const [state, setState] = useState({ newTask: '' });
+	const [addingTask, setAddingTask] = useState(null);
+	const [updatingTask, setUpdatingTask] = useState(null);
+	const [newDeadline, setNewDeadline] = React.useState(null);
+	const [newTask, setNewTask] = useState('');
 	const [stateSuggestions, setSuggestions] = React.useState([]);
-	const [newDeadline, setnewDeadline] = React.useState(null);
 
 	useEffect(() => {
 		props.getProperty(props.match.params.property_id);
@@ -180,11 +184,8 @@ const Property = props => {
 		setSuggestions([]);
 	};
 
-	const handleChange = name => (event, { newValue }) => {
-		setState({
-			...state,
-			[name]: newValue
-		});
+	const handleChange = (event, { newValue }) => {
+		setNewTask(newValue);
 	};
 
 	const autosuggestProps = {
@@ -196,15 +197,29 @@ const Property = props => {
 		renderSuggestion
 	};
 
-	const handleSubmit = (newTask, deadline) => {
+	const handleSubmit = (event, newTask, deadline) => {
+		event.preventDefault();
+
 		props.addTask(props.property.property_id, newTask, deadline);
 
-		setnewDeadline(null);
+		setNewTask('');
 
 		// at the moment, errors eat your input with no feedback
 	};
 
-	const handleDelete = task_id => {
+	const handleUpdate = (event, task_id, text, deadline) => {
+		event.preventDefault();
+
+		props.updateTask(task_id, text, deadline);
+	};
+
+	const handleDeadline = (oldDeadline, newDeadline) => {
+		props.updateDeadline(props.property.property_id, oldDeadline, newDeadline);
+	};
+
+	const handleDelete = (event, task_id) => {
+		event.stopPropagation();
+
 		props.deleteTask(task_id);
 	};
 
@@ -228,7 +243,13 @@ const Property = props => {
 	const ProperyListProps = {
 		classes,
 		suggestedTasks,
+		addingTask,
+		setAddingTask,
 		handleSubmit,
+		updatingTask,
+		setUpdatingTask,
+		handleUpdate,
+		handleDeadline,
 		handleDelete
 	};
 
@@ -250,7 +271,7 @@ const Property = props => {
 					</Typography>
 
 					<Typography variant="h6">
-						{props.gettingProperty
+						{props.gettingProperty && !props.property.address
 							? 'Loading...'
 							: props.getPropertyError
 							? 'Error'
@@ -276,9 +297,11 @@ const Property = props => {
 				</BeforeAndDuringColumn>
 
 				<AfterColumn>
-					<Typography variant="h6" className={classes.title}>
-						After Stay
-					</Typography>
+					{!!afterStay.length && (
+						<Typography variant="h6" className={classes.title}>
+							After Stay
+						</Typography>
+					)}
 
 					{afterStay.map(
 						(taskList, deadline) =>
@@ -305,49 +328,47 @@ const Property = props => {
 							option => !afterStay[+option.value]
 						)}
 						onChange={option => {
-							setnewDeadline(option);
+							setNewDeadline(option);
+							setNewTask('');
 						}}
 					/>
-					{newDeadline &&
-						(newTaskDeadline === newDeadline.value ? (
-							<form onSubmit={handleSubmit}>
-								<Autosuggest
-									{...autosuggestProps}
-									inputProps={{
-										classes,
-										placeholder: 'Add a task',
-										value: state.newTask,
-										onChange: handleChange('newTask'),
-										autoFocus: true,
-										onBlur: () => setNewTaskDeadline(null),
-										onKeyDown: e => {
-											if (e.key === 'Escape') setNewTaskDeadline(null);
-										}
-									}}
-									theme={{
-										container: classes.container,
-										suggestionsContainerOpen: classes.suggestionsContainerOpen,
-										suggestionsList: classes.suggestionsList,
-										suggestion: classes.suggestion
-									}}
-									renderSuggestionsContainer={options => (
-										<Paper {...options.containerProps} square>
-											{options.children}
-										</Paper>
-									)}
-								/>
-							</form>
-						) : (
-							<IconButton
-								aria-label="AddCircle"
-								onClick={() => {
-									setNewTaskDeadline(newDeadline.value);
-									setState({ newTask: '' });
+					{newDeadline && (
+						<NewTaskForm
+							className={classes.root}
+							onSubmit={event => {
+								handleSubmit(event, newTask, newDeadline.value);
+								setAddingTask(parseInt(newDeadline.value));
+								setNewDeadline(null);
+							}}
+						>
+							{/* onChange is kinda choppy here compared to the other lists. Not sure why. */}
+							<Autosuggest
+								{...autosuggestProps}
+								inputProps={{
+									classes,
+									placeholder: 'Add a task',
+									value: newTask,
+									onChange: handleChange,
+									autoFocus: true,
+									onBlur: () => newTask || setNewDeadline(null),
+									onKeyDown: e => {
+										if (e.key === 'Escape') setNewDeadline(null);
+									}
 								}}
-							>
-								<AddCircle className={classes.icon} style={{ fontSize: 30 }} />
-							</IconButton>
-						))}
+								theme={{
+									container: classes.container,
+									suggestionsContainerOpen: classes.suggestionsContainerOpen,
+									suggestionsList: classes.suggestionsList,
+									suggestion: classes.suggestion
+								}}
+								renderSuggestionsContainer={options => (
+									<Paper {...options.containerProps} square>
+										{options.children}
+									</Paper>
+								)}
+							/>
+						</NewTaskForm>
+					)}
 				</AfterColumn>
 			</PropertyContainer>
 		</React.Fragment>
@@ -375,6 +396,8 @@ export default withRouter(
 		{
 			getProperty,
 			addTask,
+			updateTask,
+			updateDeadline,
 			deleteTask
 		}
 	)(withStyles(styles)(Property))
@@ -410,4 +433,9 @@ const BeforeAndDuringColumn = styled.div`
 
 const AfterColumn = styled.div`
 	width: 50%;
+`;
+
+const NewTaskForm = styled.form`
+	padding: 16px 70px 14px 16px;
+	margin: 0 0 8px;
 `;

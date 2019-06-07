@@ -35,10 +35,32 @@ const styles = {
 };
 
 class PropertyPreview extends React.Component {
+	componentDidMount() {
+		if(this.props.cleaners){
+		let defaultCleaner;
+			if (this.props.property.cleaner_id === null) {
+				defaultCleaner = this.props.cleaners.map(cleaner => {
+					if (cleaner.user_id === this.props.property.manager_id) {
+						return cleaner;
+					}
+				});
+			} else {
+				this.props.cleaners.map(cleaner => {	
+					if (cleaner.user_id === this.props.property.cleaner_id) {
+						defaultCleaner = cleaner;
+					}
+				});
+			}
+
+			this.setState({
+				cleaner: defaultCleaner
+			});
+		}
+	}
+
 	componentDidUpdate(oldProps) {
 		if (
-			this.props.cleaners !== oldProps.cleaners ||
-			this.props.refreshCleaners
+			this.props.cleaners !== oldProps.cleaners 
 		) {
 			let defaultCleaner;
 
@@ -49,9 +71,9 @@ class PropertyPreview extends React.Component {
 					}
 				});
 			} else {
-				defaultCleaner = this.props.cleaners.map(cleaner => {
+				this.props.cleaners.map(cleaner => {	
 					if (cleaner.user_id === this.props.property.cleaner_id) {
-						return cleaner;
+						defaultCleaner = cleaner;
 					}
 				});
 			}
@@ -71,12 +93,15 @@ class PropertyPreview extends React.Component {
 		};
 	}
 
-	handleSelect = event => {
+	handleSelect =  event => {
+		const selectedCleaner = this.props.cleaners.filter(
+			cleaner => cleaner.user_id === event.target.value
+		);
 		this.setState({
-			cleaner: event.target.value
+			cleaner: selectedCleaner
 		});
 
-		this.props.changeCleaner(this.props.property.id, event.target.value.id);
+		this.props.changeCleaner(this.props.property.property_id, event.target.value);
 	};
 
 	render() {
@@ -95,7 +120,7 @@ class PropertyPreview extends React.Component {
 
 						<FormControl className={classes.formControl}>
 							<InputLabel shrink htmlFor="cleaner-native-label-placeholder">
-								Select Default Cleaner
+								Default Cleaner
 							</InputLabel>
 							{this.state.cleaner ? (
 								<NativeSelect
@@ -104,14 +129,17 @@ class PropertyPreview extends React.Component {
 									input={
 										<Input
 											name="cleaner"
-											id="cleaner-native-label-placeolder"
+											id="cleaner-native-label-placeholder"
 										/>
 									}
 								>
+									<option value="">{this.state.cleaner.user_name}</option>
 									{this.props.cleaners
 										? this.props.cleaners.map(cleaner => {
+												if(cleaner.user_id === this.state.cleaner.user_id)
+													return null;
 												return (
-													<option value={cleaner} key={cleaner.user_id}>
+													<option value={cleaner.user_id} key={cleaner.user_id}>
 														{cleaner.user_name}
 													</option>
 												);
@@ -130,7 +158,8 @@ class PropertyPreview extends React.Component {
 const mapStateToProps = state => {
 	return {
 		// state items
-		cleaners: state.propertyReducer.cleaners
+		cleaners: state.propertyReducer.cleaners,
+		refreshCleaners: state.propertyReducer.refreshCleaners
 	};
 };
 
