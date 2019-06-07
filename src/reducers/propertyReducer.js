@@ -1,4 +1,3 @@
-
 import {
 	// FETCHING_PROPERTIES,
 	PROPERTIES_FETCHED,
@@ -17,6 +16,12 @@ import {
 	DELETED_TASK,
 	DELETE_TASK_ERROR,
 	USER_CHECKED,
+	UPDATING_TASK,
+	UPDATED_TASK,
+	UPDATE_TASK_ERROR,
+	UPDATING_DEADLINE,
+	UPDATED_DEADLINE,
+	UPDATE_DEADLINE_ERROR
 } from '../actions';
 
 const initialState = {
@@ -26,17 +31,16 @@ const initialState = {
 	cleaners: null,
 	refreshCleaners: false,
 	partners: null,
-	tasks: null,
+	tasks: null
 };
 
 const propertyReducer = (state = initialState, action) => {
 	switch (action.type) {
-
 		case USER_CHECKED:
 			return {
 				...state,
-				refreshProperties: true,
-			}
+				refreshProperties: true
+			};
 
 		case GETTING_PROPERTY:
 			return { ...state, gettingProperty: true };
@@ -52,7 +56,12 @@ const propertyReducer = (state = initialState, action) => {
 			};
 
 		case PROPERTIES_FETCHED:
-			return { ...state, properties: action.payload, refreshProperties: false, refreshCleaners: true };
+			return {
+				...state,
+				properties: action.payload,
+				refreshProperties: false,
+				refreshCleaners: true
+			};
 
 		case PROPERTY_ADDED:
 			return { ...state, refreshProperties: true };
@@ -62,9 +71,9 @@ const propertyReducer = (state = initialState, action) => {
 
 		case CLEANER_UPDATED:
 			return { ...state, refreshCleaners: true };
-		
+
 		case FETCHING_PARTNERS:
-			return {...state, refreshCleaners: false};
+			return { ...state, refreshCleaners: false };
 
 		case PARTNERS_FETCHED:
 			return { ...state, partners: action.payload };
@@ -81,6 +90,47 @@ const propertyReducer = (state = initialState, action) => {
 					...state.property,
 					tasks: [...state.property.tasks, action.payload]
 				}
+			};
+
+		case UPDATING_TASK:
+			return { ...state, updatingTask: true };
+
+		case UPDATED_TASK:
+			return {
+				...state,
+				updatingTask: undefined,
+				property: {
+					...state.property,
+					tasks: state.property.tasks.map(task =>
+						task.task_id === action.payload.task_id
+							? action.payload.updatedTask
+							: task
+					)
+				}
+			};
+
+		case UPDATE_TASK_ERROR:
+			return {
+				...state,
+				updatingTask: undefined,
+				updateTaskError: action.payload
+			};
+
+		case UPDATING_DEADLINE:
+			return { ...state, updatingDeadline: true };
+
+		case UPDATED_DEADLINE:
+			return {
+				...state,
+				updatingDeadline: undefined,
+				property: { ...state.property, tasks: action.payload }
+			};
+
+		case UPDATE_DEADLINE_ERROR:
+			return {
+				...state,
+				updatingDeadline: undefined,
+				updateDeadlineError: action.payload
 			};
 
 		case ADD_TASK_ERROR:
