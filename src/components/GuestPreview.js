@@ -66,7 +66,7 @@ const options = {
 	headers: { Authorization: `Bearer ${token}`, 'user-info': userInfo }
 };
 
-const backendUrl = 'http://localhost:5000' || process.env.REACT_APP_BACKEND_URL;
+const backendUrl = process.env.REACT_APP_BACKEND_URL|| 'http://localhost:5000';
 
 class GuestPreview extends React.Component {
 
