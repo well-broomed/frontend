@@ -109,6 +109,8 @@ class Partners extends React.Component {
 		} catch (err) {
 			console.log(err);
 		}
+
+		this.setState({email: ''});
 	};
 
 	render() {

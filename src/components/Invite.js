@@ -33,9 +33,10 @@ class Invite extends Component {
 	}
 
 	render() {
+		const loggedIn = localStorage.getItem('jwt');
 		return (
 			<div>
-				{this.props.userInfo ? (
+				{loggedIn ? (
 					<div>
 						{this.state.successful ? (
 							<Typography variant="h6">
