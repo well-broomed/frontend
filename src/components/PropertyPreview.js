@@ -5,7 +5,6 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import NativeSelect from '@material-ui/core/NativeSelect';
-<<<<<<< HEAD
 import Typography from '@material-ui/core/Typography';
 
 // Dialog Modals
@@ -18,9 +17,6 @@ import DeleteForeverTwoTone from '@material-ui/icons/DeleteForeverTwoTone';
 
 import styled from 'styled-components';
 
-=======
-// import Typography from '@material-ui/core/Typography';
->>>>>>> dev
 import { withStyles } from '@material-ui/core';
 
 import { withRouter, Link } from 'react-router-dom';
@@ -177,7 +173,6 @@ class PropertyPreview extends React.Component {
 			{/** Property Card */}
 
 				<Card className={classes.card} key={this.props.property.id}>
-<<<<<<< HEAD
 					<CardContainer>
 					<Link to = {`/properties/${this.props.property.property_id}`}>
 
@@ -198,17 +193,6 @@ class PropertyPreview extends React.Component {
 					</CardContainer>
 					<CardFooter>
 					<FormControl className={classes.formControl}>
-=======
-					<Link to={`/properties/${this.props.property.property_id}`}>
-						<CardHeader
-							title={this.props.property.property_name}
-							subheader={this.props.property.address}
-						/>
-					</Link>
-
-					<CardContent>
-						<FormControl className={classes.formControl}>
->>>>>>> dev
 							<InputLabel shrink htmlFor="cleaner-native-label-placeholder">
 								Default Cleaner
 							</InputLabel>
