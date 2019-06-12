@@ -171,7 +171,6 @@ class Navigation extends React.Component {
 				<Dialog
 					open={this.state.loginModal}
 					TransitionComponent={Transition}
-					keepMounted
 					onClose={this.toggleModal}
 				>
 					<DialogTitle>Please select your account type.</DialogTitle>
