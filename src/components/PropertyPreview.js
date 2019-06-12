@@ -12,7 +12,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 // import Select from '@material-ui/core/Select';
 import NativeSelect from '@material-ui/core/NativeSelect';
-import Typography from '@material-ui/core/Typography';
+// import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core';
 
 import { withRouter, Link } from 'react-router-dom';
@@ -36,20 +36,19 @@ const styles = {
 
 class PropertyPreview extends React.Component {
 	componentDidMount() {
-		if(this.props.cleaners){
-		let defaultCleaner;
+		if (this.props.cleaners) {
+			let defaultCleaner;
 			if (this.props.property.cleaner_id === null) {
-				defaultCleaner = this.props.cleaners.map(cleaner => {
+				defaultCleaner = this.props.cleaners.reduce((cleaners, cleaner) => {
 					if (cleaner.user_id === this.props.property.manager_id) {
-						return cleaner;
+						cleaners.push(cleaner);
 					}
+					return cleaners;
 				});
 			} else {
-				this.props.cleaners.map(cleaner => {	
-					if (cleaner.user_id === this.props.property.cleaner_id) {
-						defaultCleaner = cleaner;
-					}
-				});
+				defaultCleaner = this.props.cleaners.filter(
+					cleaner => cleaner.user_id === this.props.property.cleaner_id
+				)[0];
 			}
 
 			this.setState({
@@ -59,23 +58,17 @@ class PropertyPreview extends React.Component {
 	}
 
 	componentDidUpdate(oldProps) {
-		if (
-			this.props.cleaners !== oldProps.cleaners 
-		) {
+		if (this.props.cleaners !== oldProps.cleaners) {
 			let defaultCleaner;
 
 			if (this.props.property.cleaner_id === null) {
-				defaultCleaner = this.props.cleaners.map(cleaner => {
-					if (cleaner.user_id === this.props.property.manager_id) {
-						return cleaner;
-					}
-				});
+				defaultCleaner = this.props.cleaners.filter(
+					cleaner => cleaner.user_id === this.props.property.manager_id
+				)[0];
 			} else {
-				this.props.cleaners.map(cleaner => {	
-					if (cleaner.user_id === this.props.property.cleaner_id) {
-						defaultCleaner = cleaner;
-					}
-				});
+				defaultCleaner = this.props.cleaners.filter(
+					cleaner => cleaner.user_id === this.props.property.cleaner_id
+				)[0];
 			}
 
 			this.setState({
@@ -93,7 +86,7 @@ class PropertyPreview extends React.Component {
 		};
 	}
 
-	handleSelect =  event => {
+	handleSelect = event => {
 		const selectedCleaner = this.props.cleaners.filter(
 			cleaner => cleaner.user_id === event.target.value
 		);
@@ -101,7 +94,10 @@ class PropertyPreview extends React.Component {
 			cleaner: selectedCleaner
 		});
 
-		this.props.changeCleaner(this.props.property.property_id, event.target.value);
+		this.props.changeCleaner(
+			this.props.property.property_id,
+			event.target.value
+		);
 	};
 
 	render() {
@@ -109,15 +105,14 @@ class PropertyPreview extends React.Component {
 		return (
 			<div>
 				<Card className={classes.card} key={this.props.property.id}>
-					<Link to = {`/properties/${this.props.property.property_id}`}>
-					<CardHeader
-						title={this.props.property.property_name}
-						subheader={this.props.property.address}
-					/>
+					<Link to={`/properties/${this.props.property.property_id}`}>
+						<CardHeader
+							title={this.props.property.property_name}
+							subheader={this.props.property.address}
+						/>
 					</Link>
 
 					<CardContent>
-
 						<FormControl className={classes.formControl}>
 							<InputLabel shrink htmlFor="cleaner-native-label-placeholder">
 								Default Cleaner
@@ -136,7 +131,7 @@ class PropertyPreview extends React.Component {
 									<option value="">{this.state.cleaner.user_name}</option>
 									{this.props.cleaners
 										? this.props.cleaners.map(cleaner => {
-												if(cleaner.user_id === this.state.cleaner.user_id)
+												if (cleaner.user_id === this.state.cleaner.user_id)
 													return null;
 												return (
 													<option value={cleaner.user_id} key={cleaner.user_id}>

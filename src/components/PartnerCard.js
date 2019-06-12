@@ -70,7 +70,7 @@ class PartnerCard extends React.Component {
 			let defaultproperties = [];
 			let availableproperties = [];
 
-			properties.map(property => {
+			properties.forEach(property => {
 				if (property.cleaner_id === this.props.partner.user_id)
 					defaultproperties.push(property);
 				if (
@@ -133,7 +133,11 @@ class PartnerCard extends React.Component {
 						subheader={this.props.partner.address}
 						avatar={
 							<Avatar>
-								<img alt = 'partner avatar' className={classes.img} src={this.props.partner.img_url} />
+								<img
+									alt="partner avatar"
+									className={classes.img}
+									src={this.props.partner.img_url}
+								/>
 							</Avatar>
 						}
 						action={
