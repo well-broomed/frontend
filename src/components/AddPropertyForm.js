@@ -53,17 +53,23 @@ class AddPropertyForm extends React.Component {
 	handleSubmit = event => {
 		event.preventDefault();
 
-		const property = {
-			property_name: this.state.property_name,
-			address: this.state.address,
-			img_url: this.state.img_url,
-			cleaner_id: this.state.cleaner_id,
-			guest_guide: this.state.guest_guide,
-			assistant_guide: this.state.assistant_guide
-		};
-
-		this.props.addProperty(property);
-		this.props.close();
+		if(this.state.property_name === ''){
+			window.alert('Property must have a name.')
+		} else if(this.state.property.address === ''){
+			window.alert('Property must have an address.')
+		} else {
+			const property = {
+				property_name: this.state.property_name,
+				address: this.state.address,
+				img_url: this.state.img_url,
+				cleaner_id: this.state.cleaner_id,
+				guest_guide: this.state.guest_guide,
+				assistant_guide: this.state.assistant_guide
+			};
+	
+			this.props.addProperty(property);
+			this.props.close();
+		}
 	};
 
 	render() {
@@ -94,11 +100,11 @@ class AddPropertyForm extends React.Component {
 					/>
 					<Button
 						className={classes.formButton}
-						variant="outlined"
+						variant="contained"
 						color="primary"
 						type="submit"
 					>
-						Submit
+						Add Property
 					</Button>
 				</form>
 			</div>

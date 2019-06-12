@@ -22,7 +22,7 @@ import { withStyles } from '@material-ui/core';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { changeCleaner } from '../actions/propertyActions';
+import { changeCleaner, deleteProperty } from '../actions/propertyActions';
 
 const CardContainer = styled.div`
 	width: 100%;
@@ -142,16 +142,16 @@ class PropertyPreview extends React.Component {
 		this.props.changeCleaner(this.props.property.property_id, event.target.value);
 	};
 
-	toggleDelete = event => {
-		console.log('delete prompt');
+	toggleDelete = () => {
 		this.setState({
 			deleteModal: !this.state.deleteModal
 		})
 	}
 
-	handleDelete = event => {
-		console.log('delete initiated');
+	handleDelete = () => {
+		this.props.deleteProperty(this.props.property.property_id);
 
+		this.toggleDelete();
 	}
 
 	render() {
@@ -246,7 +246,8 @@ export default withRouter(
 		mapStateToProps,
 		{
 			// actions
-			changeCleaner
+			changeCleaner,
+			deleteProperty,
 		}
 	)(withStyles(styles)(PropertyPreview))
 );

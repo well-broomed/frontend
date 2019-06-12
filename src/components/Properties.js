@@ -120,7 +120,6 @@ class Properties extends React.Component {
 				<Dialog
 					open={this.state.addModal}
 					TransitionComponent={Transition}
-					keepMounted
 					onClose={this.handleModalClose}
 				>
 					<DialogContent>
