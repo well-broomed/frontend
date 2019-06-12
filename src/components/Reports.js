@@ -4,11 +4,22 @@ import React from 'react';
 import { connect } from 'react-redux';
 // Router
 import { withRouter } from 'react-router-dom';
+
+// Components
+import { ProgressRow, PartnerCircle, PastCircle } from '../components';
+
+// Actions
+import { getReports, getPastReports } from '../actions';
+
 //SwipeableViews
 import SwipeableViews from 'react-swipeable-views';
+
 //Circular Progress Bar
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
+import { CircularProgressbar } from 'react-circular-progressbar';
+
+// Styled Components
+import styled from 'styled-components';
+
 // Material-UI
 import {
 	Typography,
@@ -16,36 +27,33 @@ import {
 	Tab,
 	AppBar,
 	withStyles,
-	Paper,
-	withTheme,
-    Divider
+	Divider
 } from '@material-ui/core';
 
 const styles = {
+	overallHeader: {
+		margin: '0 0 14px'
+	},
 	progressbar: {
 		width: '50%',
 		display: 'flex',
-        margin: 'auto',
-        height: '200px'
-	},
-	progressBarReports: {
-		width: '75%',
-		display: 'flex'
+		margin: '0 auto 10px',
+		height: '200px'
 	},
 	appbar: {
 		marginTop: '15px'
-    },
-    divider: {
-        margin: '15px 0'
-    },
+	},
+	divider: {
+		margin: '15px 0'
+	},
 	reports: {
 		marginTop: '20px'
 	},
 	progresses: {
 		display: 'flex',
 		flexWrap: 'wrap',
-        justifyContent: 'center',
-        margin: '10px 0'
+		justifyContent: 'center',
+		margin: '10px 0'
 	},
 	singleProgress: {
 		width: '33%',
@@ -55,6 +63,63 @@ const styles = {
 	}
 };
 
+function getOverall(arr) {
+	let count = 0;
+
+	const sum = arr.reduce((sum, property) => {
+		let propertySum = 0;
+
+		if (property.current) {
+			propertySum += parseInt(property.current.completion);
+
+			count++;
+		} else {
+			for (const guest in property) {
+				propertySum += parseInt(property[guest].completion);
+
+				count++;
+			}
+		}
+
+		return sum + propertySum;
+	}, 0);
+
+	return Math.floor(sum / count);
+}
+
+function makePartners(arr) {
+	const cleaners = {};
+	const partners = [];
+
+	arr.forEach(property => {
+		for (const guest in property) {
+			const id = property[guest].cleaner_id;
+
+			if (id) {
+				if (!(id in cleaners)) {
+					cleaners[id] = {
+						name: property[guest].cleaner_name,
+						sum: 0,
+						count: 0
+					};
+				}
+				cleaners[id].sum += parseInt(property[guest].completion);
+				cleaners[id].count++;
+			}
+		}
+	});
+
+	for (const cleaner in cleaners) {
+		partners.push({
+			cleaner_id: cleaner,
+			cleaner_name: cleaners[cleaner].name,
+			completion: Math.floor(cleaners[cleaner].sum / cleaners[cleaner].count)
+		});
+	}
+
+	return partners;
+}
+
 class Reports extends React.Component {
 	constructor(props) {
 		super(props);
@@ -63,55 +128,25 @@ class Reports extends React.Component {
 		};
 	}
 
-	componentDidMount(){
-        if(!localStorage.getItem('jwt')){
+	componentDidMount() {
+		if (!localStorage.getItem('jwt')) {
 			this.props.history.replace('/');
+		} else {
+			this.props.getReports();
+			this.props.getPastReports();
 		}
-    }
+	}
 
 	handleTabChange = (event, newValue) => {
 		this.setState({ tabValue: newValue });
 	};
 
 	render() {
-		const { classes } = this.props;
-		const dummyProperties = [
-			{
-				property_name: 'Sears Tower',
-				property_tasks: 50
-			},
-			{
-				property_name: 'Hogwarts',
-				property_tasks: 33
-			},
-			{
-				property_name: 'Boardwalk',
-				property_tasks: 49
-			},
-			{
-				property_name: 'Notre Dame',
-				property_tasks: 91
-			}
-		];
+		const { classes, reports, pastReports } = this.props;
 
-		const dummyPartners = [
-			{
-				partner_name: 'Fuzzy Dunlop',
-				partner_tasks: 25
-			},
-			{
-				partner_name: 'Carlos Slim',
-				partner_tasks: 91
-			},
-			{
-				partner_name: 'Bill Gates',
-				partner_tasks: 63
-			},
-			{
-				partner_name: 'Marlo Stanfield',
-				partner_tasks: 17
-			}
-		];
+		const overall = reports.length && getOverall(reports);
+
+		const partners = makePartners(reports);
 
 		return (
 			<div>
@@ -124,9 +159,8 @@ class Reports extends React.Component {
 						textColor="primary"
 						centered
 					>
-						<Tab label="Before Stay" />
-						<Tab label="During Stay" />
-						<Tab label="After Stay" />
+						<Tab label="Current" />
+						<Tab label="Past" />
 					</Tabs>
 				</AppBar>
 				<SwipeableViews
@@ -136,101 +170,54 @@ class Reports extends React.Component {
 					className={classes.reports}
 				>
 					<Typography component="div" dir={this.props.theme.direction}>
-                    <Typography variant="h4" align="center">
-							{' '}
-							Overall Completion{' '}
+						<Typography
+							variant="h4"
+							className={classes.overallHeader}
+							align="center"
+						>
+							Overall Completion
 						</Typography>
 						<div className={classes.progressbar}>
-							<CircularProgressbar value={33} text={33 + '%'} />
+							<CircularProgressbar value={overall} text={overall + '%'} />
 						</div>
-                        <Divider className={classes.divider}/>
-						<Typography variant="h4" align="center"> Properties </Typography>
+						<Divider className={classes.divider} />
+						<TimeHeaders>
+							{['Recent', 'Current', 'Upcoming'].map(title => (
+								<Typography
+									key={title}
+									variant="h5"
+									className={classes.singleProgress}
+									align="center"
+								>
+									{title}
+								</Typography>
+							))}
+						</TimeHeaders>
 						<div className={classes.progresses}>
-							{dummyProperties.map(property => {
-								return (
-									<div className={classes.singleProgress}>
-										<div className={classes.progressBarReports}>
-											<CircularProgressbar
-												value={property.property_tasks}
-												text={`${property.property_tasks}%`}
-											/>
-										</div>
-										<Typography variant="h6" align="center">
-											{' '}
-											{property.property_name}{' '}
-										</Typography>
-									</div>
-								);
-							})}
+							{reports.map((property, index) => (
+								<ProgressRow
+									key={`property${index}`}
+									property={property}
+									even={index % 2}
+								/>
+							))}
 						</div>
-                        <Divider className={classes.divider}/>
-						<Typography variant="h4" align="center"> Partners </Typography>
+						<Divider className={classes.divider} />
+						<Typography variant="h4" align="center">
+							Partners
+						</Typography>
 						<div className={classes.progresses}>
-							{dummyPartners.map(partner => {
-								return (
-									<div className={classes.singleProgress}>
-										<div className={classes.progressBarReports}>
-											<CircularProgressbar
-												value={partner.partner_tasks}
-												text={`${partner.partner_tasks}%`}
-											/>
-										</div>
-										<Typography variant="h6" align="center">
-											{' '}
-											{partner.partner_name}{' '}
-										</Typography>
-									</div>
-								);
-							})}
+							{partners.map(partner => (
+								<PartnerCircle key={partner.cleaner_name} partner={partner} />
+							))}
 						</div>
 					</Typography>
-					<Typography dir={this.props.theme.direction}>
-                    <Typography variant="h4" align="center">
-							{' '}
-							Overall Completion{' '}
-						</Typography>
-                    <div className={classes.progressbar}>
-							<CircularProgressbar value={33} text={33 + '%'} />
-						</div>
-                    <Divider className={classes.divider}/>
-                    <Typography variant="h5" align='center'> Properties </Typography>
+
+					<Typography component="div" dir={this.props.theme.direction}>
 						<div className={classes.progresses}>
-							{dummyProperties.map(property => {
-								return (
-									<div className={classes.singleProgress}>
-										<div className={classes.progressBarReports}>
-											<CircularProgressbar
-												value={property.property_tasks}
-												text={`${property.property_tasks}%`}
-											/>
-										</div>
-										<Typography variant="h6" align="center">
-											{' '}
-											{property.property_name}{' '}
-										</Typography>
-									</div>
-								);
-							})}
-						</div>
-                        <Divider className={classes.divider}/>
-						<Typography variant="h5" align="center"> Partners </Typography>
-						<div className={classes.progresses}>
-							{dummyPartners.map(partner => {
-								return (
-									<div className={classes.singleProgress}>
-										<div className={classes.progressBarReports}>
-											<CircularProgressbar
-												value={partner.partner_tasks}
-												text={`${partner.partner_tasks}%`}
-											/>
-										</div>
-										<Typography variant="h6" align="center">
-											{' '}
-											{partner.partner_name}{' '}
-										</Typography>
-									</div>
-								);
-							})}
+							{pastReports.map(guest => (
+								<PastCircle key={guest.guest_id} guest={guest} />
+							))}
 						</div>
 					</Typography>
 				</SwipeableViews>
@@ -241,7 +228,14 @@ class Reports extends React.Component {
 
 const mapStateToProps = state => {
 	return {
-		// state items
+		reports: state.reportsReducer.reports,
+		pastReports: state.reportsReducer.pastReports,
+
+		gettingReports: state.reportsReducer.gettingReports,
+		getReportsError: state.reportsReducer.getReportsError,
+
+		gettingPastReports: state.reportsReducer.gettingPastReports,
+		getPastReportsError: state.reportsReducer.getPastReportsError
 	};
 };
 
@@ -249,7 +243,13 @@ export default withRouter(
 	connect(
 		mapStateToProps,
 		{
-			// actions
+			getReports,
+			getPastReports // Really want to move this to 'past' tab only, couldn't figure out how to trigger action on tab change
 		}
 	)(withStyles(styles, { withTheme: true })(Reports))
 );
+
+const TimeHeaders = styled.div`
+	display: flex;
+	color: #b3b3b3;
+`;
