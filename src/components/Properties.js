@@ -103,7 +103,9 @@ class Properties extends React.Component {
 		// const { anchorEl } = this.state;
 		// const open = Boolean(anchorEl);
 		const { classes } = this.props;
+		const role = localStorage.getItem('role');
 
+		if(role === 'manager')
 		return (
 			<div>
 				<TopBar>
@@ -141,6 +143,43 @@ class Properties extends React.Component {
 				)}
 			</div>
 		);
+		else
+
+		return (<div>
+			<TopBar>
+					<Typography variant="h2">Properties</Typography>{' '}
+					<Fab
+						color="primary"
+						className={classes.addIcon}
+						onClick={this.handleModalOpen}
+					>
+						<AddIcon />
+					</Fab>
+				</TopBar>
+
+				<Dialog
+					open={this.state.addModal}
+					TransitionComponent={Transition}
+					keepMounted
+					onClose={this.handleModalClose}
+				>
+					<DialogContent>
+						<AddPropertyForm close={this.handleModalClose} />
+					</DialogContent>
+				</Dialog>
+
+				{this.props.properties ? (
+					this.props.properties.map(property => {
+						return (
+							<PropertyPreview property={property} key={property.property_id} />
+						);
+					})
+				) : (
+					<Typography variant="overline">
+						No properties have been added yet.
+					</Typography>
+				)}
+		</div>);
 	}
 }
 
@@ -151,7 +190,8 @@ const mapStateToProps = state => {
 		refreshProperties: state.propertyReducer.refreshProperties,
 		cleaners: state.propertyReducer.cleaners,
 		userInfo: state.authReducer.userInfo,
-		refreshCleaners: state.propertyReducer.refreshCleaners
+		refreshCleaners: state.propertyReducer.refreshCleaners,
+		user: state.authReducer.currentUser
 	};
 };
 
