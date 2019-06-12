@@ -148,26 +148,8 @@ class Properties extends React.Component {
 		return (<div>
 			<TopBar>
 					<Typography variant="h2">Properties</Typography>{' '}
-					<Fab
-						color="primary"
-						className={classes.addIcon}
-						onClick={this.handleModalOpen}
-					>
-						<AddIcon />
-					</Fab>
 				</TopBar>
-
-				<Dialog
-					open={this.state.addModal}
-					TransitionComponent={Transition}
-					keepMounted
-					onClose={this.handleModalClose}
-				>
-					<DialogContent>
-						<AddPropertyForm close={this.handleModalClose} />
-					</DialogContent>
-				</Dialog>
-
+				
 				{this.props.properties ? (
 					this.props.properties.map(property => {
 						return (

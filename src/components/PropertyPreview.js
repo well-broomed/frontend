@@ -102,6 +102,9 @@ class PropertyPreview extends React.Component {
 
 	render() {
 		const { classes } = this.props;
+		const role = localStorage.getItem('role')
+
+		if(role === 'manager')
 		return (
 			<div>
 				<Card className={classes.card} key={this.props.property.id}>
@@ -146,6 +149,21 @@ class PropertyPreview extends React.Component {
 					</CardContent>
 				</Card>
 			</div>
+		);
+
+		else
+		return (
+			<Card className={classes.card} key={this.props.property.id}>
+					<Link to={`/properties/${this.props.property.property_id}`}>
+						<CardHeader
+							title={this.props.property.property_name}
+							subheader={this.props.property.address}
+						/>
+					</Link>
+
+					<CardContent/>
+				</Card>
+
 		);
 	}
 }
