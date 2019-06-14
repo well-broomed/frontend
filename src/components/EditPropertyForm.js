@@ -14,6 +14,14 @@ import Button from '@material-ui/core/Button';
 
 import Typography from '@material-ui/core/Typography';
 
+import styled from 'styled-components';
+
+const FormButtonRow = styled.div`
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    `;
+
 const styles = {
 	container: {
 		display: 'flex',
@@ -25,7 +33,9 @@ const styles = {
 		margin: '10px 0px'
 	},
 	formButton: {
-		margin: '10px 0px'
+        margin: '10px 0px',
+        minHeight: '60px',
+        width: '45%',
 	}
 };
 
@@ -102,8 +112,8 @@ class EditPropertyForm extends React.Component {
 						value={this.state.address}
 						onChange={this.handleInput('address')}
 					/>
-
-                    <Button variant = 'outlined' onClick = {this.handleCancel}>
+                    <FormButtonRow>
+                    <Button className = {classes.formButton} variant = 'outlined' onClick = {this.handleCancel}>
                         Cancel
                     </Button>
 					<Button
@@ -114,6 +124,7 @@ class EditPropertyForm extends React.Component {
 					>
 						Submit Changes
 					</Button>
+                    </FormButtonRow>
 
                     
 				</form>
