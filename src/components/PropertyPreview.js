@@ -85,7 +85,7 @@ class PropertyPreview extends React.Component {
 			let defaultCleaner;
 			if(this.props.property.cleaner_id === null){
 				defaultCleaner = this.props.cleaners.filter(
-					cleaner => cleaner.user_id === this.props.property.cleaner_id
+					cleaner => cleaner.user_id === this.props.property.manager_id
 				)[0];
 			} else {
 				defaultCleaner = this.props.cleaners.filter(
