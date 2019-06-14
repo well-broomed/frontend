@@ -8,7 +8,7 @@ class Invite extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			successful: false
+			successful: false,
 		};
 	}
 
@@ -22,8 +22,8 @@ class Invite extends Component {
 		let options = {
 			headers: {
 				Authorization: `Bearer ${token}`,
-				'user-info': userInfo
-			}
+				'user-info': userInfo,
+			},
 		};
 		const response = await axios.get(
 			`${backendUrl}/api/invites/accept/${inviteCode}`,
@@ -35,7 +35,7 @@ class Invite extends Component {
 	render() {
 		return (
 			<div>
-				{this.props.userInfo ? (
+				{this.props.user ? (
 					<div>
 						{this.state.successful ? (
 							<Typography variant="h6">
@@ -48,8 +48,9 @@ class Invite extends Component {
 							<Typography variant="h6">
 								{' '}
 								Unfortunately, your invitation was not successful. This may be
-								because you have already accepted an invitation from this user.{' '} <br></br>
-							    {/*<Link to="/account">Click here to go to your account page.</Link> Implement a current partners view in account page*/}
+								because you have already accepted an invitation from this user.{' '}
+								<br />
+								{/*<Link to="/account">Click here to go to your account page.</Link> Implement a current partners view in account page*/}
 							</Typography>
 						)}{' '}
 					</div>
@@ -66,7 +67,7 @@ class Invite extends Component {
 }
 function mapStateToProps(state) {
 	return {
-		userInfo: state.authReducer.userInfo
+		user: state.authReducer.user,
 	};
 }
 

@@ -6,63 +6,80 @@ export const USER_CHECKED = 'USER_CHECKED';
 export const UPDATING_USER = 'UPDATING_USER';
 export const USER_UPDATED = 'USER_UPDATED';
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL || `http://localhost:5000`
+export const SET_USER = 'SET_USER';
 
-export const checkIfUserExists = (role) => {
-    // This function passes the auth0 jwt to the backend, and validates whether an entry
-    // for this user exists in the database.
+const backendUrl = process.env.REACT_APP_BACKEND_URL || `http://localhost:5000`;
 
-    // The role selected by the user is passed upon account validation.
+export const checkIfUserExists = role => {
+	// This function passes the auth0 jwt to the backend, and validates whether an entry
+	// for this user exists in the database.
 
-    const token = localStorage.getItem('jwt');
+	// The role selected by the user is passed upon account validation.
 
-    const options = {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        }
-    }
+	const token = localStorage.getItem('jwt');
 
-    const body = {
-        role: role,
-    }
+	const options = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
 
-    const checkUrl = axios.post(`${backendUrl}/api/users/login`, body, options)
+	const body = {
+		role: role,
+	};
 
-    return dispatch => {
-        dispatch({type: CHECKING_USER});
+	const checkUrl = axios.post(`${backendUrl}/api/users/login`, body, options);
 
-        checkUrl.then(res => {
-            localStorage.setItem('userInfo', res.data.userInfo);
-            // localStorage.setItem('userId', res.data.profile.id);
-            dispatch({type: USER_CHECKED, payload: res.data});
-        }).catch(err => {
-            console.log(err);
-            dispatch({type: ERROR})
-        })
-    }
-}
+	return dispatch => {
+		dispatch({ type: CHECKING_USER });
+
+		checkUrl
+			.then(res => {
+				localStorage.setItem('userInfo', res.data.userInfo);
+				localStorage.setItem('currentUser', JSON.stringify(res.data.user));
+				localStorage.setItem('role', JSON.stringify(res.data.user.role));
+
+				dispatch({ type: USER_CHECKED, payload: res.data });
+			})
+			.catch(err => {
+				console.log(err);
+				dispatch({ type: ERROR });
+			});
+	};
+};
 
 export const updateUserProfile = (user_id, changes) => {
-    
-    let token = localStorage.getItem('jwt');
+	let token = localStorage.getItem('jwt');
 	let userInfo = localStorage.getItem('userInfo');
 
 	let options = {
 		headers: {
 			Authorization: `Bearer ${token}`,
-			'user-info': userInfo
-		}
+			'user-info': userInfo,
+		},
 	};
-    const endpoint = axios.put(`${backendUrl}/api/users/${user_id}`, changes, options);
+	const endpoint = axios.put(
+		`${backendUrl}/api/users/${user_id}`,
+		changes,
+		options
+	);
 
-    return dispatch => {
-        dispatch({type: UPDATING_USER});
+	return dispatch => {
+		dispatch({ type: UPDATING_USER });
 
-        endpoint.then(res => {
-            dispatch({type: USER_UPDATED, payload: res.data});
-        }).catch(err => {
-            console.log(err);
-            dispatch({type: ERROR});
-        })
-    }
-}
+		endpoint
+			.then(res => {
+				dispatch({ type: USER_UPDATED, payload: res.data });
+			})
+			.catch(err => {
+				console.log(err);
+				dispatch({ type: ERROR });
+			});
+	};
+};
+
+export const setUser = user => {
+	return dispatch => {
+		dispatch({ type: SET_USER, payload: user });
+	};
+};
