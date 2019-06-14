@@ -44,15 +44,15 @@ const TopBar = styled.div`
 const styles = {
 	card: {
 		maxWidth: 600,
-		margin: '20px auto'
+		margin: '20px auto',
 	},
 	media: {
-		objectFit: 'cover'
+		objectFit: 'cover',
 	},
 	addIcon: {
 		fontSize: '5rem',
-		cursor: 'pointer'
-	}
+		cursor: 'pointer',
+	},
 };
 
 function Transition(props) {
@@ -61,11 +61,12 @@ function Transition(props) {
 
 class Properties extends React.Component {
 	componentDidMount() {
-
-		if(!localStorage.getItem('jwt')){
+		if (!localStorage.getItem('jwt')) {
 			this.props.history.replace('/');
-		} else if(!localStorage.getItem('userInfo')){
-			this.props.checkIfUserExists(localStorage.getItem('role') || localStorage.getItem('accountType'));
+		} else if (!localStorage.getItem('userInfo')) {
+			this.props.checkIfUserExists(
+				localStorage.getItem('role') || localStorage.getItem('accountType')
+			);
 		}
 		this.props.getUserProperties();
 	}
@@ -75,7 +76,7 @@ class Properties extends React.Component {
 			this.props.getUserProperties();
 		}
 
-		if(prevProps.refreshCleaners !== this.props.refreshCleaners){
+		if (prevProps.refreshCleaners !== this.props.refreshCleaners) {
 			this.props.getCleaners();
 		}
 	}
@@ -83,19 +84,19 @@ class Properties extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			addModal: false
+			addModal: false,
 		};
 	}
 
 	handleModalOpen = () => {
 		this.setState({
-			addModal: true
+			addModal: true,
 		});
 	};
 
 	handleModalClose = () => {
 		this.setState({
-			addModal: false
+			addModal: false,
 		});
 	};
 
@@ -150,8 +151,8 @@ const mapStateToProps = state => {
 		properties: state.propertyReducer.properties,
 		refreshProperties: state.propertyReducer.refreshProperties,
 		cleaners: state.propertyReducer.cleaners,
-		userInfo: state.authReducer.userInfo,
-		refreshCleaners: state.propertyReducer.refreshCleaners
+		userInfo: state.authReducer.user,
+		refreshCleaners: state.propertyReducer.refreshCleaners,
 	};
 };
 
