@@ -53,8 +53,6 @@ const CardActions = styled.div`
 	}
 `;
 
-
-const backendUrl = process.env.REACT_APP_BACKEND_URL|| 'http://localhost:5000';
 class GuestPreview extends React.Component {
 	constructor(props) {
 		super(props);
