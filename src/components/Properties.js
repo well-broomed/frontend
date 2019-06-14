@@ -55,9 +55,9 @@ const styles = {
 	},
 };
 
-function Transition(props) {
-	return <Slide direction="up" {...props} />;
-}
+const Transition = React.forwardRef((props, ref) => (
+	<Slide direction = 'up' {...props} ref = {ref} />
+))
 
 class Properties extends React.Component {
 	componentDidMount() {
@@ -139,10 +139,11 @@ class Properties extends React.Component {
 					</TopBar>
 
 					<Dialog
-						open={this.state.addModal}
-						TransitionComponent={Transition}
-						keepMounted
-						onClose={this.handleModalClose}
+					open={this.state.addModal}
+					TransitionComponent={Transition}
+					onClose={this.handleModalClose}
+					fullWidth = {true}
+					maxWidth = {'xl'}
 					>
 						<DialogContent>
 							<AddPropertyForm close={this.handleModalClose} />

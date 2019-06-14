@@ -129,14 +129,16 @@ class Home extends React.Component {
                 <InfoList>
 
                 <Typography variant = 'h6'>How does it work?</Typography>
-                <Typography variant = 'body1'>
+                
                     <ul>
+                    <Typography variant = 'body1'>
                         <li>Each property has its own checklist template.</li>
                         <li>Within each template, you can assign tasks to be completed Before, During, and After the stay.</li>
                         <li>Every time you add a reservation, a cleaning shift is generated with tasks from the template.</li>
                         <li>You can choose which assistants you want to assign to each property, and notify them whenever there is an upcoming reservation.</li>
+                    </Typography>
                     </ul>
-                </Typography>
+                
                 </InfoList>
 
                 <CallToAction>

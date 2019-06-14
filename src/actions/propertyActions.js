@@ -16,10 +16,19 @@ export const GET_PROPERTY_CLEANERS_ERROR = 'GET_PROPERTY_CLEANERS_ERROR';
 
 export const ADDING_PROPERTY = 'ADDING_PROPERTY';
 export const PROPERTY_ADDED = 'PROPERTY_ADDED';
+
+export const UPDATING_PROPERTY = 'UPDATING_PROPERTY';
+export const PROPERTY_UPDATED = 'PROPERTY_UPDATED';
+
+export const DELETING_PROPERTY = 'DELETING_PROPERTY';
+export const PROPERTY_DELETED = 'PROPERTY_DELETED';
+
 export const FETCHING_CLEANERS = 'FETCHING_CLEANERS';
 export const CLEANERS_FETCHED = 'CLEANERS_FETCHED';
+
 export const UPDATING_CLEANER = 'UPDATING_CLEANER';
 export const CLEANER_UPDATED = 'CLEANER_UPDATED';
+
 export const PARTNERS_FETCHED = 'PARTNERS_FETCHED';
 export const FETCHING_PARTNERS = 'FETCHING_PARTNERS';
 
@@ -74,7 +83,6 @@ export const getUserProperties = () => {
 
 		fetchUrl
 			.then(res => {
-				console.log('property return', res.data);
 				// localStorage.setItem('userId', res.data.profile.id);
 				dispatch({ type: PROPERTIES_FETCHED, payload: res.data.properties });
 			})
@@ -127,6 +135,42 @@ export const addProperty = property => {
 			});
 	};
 };
+
+export const deleteProperty = property_id => {
+	let options = setHeaders();
+
+	const endpoint = axios.delete(`${backendUrl}/api/properties/${property_id}`, options);
+
+	return dispatch => {
+		dispatch({type: DELETING_PROPERTY});
+
+		endpoint.then(res => {
+			dispatch({type: PROPERTY_DELETED})
+		}).catch(err => {
+			console.log(err);
+			dispatch({type: ERROR})
+		})
+	}
+}
+
+export const updateProperty = (property_id, property) => {
+	let options = setHeaders();
+
+	const endpoint = axios.put(`${backendUrl}/api/properties/${property_id}`, property, options);
+
+	return dispatch => {
+		dispatch({type: UPDATING_PROPERTY});
+
+		endpoint.then(res => {
+			console.log('update property res', res.data);
+
+			dispatch({type: PROPERTY_UPDATED, payload: res.data});
+		}).catch(err => {
+			console.log(err);
+			return dispatch({type: ERROR})
+		})
+	}
+}
 
 export const getPropertyCleaners = () => {
 	let options = setHeaders();

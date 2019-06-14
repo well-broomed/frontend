@@ -74,10 +74,9 @@ const styles = {
 	}
 };
 
-// Slide the login modal from screen bottom
-function Transition(props) {
-	return <Slide direction="up" {...props} />;
-}
+const Transition = React.forwardRef((props, ref) => (
+	<Slide direction = 'up' {...props} ref = {ref} />
+))
 class Navigation extends React.Component {
 	componentDidMount() {
 		// modify this to check central state's isloggedin once backend is deployed
@@ -171,7 +170,6 @@ class Navigation extends React.Component {
 				<Dialog
 					open={this.state.loginModal}
 					TransitionComponent={Transition}
-					keepMounted
 					onClose={this.toggleModal}
 				>
 					<DialogTitle>Please select your account type.</DialogTitle>
@@ -182,7 +180,7 @@ class Navigation extends React.Component {
 								this.selectAccount(event, 'manager');
 							}}
 						>
-							I am a Property Manager
+							<div>I am a Property Manager</div>
 						</Button>
 
 						<Button
@@ -190,7 +188,7 @@ class Navigation extends React.Component {
 								this.selectAccount(event, 'assistant');
 							}}
 						>
-							I am an Assistant
+							<div>I am an Assistant</div>
 						</Button>
 					</DialogActions>
 				</Dialog>
@@ -261,14 +259,10 @@ class Navigation extends React.Component {
 					<Divider />
 					<br></br>
 					<div style = {{padding: '0px 10px'}}>
-					<Typography variant = 'subtitle'>Please login to access the menu.</Typography>
+					<Typography variant = 'subtitle1'>Please login to access the menu.</Typography>
 					</div>
 					</>
 				)}
-
-				
-	
-				
 			</div>
 		);
 

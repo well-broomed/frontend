@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core';
 
-import { addProperty } from '../actions/propertyActions';
+import { updateProperty } from '../actions/propertyActions';
 
 // Form Components
 
@@ -14,41 +14,54 @@ import Button from '@material-ui/core/Button';
 
 import Typography from '@material-ui/core/Typography';
 
+import styled from 'styled-components';
+
+const FormButtonRow = styled.div`
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    `;
+
 const styles = {
 	container: {
 		display: 'flex',
 		flexFlow: 'column nowrap',
 		padding: '5%',
-		height: '80vh'
+		height: '50vh'
 	},
 	formField: {
 		margin: '10px 0px'
 	},
 	formButton: {
-		margin: '10px 0px',
-		minHeight: '60px'
+        margin: '10px 0px',
+        minHeight: '60px',
+        width: '45%',
 	}
 };
 
-class AddPropertyForm extends React.Component {
+class EditPropertyForm extends React.Component {
+    componentDidMount(){
+        // assign the initial state for the property form
+        this.setState({
+            property_name: this.props.property.property_name,
+            address: this.props.property.address,
+        })
+    }
+
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			addModal: false,
+			editModal: false,
 			property_name: '',
 			address: '',
-			img_url: null,
-			cleaner_id: null,
-			guest_guide: null,
-			assistant_guide: null
 		};
 	}
 
 	handleInput = name => event => {
 		this.setState({
 			[name]: event.target.value
-		});
+        });
 	};
 
 	handleSubmit = event => {
@@ -62,16 +75,16 @@ class AddPropertyForm extends React.Component {
 			const property = {
 				property_name: this.state.property_name,
 				address: this.state.address,
-				img_url: this.state.img_url,
-				cleaner_id: this.state.cleaner_id,
-				guest_guide: this.state.guest_guide,
-				assistant_guide: this.state.assistant_guide
-			};
-	
-			this.props.addProperty(property);
+            };
+            
+    		this.props.updateProperty(this.props.property.property_id, property);
 			this.props.close();
 		}
-	};
+    };
+    
+    handleCancel = () => {
+        this.props.close();
+    }
 
 	render() {
 		const { classes } = this.props;
@@ -83,7 +96,7 @@ class AddPropertyForm extends React.Component {
 					noValidate
 					autoComplete="off"
 				>
-					<Typography variant="h4">Add a New Property</Typography>
+					<Typography variant="h4">Edit Property</Typography>
 
 					<TextField
 						className={classes.formField}
@@ -99,28 +112,21 @@ class AddPropertyForm extends React.Component {
 						value={this.state.address}
 						onChange={this.handleInput('address')}
 					/>
-					<TextField
-						className={classes.formField}
-						id="standard-dense"
-						label="Guest Guide URL"
-						value={this.state.guest_guide}
-						onChange={this.handleInput('guest_guide')}
-					/>
-					<TextField
-						className={classes.formField}
-						id="standard-dense"
-						label="Assistant Guide URL"
-						value={this.state.assistant_guide}
-						onChange={this.handleInput('assistant_guide')}
-					/>
+                    <FormButtonRow>
+                    <Button className = {classes.formButton} variant = 'outlined' onClick = {this.handleCancel}>
+                        Cancel
+                    </Button>
 					<Button
 						className={classes.formButton}
 						variant="contained"
 						color="primary"
 						type="submit"
 					>
-						Add Property
+						Submit Changes
 					</Button>
+                    </FormButtonRow>
+
+                    
 				</form>
 			</div>
 		);
@@ -138,7 +144,7 @@ export default withRouter(
 		mapStateToProps,
 		{
 			// actions
-			addProperty
+			updateProperty
 		}
-	)(withStyles(styles)(AddPropertyForm))
+	)(withStyles(styles)(EditPropertyForm))
 );
