@@ -117,10 +117,13 @@ class Properties extends React.Component {
 					</Fab>
 				</TopBar>
 
+				{/** Add Property Modal */}
 				<Dialog
 					open={this.state.addModal}
 					TransitionComponent={Transition}
 					onClose={this.handleModalClose}
+					fullWidth = {true}
+					maxWidth = {'xl'}
 				>
 					<DialogContent>
 						<AddPropertyForm close={this.handleModalClose} />

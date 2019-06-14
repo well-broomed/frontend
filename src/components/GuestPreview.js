@@ -172,7 +172,8 @@ class GuestPreview extends React.Component {
                     </DialogActions>
                 </Dialog>
 
-                <Dialog open = {this.state.editModal} onClose = {this.toggleEdit} fullWidth = {false} maxWidth = {'70%'}>
+                {/** Edit Guest Modal */}
+                <Dialog open = {this.state.editModal} onClose = {this.toggleEdit} fullWidth = {true} maxWidth = {'xl'} >
                     <DialogContent>
                         <EditGuestForm close = {this.toggleEdit} guest = {this.state.guest} />
                     </DialogContent>

@@ -43,21 +43,6 @@ class AddGuestForm extends React.Component {
         })
     }
 
-    componentDidUpdate(prevProps){
-        // reset the form if it's closed
-        if(this.props.isOpen !== prevProps.isOpen){
-            this.setState({
-                guest_name: '',
-                property_id: null,
-                email: null,
-                cleaner_id: null,
-                cleaner: null,
-                property: null,
-            })
-        }
-    }
-
-
 	constructor(props) {
 		super(props);
 
@@ -68,8 +53,8 @@ class AddGuestForm extends React.Component {
 			checkout: null,
 			email: null,
             cleaner_id: null,
-            cleaner: null,
-            property: null,
+            cleaner: '',
+            property: '',
 		};
 	}
 

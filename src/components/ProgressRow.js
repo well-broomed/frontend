@@ -12,7 +12,6 @@ import { Typography } from '@material-ui/core';
 
 const ProgressRow = props => {
 	const { property, even } = props;
-	console.log(property, "REPORTS PROPERTY")
 
 	return (
 		<PropertyRowContainer style={{ background: even ? 'inherit' : 'white' }}>

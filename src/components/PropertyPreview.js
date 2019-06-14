@@ -182,8 +182,8 @@ class PropertyPreview extends React.Component {
 			</Dialog>
 
 			{/** Edit Modal **/}
-			<Dialog open = {this.state.editModal} onClose = {this.toggleEdit} fullWidth={true} maxWidth = {false}>
-				<DialogContent fullWidth = {true}>
+			<Dialog open = {this.state.editModal} onClose = {this.toggleEdit} fullWidth={true} maxWidth = 'xl'>
+				<DialogContent>
 					<EditPropertyForm close = {this.toggleEdit} property = {this.props.property} />
 				</DialogContent>
 			</Dialog>

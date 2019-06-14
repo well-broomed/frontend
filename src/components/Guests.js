@@ -128,11 +128,14 @@ class Guests extends React.Component {
 					</Fab>
 				</TopBar>
 
+
+				{/** Add Guest Modal */}
 				<Dialog
 					open={this.state.addModal}
 					TransitionComponent={Transition}
 					onClose={this.handleModalClose}
-					fullWidth={true}
+					fullWidth = {true}
+					maxWidth = {'xl'}
 				>
 					<DialogContent>
 						<AddGuestForm
@@ -155,7 +158,7 @@ class Guests extends React.Component {
 						{this.props.guests ? (
 							<div>
 								{this.props.guests.map(guest => {
-									return <GuestPreview guest={guest} tab={this.state.tab} />;
+									return <GuestPreview guest={guest} tab={this.state.tab} key = {guest.guest_id} />;
 								})}
 							</div>
 						) : null}

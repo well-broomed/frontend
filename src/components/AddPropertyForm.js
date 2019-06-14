@@ -25,7 +25,8 @@ const styles = {
 		margin: '10px 0px'
 	},
 	formButton: {
-		margin: '10px 0px'
+		margin: '10px 0px',
+		minHeight: '60px'
 	}
 };
 
