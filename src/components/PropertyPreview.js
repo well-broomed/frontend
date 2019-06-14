@@ -120,9 +120,7 @@ class PropertyPreview extends React.Component {
 							<InputLabel shrink htmlFor="cleaner-native-label-placeholder">
 								Default Cleaner
 							</InputLabel>
-							{this.state.cleaner ? (
 								<NativeSelect
-									value={this.state.cleaner.user_name} // placholder == assigned cleaner's name
 									onChange={this.handleSelect}
 									input={
 										<Input
@@ -131,10 +129,10 @@ class PropertyPreview extends React.Component {
 										/>
 									}
 								>
-									<option value="">{this.state.cleaner.user_name}</option>
+									<option value="">{this.state.cleaner ? this.state.cleaner.user_name : "Unassigned"}</option>
 									{this.props.cleaners
 										? this.props.cleaners.map(cleaner => {
-												if (cleaner.user_id === this.state.cleaner.user_id)
+												if (this.state.cleaner && cleaner.user_id === this.state.cleaner.user_id)
 													return null;
 												return (
 													<option value={cleaner.user_id} key={cleaner.user_id}>
@@ -144,7 +142,6 @@ class PropertyPreview extends React.Component {
 										  })
 										: null}
 								</NativeSelect>
-							) : null}
 						</FormControl>
 					</CardContent>
 				</Card>
