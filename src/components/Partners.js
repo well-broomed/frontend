@@ -102,13 +102,15 @@ class Partners extends React.Component {
 			cleaner_email: this.state.email
 		};
 
-		const backendUrl = process.env.backendURL || 'http://localhost:5000';
+		const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 		try {
 			const res = await axios.post(`${backendUrl}/api/invites/`, body, options);
 			console.log(res);
 		} catch (err) {
 			console.log(err);
 		}
+
+		this.setState({email: ''});
 	};
 
 	render() {

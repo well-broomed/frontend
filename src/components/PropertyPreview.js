@@ -10,6 +10,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import Typography from '@material-ui/core/Typography';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
 
 // Dialog Modals
 import Dialog from '@material-ui/core/Dialog';
@@ -163,6 +165,9 @@ class PropertyPreview extends React.Component {
 
 	render() {
 		const { classes } = this.props;
+		const role = localStorage.getItem('role')
+
+		if(role === 'manager')
 		return (
 			<div>
 
@@ -210,9 +215,7 @@ class PropertyPreview extends React.Component {
 							<InputLabel shrink htmlFor="cleaner-native-label-placeholder">
 								Default Cleaner
 							</InputLabel>
-							{this.state.cleaner ? (
 								<NativeSelect
-									value={this.state.cleaner.user_name} // placholder == assigned cleaner's name
 									onChange={this.handleSelect}
 									input={
 										<Input
@@ -221,10 +224,10 @@ class PropertyPreview extends React.Component {
 										/>
 									}
 								>
-									<option value="">{this.state.cleaner.user_name}</option>
+									<option value="">{this.state.cleaner ? this.state.cleaner.user_name : "Unassigned"}</option>
 									{this.props.cleaners
 										? this.props.cleaners.map(cleaner => {
-												if (cleaner.user_id === this.state.cleaner.user_id)
+												if (this.state.cleaner && cleaner.user_id === this.state.cleaner.user_id)
 													return null;
 												return (
 													<option value={cleaner.user_id} key={cleaner.user_id}>
@@ -234,11 +237,25 @@ class PropertyPreview extends React.Component {
 										  })
 										: null}
 								</NativeSelect>
-							) : null}
 						</FormControl>
 					</CardFooter>
 				</Card>
 			</div>
+		);
+
+		else
+		return (
+			<Card className={classes.card} key={this.props.property.id}>
+					<Link to={`/properties/${this.props.property.property_id}`}>
+						<CardHeader
+							title={this.props.property.property_name}
+							subheader={this.props.property.address}
+						/>
+					</Link>
+
+					<CardContent/>
+				</Card>
+
 		);
 	}
 }
