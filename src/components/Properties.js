@@ -78,7 +78,10 @@ class Properties extends React.Component {
 			this.props.getUserProperties();
 		}
 
-		if(prevProps.refreshCleaners !== this.props.refreshCleaners && localStorage.getItem('role') === 'manager'){
+		if (
+			prevProps.refreshCleaners !== this.props.refreshCleaners &&
+			localStorage.getItem('role') === 'manager'
+		) {
 			this.props.getCleaners();
 		}
 	}
@@ -106,11 +109,11 @@ class Properties extends React.Component {
 		// const { anchorEl } = this.state;
 		// const open = Boolean(anchorEl);
 		const { classes } = this.props;
-		const role = localStorage.getItem('role');
+		const role = (this.props.user && this.props.user.role) || null;
 		const properties = this.props.properties;
 		let defaultproperties = [];
 		let availableproperties = [];
-		if (role !== 'manager' && this.props.properties && this.props.cleaners){
+		if (role !== 'manager' && this.props.properties && this.props.cleaners) {
 			properties.forEach(property => {
 				if (property.cleaner_id === this.props.cleaners[0].user_id)
 					defaultproperties.push(property);
@@ -118,79 +121,91 @@ class Properties extends React.Component {
 					availableproperties.push(property);
 			});
 
-			console.log(properties)
+			console.log(properties);
 		}
 
-		if(role === 'manager')
-		return (
-			<div>
-				<TopBar>
-					<Typography variant="h2">Properties</Typography>{' '}
-					<Fab
-						color="primary"
-						className={classes.addIcon}
-						onClick={this.handleModalOpen}
+		if (role === 'manager')
+			return (
+				<div>
+					<TopBar>
+						<Typography variant="h2">Properties</Typography>{' '}
+						<Fab
+							color="primary"
+							className={classes.addIcon}
+							onClick={this.handleModalOpen}
+						>
+							<AddIcon />
+						</Fab>
+					</TopBar>
+
+					<Dialog
+						open={this.state.addModal}
+						TransitionComponent={Transition}
+						keepMounted
+						onClose={this.handleModalClose}
 					>
-						<AddIcon />
-					</Fab>
-				</TopBar>
+						<DialogContent>
+							<AddPropertyForm close={this.handleModalClose} />
+						</DialogContent>
+					</Dialog>
 
-				<Dialog
-					open={this.state.addModal}
-					TransitionComponent={Transition}
-					keepMounted
-					onClose={this.handleModalClose}
-				>
-					<DialogContent>
-						<AddPropertyForm close={this.handleModalClose} />
-					</DialogContent>
-				</Dialog>
-
-				{this.props.properties ? (
-					this.props.properties.map(property => {
-						return (
-							<PropertyPreview property={property} key={property.property_id} />
-						);
-					})
-				) : (
-					<Typography variant="overline">
-						No properties have been added yet.
-					</Typography>
-				)}
-			</div>
-		);
+					{this.props.properties ? (
+						this.props.properties.map(property => {
+							return (
+								<PropertyPreview
+									property={property}
+									key={property.property_id}
+								/>
+							);
+						})
+					) : (
+						<Typography variant="overline">
+							No properties have been added yet.
+						</Typography>
+					)}
+				</div>
+			);
 		else
-		return (<div>
-			<TopBar>
-					<Typography variant="h2">Properties</Typography>{' '}
-				</TopBar>
-				<Typography variant="h5"> Your Default Properties </Typography>
+			return (
+				<div>
+					<TopBar>
+						<Typography variant="h2">Properties</Typography>{' '}
+					</TopBar>
+					<Typography variant="h5"> Your Default Properties </Typography>
 					{defaultproperties ? (
-					defaultproperties.map(property => {
-						return (
-							<PropertyPreview property={property} key={property.property_id} />
-						);
-					})
-				) : (
-					<Typography variant="overline">
-						You have not been assigned as the default partner for any properties.
-					</Typography>
-				)}
+						defaultproperties.map(property => {
+							return (
+								<PropertyPreview
+									property={property}
+									key={property.property_id}
+								/>
+							);
+						})
+					) : (
+						<Typography variant="overline">
+							You have not been assigned as the default partner for any
+							properties.
+						</Typography>
+					)}
 
-				<Typography variant="h5">Properties You're Available For </Typography>
+					<Typography variant="h5">Properties You're Available For </Typography>
 					{availableproperties ? (
-					availableproperties.map(property => {
-						return (
-							<PropertyPreview property={property} key={property.property_id} />
-						);
-					})
-				) : (
-					<Typography variant="overline">
-						You have not been assigned as the default partner for any properties.
-					</Typography>
-				)}
-		</div>);
-		
+						availableproperties.map(property => {
+							return (
+								<PropertyPreview
+									property={property}
+									key={property.property_id}
+								/>
+							);
+						})
+					) : (
+						<Typography variant="overline">
+							You have not been assigned as the default partner for any
+							properties.
+						</Typography>
+					)}
+				</div>
+			);
 	}
 }
 
@@ -202,7 +217,7 @@ const mapStateToProps = state => {
 		cleaners: state.propertyReducer.cleaners,
 		userInfo: state.authReducer.userInfo,
 		refreshCleaners: state.propertyReducer.refreshCleaners,
-		user: state.authReducer.currentUser
+		user: state.authReducer.user,
 	};
 };
 
