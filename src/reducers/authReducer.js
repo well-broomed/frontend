@@ -1,30 +1,43 @@
-import { USER_CHECKED, USER_UPDATED, UPDATING_USER } from '../actions';
+import {
+	USER_CHECKED,
+	USER_UPDATED,
+	UPDATING_USER,
+	SET_USER,
+} from '../actions';
 
 const initialState = {
 	userInfo: null,
 	userChecked: null,
-	currentUser: null,
+	user: null,
 };
 
 const authReducer = (state = initialState, action) => {
 	switch (action.type) {
 		// example action
 		case USER_CHECKED:
-			return { ...state, userInfo: action.payload.userInfo, userChecked: true, currentUser: action.payload.user };
-		
+			return {
+				...state,
+				userInfo: action.payload.userInfo,
+				userChecked: true,
+				user: action.payload.user,
+			};
+
 		case UPDATING_USER:
 			return {
 				...state,
 				userChecked: false,
-			}
+			};
 
 		case USER_UPDATED:
-			return  {
+			return {
 				...state,
 				userInfo: action.payload.userInfo,
-				currentUser: action.payload.user,
+				user: action.payload.user,
 				userChecked: true,
-			}
+			};
+
+		case SET_USER:
+			return { ...state, user: action.payload };
 
 		default:
 			return state;

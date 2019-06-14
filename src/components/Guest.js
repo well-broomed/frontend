@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 	checkList: {
 		width: '100%',
 		maxWidth: 360,
-		backgroundColor: theme.palette.background.paper
+		backgroundColor: theme.palette.background.paper,
 	},
 	guestInfo: {
 		display: 'flex',
@@ -43,11 +43,11 @@ const useStyles = makeStyles(theme => ({
 		backgroundColor: theme.palette.background.paper,
 		padding: theme.spacing(2, 2),
 		borderRadius: 0,
-		boxShadow: 'none'
+		boxShadow: 'none',
 	},
 	guide: { fontSize: '64px', padding: 0 },
 	reassignmentText: { margin: '0 0 -2.5rem 0.9rem' },
-	otherCleaner: { color: 'red' }
+	otherCleaner: { color: 'red' },
 }));
 
 const hourConverter = hours => {
@@ -66,7 +66,7 @@ const Guest = props => {
 		gettingGuest,
 		getGuestError,
 		updateGuestTask,
-		reassignCleaner
+		reassignCleaner,
 	} = props;
 
 	const classes = useStyles();
@@ -100,7 +100,7 @@ const Guest = props => {
 				guest.otherCleaners.map(cleaner => ({
 					...cleaner,
 					// Can't figure out a way to style individual options. Help!
-					label: cleaner.label + ' (color: gray)'
+					label: cleaner.label + ' (color: gray)',
 				}))
 		  )
 		: [];
@@ -215,7 +215,7 @@ const Guest = props => {
 								value={
 									guest.cleaner_id && {
 										value: guest.cleaner_id,
-										label: guest.cleaner_name
+										label: guest.cleaner_name,
 									}
 								}
 								options={availableCleaners}
@@ -263,15 +263,13 @@ const Guest = props => {
 
 const mapStateToProps = state => {
 	return {
-		currentUser: state.authReducer.currentUser,
-
 		guest: state.guestReducer.guest,
 
 		gettingGuest: state.guestReducer.gettingGuest,
 		getGuestError: state.guestReducer.getGuestError,
 
 		reassigningCleaner: state.guestReducer.reassigningCleaner,
-		reassignCleanerError: state.guestReducer.reassignCleanerError
+		reassignCleanerError: state.guestReducer.reassignCleanerError,
 	};
 };
 
@@ -281,7 +279,7 @@ export default withRouter(
 		{
 			getGuest,
 			updateGuestTask,
-			reassignCleaner
+			reassignCleaner,
 		}
 	)(Guest)
 );
