@@ -68,7 +68,9 @@ class Properties extends React.Component {
 				localStorage.getItem('role') || localStorage.getItem('accountType')
 			);
 		}
+
 		this.props.getUserProperties();
+		this.props.getCleaners();
 	}
 
 	componentDidUpdate(prevProps) {
@@ -76,7 +78,7 @@ class Properties extends React.Component {
 			this.props.getUserProperties();
 		}
 
-		if (prevProps.refreshCleaners !== this.props.refreshCleaners) {
+		if(prevProps.refreshCleaners !== this.props.refreshCleaners && localStorage.getItem('role') === 'manager'){
 			this.props.getCleaners();
 		}
 	}
@@ -104,7 +106,22 @@ class Properties extends React.Component {
 		// const { anchorEl } = this.state;
 		// const open = Boolean(anchorEl);
 		const { classes } = this.props;
+		const role = localStorage.getItem('role');
+		const properties = this.props.properties;
+		let defaultproperties = [];
+		let availableproperties = [];
+		if (role !== 'manager' && this.props.properties && this.props.cleaners){
+			properties.forEach(property => {
+				if (property.cleaner_id === this.props.cleaners[0].user_id)
+					defaultproperties.push(property);
+				if (property.available === this.props.cleaners[0].user_id)
+					availableproperties.push(property);
+			});
 
+			console.log(properties)
+		}
+
+		if(role === 'manager')
 		return (
 			<div>
 				<TopBar>
@@ -142,6 +159,38 @@ class Properties extends React.Component {
 				)}
 			</div>
 		);
+		else
+		return (<div>
+			<TopBar>
+					<Typography variant="h2">Properties</Typography>{' '}
+				</TopBar>
+				<Typography variant="h5"> Your Default Properties </Typography>
+					{defaultproperties ? (
+					defaultproperties.map(property => {
+						return (
+							<PropertyPreview property={property} key={property.property_id} />
+						);
+					})
+				) : (
+					<Typography variant="overline">
+						You have not been assigned as the default partner for any properties.
+					</Typography>
+				)}
+
+				<Typography variant="h5">Properties You're Available For </Typography>
+					{availableproperties ? (
+					availableproperties.map(property => {
+						return (
+							<PropertyPreview property={property} key={property.property_id} />
+						);
+					})
+				) : (
+					<Typography variant="overline">
+						You have not been assigned as the default partner for any properties.
+					</Typography>
+				)}
+		</div>);
+		
 	}
 }
 
@@ -151,8 +200,9 @@ const mapStateToProps = state => {
 		properties: state.propertyReducer.properties,
 		refreshProperties: state.propertyReducer.refreshProperties,
 		cleaners: state.propertyReducer.cleaners,
-		userInfo: state.authReducer.user,
+		userInfo: state.authReducer.userInfo,
 		refreshCleaners: state.propertyReducer.refreshCleaners,
+		user: state.authReducer.currentUser
 	};
 };
 

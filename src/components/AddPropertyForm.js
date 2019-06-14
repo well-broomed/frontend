@@ -19,7 +19,7 @@ const styles = {
 		display: 'flex',
 		flexFlow: 'column nowrap',
 		padding: '5%',
-		height: '50vh'
+		height: '80vh'
 	},
 	formField: {
 		margin: '10px 0px'
@@ -91,6 +91,20 @@ class AddPropertyForm extends React.Component {
 						label="Address"
 						value={this.state.address}
 						onChange={this.handleInput('address')}
+					/>
+					<TextField
+						className={classes.formField}
+						id="standard-dense"
+						label="Guest Guide URL"
+						value={this.state.guest_guide}
+						onChange={this.handleInput('guest_guide')}
+					/>
+					<TextField
+						className={classes.formField}
+						id="standard-dense"
+						label="Assistant Guide URL"
+						value={this.state.assistant_guide}
+						onChange={this.handleInput('assistant_guide')}
 					/>
 					<Button
 						className={classes.formButton}
