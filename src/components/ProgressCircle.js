@@ -1,6 +1,9 @@
 // React
 import React from 'react';
 
+// Router
+import { Link } from 'react-router-dom';
+
 // Moment.js
 import moment from 'moment';
 
@@ -20,21 +23,22 @@ import RemoveIconRounded from '@material-ui/icons/RemoveRounded';
 const useStyles = makeStyles(theme => ({
 	progressBarReports: {
 		display: 'flex',
-		width: '75%'
+		width: '75%',
 	},
 	singleProgress: {
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center',
-		width: '33%'
+		width: '33%',
 	},
 	deadline: {
-		margin: '6px 0 0'
+		fontWeight: 500,
+		margin: '6px 0 0',
 	},
 	cleanerName: {
-		margin: '-4px 0 14px'
+		margin: '-4px 0 14px',
 	},
-	blank: { fontSize: '3rem', color: '#b3b3b3' }
+	blank: { fontSize: '3rem', color: '#b3b3b3' },
 }));
 
 const ProgressCircle = props => {
@@ -102,25 +106,30 @@ const ProgressCircle = props => {
 
 		return (
 			<div className={classes.singleProgress}>
-				<div className={classes.progressBarReports}>
-					<CircularProgressbar
-						value={guest.completion}
-						text={`${guest.completion}%`}
-						styles={buildStyles({
-							pathColor: color,
-							textColor: color,
-							trailColor
-						})}
-					/>
-				</div>
-				<Typography
-					variant="subtitle1"
-					className={classes.deadline}
-					align="center"
-					style={{ color }}
-				>
-					{moment(deadline).format('MM/DD h:mma')}
-				</Typography>
+				<GuestLink to={`/guests/${guest.guest_id}`}>
+					<div className={classes.progressBarReports}>
+						<CircularProgressbar
+							value={guest.completion}
+							text={`${guest.completion}%`}
+							styles={buildStyles({
+								pathColor: color,
+								textColor: color,
+								trailColor,
+							})}
+						/>
+					</div>
+
+					<Typography
+						variant="subtitle1"
+						className={classes.deadline}
+						align="center"
+						style={{ color }}
+					>
+						{moment(deadline).format('MMM DD h:mma')}
+					</Typography>
+				</GuestLink>
+
+				{/* todo: make this a link to the partner page */}
 				<Typography
 					variant="subtitle2"
 					className={classes.cleanerName}
@@ -142,6 +151,13 @@ const ProgressCircle = props => {
 };
 
 export default ProgressCircle;
+
+const GuestLink = styled(Link)`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-decoration: none;
+`;
 
 const Blank = styled.div`
 	display: flex;

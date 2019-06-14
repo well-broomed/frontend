@@ -1,6 +1,9 @@
 // React
 import React from 'react';
 
+// Router
+import { Link } from 'react-router-dom';
+
 // Components
 import { ProgressCircle } from '../components';
 
@@ -13,22 +16,19 @@ import { Typography } from '@material-ui/core';
 const ProgressRow = props => {
 	const { property, even } = props;
 
+	const propertyInfo = property.recent || property.current || property.upcoming;
+
 	return (
 		<PropertyRowContainer style={{ background: even ? 'inherit' : 'white' }}>
-			<PropertyName variant="h6" align="center">
-				{property.recent ? (
-					property.recent.property_name
-				): null}
-
-				{property.current ? (
-					property.current.property_name
-				) : null}
-
-				{property.upcoming ? (
-					property.upcoming.property_name
-				): null }
-				
-			</PropertyName>
+			<PropertyLink to={`/properties/${propertyInfo.property_id}`}>
+				<PropertyName
+					variant="h6"
+					align="center"
+					style={{ letterSpacing: '.03rem' }}
+				>
+					{propertyInfo.property_name}
+				</PropertyName>
+			</PropertyLink>
 
 			<PropertyRow>
 				<ProgressCircle
@@ -53,11 +53,18 @@ export default ProgressRow;
 
 const PropertyRowContainer = styled.div`
 	width: 100%;
+	/* padding: 16px 0 6px; */
+`;
+
+const PropertyLink = styled(Link)`
+	color: inherit;
+	text-decoration: none;
 `;
 
 const PropertyRow = styled.div`
 	display: flex;
 	width: 100%;
+	/* margin: 0 0 -20px; */
 `;
 
 const PropertyName = styled(Typography)`

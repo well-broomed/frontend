@@ -16,7 +16,7 @@ import {
 	addTask,
 	updateTask,
 	updateDeadline,
-	deleteTask
+	deleteTask,
 } from '../actions';
 
 // React-Select
@@ -44,41 +44,41 @@ const styles = theme => ({
 	root: {
 		width: '100%',
 		maxWidth: 360,
-		backgroundColor: theme.palette.background.paper
-	}
+		backgroundColor: theme.palette.background.paper,
+	},
 });
 
 const useStyles = makeStyles(theme => ({
 	root: {
 		width: '100%',
 		maxWidth: 360,
-		backgroundColor: theme.palette.background.paper
+		backgroundColor: theme.palette.background.paper,
 	},
 	newTask: {
 		height: 250,
-		flexGrow: 1
+		flexGrow: 1,
 	},
 	container: {
-		position: 'relative'
+		position: 'relative',
 	},
 	suggestionsContainerOpen: {
 		position: 'absolute',
 		zIndex: 1,
 		marginTop: theme.spacing(1),
 		left: 0,
-		right: 0
+		right: 0,
 	},
 	suggestion: {
-		display: 'block'
+		display: 'block',
 	},
 	suggestionsList: {
 		margin: 0,
 		padding: 0,
-		listStyleType: 'none'
+		listStyleType: 'none',
 	},
 	divider: {
-		height: theme.spacing(2)
-	}
+		height: theme.spacing(2),
+	},
 }));
 
 const afterStayOptions = [
@@ -87,7 +87,7 @@ const afterStayOptions = [
 	{ value: '12', label: '12 hours After Stay' },
 	{ value: '24', label: '1 day After Stay' },
 	{ value: '48', label: '2 days After Stay' },
-	{ value: '72', label: '3 days After Stay' }
+	{ value: '72', label: '3 days After Stay' },
 ];
 
 const suggestedTasks = [
@@ -95,7 +95,7 @@ const suggestedTasks = [
 	{ label: 'Clean the toilet' },
 	{ label: 'Vacuum the bedroom' },
 	{ label: 'Wipe the windows' },
-	{ label: 'Tidy the furniture' }
+	{ label: 'Tidy the furniture' },
 ];
 
 function renderInputComponent(inputProps) {
@@ -110,8 +110,8 @@ function renderInputComponent(inputProps) {
 					inputRef(node);
 				},
 				classes: {
-					input: classes.input
-				}
+					input: classes.input,
+				},
 			}}
 			{...other}
 		/>
@@ -194,7 +194,7 @@ const Property = props => {
 		onSuggestionsFetchRequested: handleSuggestionsFetchRequested,
 		onSuggestionsClearRequested: handleSuggestionsClearRequested,
 		getSuggestionValue,
-		renderSuggestion
+		renderSuggestion,
 	};
 
 	const handleSubmit = (event, newTask, deadline) => {
@@ -250,7 +250,7 @@ const Property = props => {
 		setUpdatingTask,
 		handleUpdate,
 		handleDeadline,
-		handleDelete
+		handleDelete,
 	};
 
 	return (
@@ -353,13 +353,13 @@ const Property = props => {
 									onBlur: () => newTask || setNewDeadline(null),
 									onKeyDown: e => {
 										if (e.key === 'Escape') setNewDeadline(null);
-									}
+									},
 								}}
 								theme={{
 									container: classes.container,
 									suggestionsContainerOpen: classes.suggestionsContainerOpen,
 									suggestionsList: classes.suggestionsList,
-									suggestion: classes.suggestion
+									suggestion: classes.suggestion,
 								}}
 								renderSuggestionsContainer={options => (
 									<Paper {...options.containerProps} square>
@@ -377,17 +377,17 @@ const Property = props => {
 
 const mapStateToProps = state => {
 	return {
-		userInfo: state.authReducer.userInfo,
+		userInfo: state.authReducer.user,
 
 		property: state.propertyReducer.property,
 
 		gettingProperty: state.propertyReducer.gettingProperty,
-		getPropertyError: state.propertyReducer.getPropertyError
+		getPropertyError: state.propertyReducer.getPropertyError,
 	};
 };
 
 Property.propTypes = {
-	classes: PropTypes.object.isRequired
+	classes: PropTypes.object.isRequired,
 };
 
 export default withRouter(
@@ -398,7 +398,7 @@ export default withRouter(
 			addTask,
 			updateTask,
 			updateDeadline,
-			deleteTask
+			deleteTask,
 		}
 	)(withStyles(styles)(Property))
 );

@@ -56,10 +56,20 @@ class Account extends React.Component {
         }
         
         this.props.checkIfUserExists(localStorage.getItem('role'));
+
+        if(this.props.currentUser){
+            this.setState({
+                username: this.props.currentUser.user_name,
+                email: this.props.currentUser.email,
+                passwordOpen: false,
+                usernameOpen: false,
+                emailOpen: false,
+            })
+        }
     }
 
     componentDidUpdate(prevProps){
-        if(this.props.userChecked !== prevProps.userChecked){
+        if(this.props.currentUser !== prevProps.currentUser){
             this.setState({
                 username: this.props.currentUser.user_name,
                 email: this.props.currentUser.email,
