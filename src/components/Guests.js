@@ -7,8 +7,9 @@ import { withRouter } from 'react-router-dom';
 
 import {
 	fetchAllGuests,
-	getUserProperties,
-	getCleaners
+	// getUserProperties,
+	// getCleaners,
+	getPropertyCleaners,
 } from '../actions/index';
 
 import AddGuestForm from './AddGuestForm';
@@ -34,12 +35,12 @@ import Tab from '@material-ui/core/Tab';
 
 const styles = {
 	card: {
-		minWidth: 275
+		minWidth: 275,
 	},
 	addIcon: {
 		fontSize: '5rem',
-		cursor: 'pointer'
-	}
+		cursor: 'pointer',
+	},
 };
 
 const TopBar = styled.div`
@@ -67,49 +68,51 @@ class Guests extends React.Component {
 			this.props.history.replace('/');
 		}
 
-		if (!this.props.guests) {
-			this.props.fetchAllGuests();
-		}
+		// if (!this.props.guests) {
+		this.props.fetchAllGuests();
+		// }
 
-		if (!this.props.properties) {
-			this.props.getUserProperties();
-		}
+		this.props.getPropertyCleaners();
 
-		if (!this.props.cleaners) {
-			this.props.getCleaners();
-		}
+		// if (!this.props.properties) {
+		// 	this.props.getUserProperties();
+		// }
+
+		// if (!this.props.cleaners) {
+		// 	this.props.getCleaners();
+		// }
 	}
 
-	componentDidUpdate(prevProps) {
-		console.log('newguests');
-		if (prevProps.refreshGuests !== this.props.refreshGuests) {
-			this.props.fetchAllGuests();
-		}
-	}
+	// componentDidUpdate(prevProps) {
+	// 	console.log('newguests');
+	// 	if (prevProps.refreshGuests !== this.props.refreshGuests) {
+	// 		this.props.fetchAllGuests();
+	// 	}
+	// }
 
 	constructor(props) {
 		super(props);
 		this.state = {
 			addModal: false,
-			tab: 0
+			tab: 0,
 		};
 	}
 
 	handleModalOpen = () => {
 		this.setState({
-			addModal: true
+			addModal: true,
 		});
 	};
 
 	handleModalClose = () => {
 		this.setState({
-			addModal: false
+			addModal: false,
 		});
 	};
 
 	handleTab = value => event => {
 		this.setState({
-			tab: value
+			tab: value,
 		});
 	};
 
@@ -134,8 +137,8 @@ class Guests extends React.Component {
 					open={this.state.addModal}
 					TransitionComponent={Transition}
 					onClose={this.handleModalClose}
-					fullWidth={false}
-					maxWidth={'70%'}
+					fullWidth={false} // What is this? Causes errors
+					maxWidth={'70%'} // This too
 				>
 					<DialogContent fullWidth={false} maxWidth={'100%'}>
 						<AddGuestForm
@@ -158,7 +161,13 @@ class Guests extends React.Component {
 						{this.props.guests ? (
 							<div>
 								{this.props.guests.map(guest => {
-									return <GuestPreview guest={guest} tab={this.state.tab} />;
+									return (
+										<GuestPreview
+											key={guest.guest_id}
+											guest={guest}
+											tab={this.state.tab}
+										/>
+									);
 								})}
 							</div>
 						) : null}
@@ -179,9 +188,15 @@ const mapStateToProps = state => {
 	return {
 		// state items
 		guests: state.guestReducer.guests,
+		cleaners: state.propertyReducer.cleaners,
+		propertyCleaners: state.propertyReducer.propertyCleaners,
+
 		refreshGuests: state.guestReducer.refreshGuests,
-		refreshProperties: state.propertyReducer.refreshProperties,
-		refreshCleaners: state.propertyReducer.refreshCleaners
+		// refreshProperties: state.propertyReducer.refreshProperties,
+		// refreshCleaners: state.propertyReducer.refreshCleaners,
+
+		gettingPropertyCleaners: state.propertyReducer.gettingPropertyCleaners,
+		getPropertyCleanersError: state.propertyReducer.getPropertyCleanersError,
 	};
 };
 
@@ -191,8 +206,9 @@ export default withRouter(
 		{
 			// actions
 			fetchAllGuests,
-			getUserProperties,
-			getCleaners
+			// getUserProperties,
+			// getCleaners,
+			getPropertyCleaners,
 		}
 	)(withStyles(styles)(Guests))
 );
