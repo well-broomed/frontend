@@ -9,6 +9,11 @@ export const GETTING_PROPERTY = 'GETTING_PROPERTY';
 export const GOT_PROPERTY = 'GOT_PROPERTY';
 export const GET_PROPERTY_ERROR = 'GET_PROPERTY_ERROR';
 
+// getPropertyCleaners
+export const GETTING_PROPERTY_CLEANERS = 'GETTING_PROPERTY_CLEANERS';
+export const GOT_PROPERTY_CLEANERS = 'GOT_PROPERTY_CLEANERS';
+export const GET_PROPERTY_CLEANERS_ERROR = 'GET_PROPERTY_CLEANERS_ERROR';
+
 export const ADDING_PROPERTY = 'ADDING_PROPERTY';
 export const PROPERTY_ADDED = 'PROPERTY_ADDED';
 export const FETCHING_CLEANERS = 'FETCHING_CLEANERS';
@@ -45,8 +50,8 @@ function setHeaders() {
 	const options = {
 		headers: {
 			Authorization: `Bearer ${token}`,
-			'user-info': userInfo
-		}
+			'user-info': userInfo,
+		},
 	};
 
 	return options;
@@ -123,6 +128,28 @@ export const addProperty = property => {
 	};
 };
 
+export const getPropertyCleaners = () => {
+	let options = setHeaders();
+
+	const endpoint = axios.get(`${backendUrl}/api/property/cleaners`, options);
+
+	return dispatch => {
+		dispatch({ type: GETTING_PROPERTY_CLEANERS });
+
+		endpoint
+			.then(res => {
+				dispatch({
+					type: GOT_PROPERTY_CLEANERS,
+					payload: res.data,
+				});
+			})
+			.catch(err => {
+				console.log(err);
+				dispatch({ type: GET_PROPERTY_CLEANERS_ERROR });
+			});
+	};
+};
+
 export const getCleaners = () => {
 	let options = setHeaders();
 
@@ -135,7 +162,7 @@ export const getCleaners = () => {
 			.then(res => {
 				dispatch({
 					type: CLEANERS_FETCHED,
-					payload: res.data.cleaner_profiles
+					payload: res.data.cleaner_profiles,
 				});
 			})
 			.catch(err => {
@@ -244,7 +271,7 @@ export const updateTask = (task_id, text, deadline) => {
 			.then(res => {
 				dispatch({
 					type: UPDATED_TASK,
-					payload: { task_id, updatedTask: res.data.updatedTask }
+					payload: { task_id, updatedTask: res.data.updatedTask },
 				});
 			})
 			.catch(error => {
