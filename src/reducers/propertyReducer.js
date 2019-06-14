@@ -22,7 +22,8 @@ import {
 	UPDATE_TASK_ERROR,
 	UPDATING_DEADLINE,
 	UPDATED_DEADLINE,
-	UPDATE_DEADLINE_ERROR
+	UPDATE_DEADLINE_ERROR,
+	PROPERTY_UPDATED
 } from '../actions';
 
 const initialState = {
@@ -68,6 +69,9 @@ const propertyReducer = (state = initialState, action) => {
 			return { ...state, refreshProperties: true };
 
 		case PROPERTY_DELETED:
+			return {...state, refreshProperties: true};
+
+		case PROPERTY_UPDATED:
 			return {...state, refreshProperties: true};
 
 		case CLEANERS_FETCHED:

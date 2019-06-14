@@ -1,5 +1,9 @@
 import React from 'react';
 
+// Components
+import EditPropertyForm from './EditPropertyForm';
+
+// Cards
 import Card from '@material-ui/core/Card';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -13,15 +17,18 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 
 import Button from '@material-ui/core/Button';
+
+// Icons
 import DeleteForeverTwoTone from '@material-ui/icons/DeleteForeverTwoTone';
+import EditTwoTone from '@material-ui/icons/EditTwoTone';
 
+// Dependencies
 import styled from 'styled-components';
-
 import { withStyles } from '@material-ui/core';
-
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+// Actions
 import { changeCleaner, deleteProperty } from '../actions/propertyActions';
 
 const CardContainer = styled.div`
@@ -72,32 +79,9 @@ const styles = {
 };
 
 class PropertyPreview extends React.Component {
-	componentDidMount() {
-		if (this.props.cleaners) {
-			let defaultCleaner;
-			if (this.props.property.cleaner_id === null) {
-				defaultCleaner = this.props.cleaners.reduce((cleaners, cleaner) => {
-					if (cleaner.user_id === this.props.property.manager_id) {
-						cleaners.push(cleaner);
-					}
-					return cleaners;
-				});
-			} else {
-				defaultCleaner = this.props.cleaners.filter(
-					cleaner => cleaner.user_id === this.props.property.cleaner_id
-				)[0];
-			}
-
-			this.setState({
-				cleaner: defaultCleaner
-			});
-		}
-	}
-
 	componentDidUpdate(oldProps) {
 		if (this.props.cleaners !== oldProps.cleaners) {
 			let defaultCleaner;
-
 			if (this.props.property.cleaner_id === null) {
 				defaultCleaner = this.props.cleaners.filter(
 					cleaner => cleaner.user_id === this.props.property.manager_id
@@ -121,6 +105,7 @@ class PropertyPreview extends React.Component {
 			// state
 			cleaner: null,
 			deleteModal: false,
+			editModal: false,
 		};
 	}
 
@@ -150,6 +135,12 @@ class PropertyPreview extends React.Component {
 		this.toggleDelete();
 	}
 
+	toggleEdit = () => {
+		this.setState({
+			editModal: !this.state.editModal
+		})
+	}
+
 	render() {
 		const { classes } = this.props;
 		return (
@@ -170,6 +161,13 @@ class PropertyPreview extends React.Component {
 				</DialogActions>
 			</Dialog>
 
+			{/** Edit Modal **/}
+			<Dialog open = {this.state.editModal} onClose = {this.toggleEdit} fullWidth={true} maxWidth={'70%'}>
+				<DialogContent>
+					<EditPropertyForm close = {this.toggleEdit} property = {this.props.property} />
+				</DialogContent>
+			</Dialog>
+
 			{/** Property Card */}
 
 				<Card className={classes.card} key={this.props.property.id}>
@@ -179,16 +177,12 @@ class PropertyPreview extends React.Component {
 						<CardText>
 							<Typography variant = 'h4'>{this.props.property.property_name}</Typography>
 							<Typography variant = 'h5'>{this.props.property.address}</Typography>
-							
-							
-
-
 						</CardText>
 					</Link>
 
 						<CardActions>
+						<EditTwoTone onClick = {this.toggleEdit} />
 						<DeleteForeverTwoTone onClick = {this.toggleDelete} />
-
 						</CardActions>
 					</CardContainer>
 					<CardFooter>
