@@ -57,9 +57,9 @@ const TopBar = styled.div`
 //     border: 2px solid black;
 //     `;
 
-function Transition(props) {
-	return <Slide direction="up" {...props} />;
-}
+const Transition = React.forwardRef((props, ref) => (
+	<Slide direction = 'up' {...props} ref = {ref} />
+))
 
 class Guests extends React.Component {
 	componentDidMount() {
@@ -81,7 +81,6 @@ class Guests extends React.Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		console.log('newguests');
 		if (prevProps.refreshGuests !== this.props.refreshGuests) {
 			this.props.fetchAllGuests();
 		}
@@ -119,7 +118,7 @@ class Guests extends React.Component {
 		return (
 			<div>
 				<TopBar>
-					<Typography variant="h2">Guests</Typography>{' '}
+					<Typography variant="h2">Guests</Typography>
 					<Fab
 						color="primary"
 						className={classes.addIcon}
@@ -128,16 +127,14 @@ class Guests extends React.Component {
 						<AddIcon />
 					</Fab>
 				</TopBar>
-				<br />
 
 				<Dialog
 					open={this.state.addModal}
 					TransitionComponent={Transition}
 					onClose={this.handleModalClose}
-					fullWidth={false}
-					maxWidth={'70%'}
+					fullWidth={true}
 				>
-					<DialogContent fullWidth={false} maxWidth={'100%'}>
+					<DialogContent>
 						<AddGuestForm
 							isOpen={this.state.addModal}
 							close={this.handleModalClose}

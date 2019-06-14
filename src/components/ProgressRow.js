@@ -12,13 +12,23 @@ import { Typography } from '@material-ui/core';
 
 const ProgressRow = props => {
 	const { property, even } = props;
+	console.log(property, "REPORTS PROPERTY")
 
 	return (
 		<PropertyRowContainer style={{ background: even ? 'inherit' : 'white' }}>
 			<PropertyName variant="h6" align="center">
-				{property.recent.property_name ||
-					property.current.property_name ||
-					property.upcoming.property_name}
+				{property.recent ? (
+					property.recent.property_name
+				): null}
+
+				{property.current ? (
+					property.current.property_name
+				) : null}
+
+				{property.upcoming ? (
+					property.upcoming.property_name
+				): null }
+				
 			</PropertyName>
 
 			<PropertyRow>

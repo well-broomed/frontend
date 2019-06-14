@@ -55,9 +55,9 @@ const styles = {
 	}
 };
 
-function Transition(props) {
-	return <Slide direction="up" {...props} />;
-}
+const Transition = React.forwardRef((props, ref) => (
+	<Slide direction = 'up' {...props} ref = {ref} />
+))
 
 class Properties extends React.Component {
 	componentDidMount() {
@@ -107,7 +107,7 @@ class Properties extends React.Component {
 		return (
 			<div>
 				<TopBar>
-					<Typography variant="h2">Properties</Typography>{' '}
+					<Typography variant="h2">Properties</Typography>
 					<Fab
 						color="primary"
 						className={classes.addIcon}

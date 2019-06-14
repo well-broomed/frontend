@@ -24,8 +24,6 @@ const styles = {
 		display: 'flex',
 		flexFlow: 'column nowrap',
 		padding: '5%',
-        height: '70vh',
-        width: '70vw',
 	},
 	formField: {
         margin: '10px 0px',
@@ -127,7 +125,8 @@ class AddGuestForm extends React.Component {
     }
 
 	render() {
-		const { classes } = this.props;
+        const { classes } = this.props;
+
 		return (
 			<div>
 				<form
@@ -143,7 +142,7 @@ class AddGuestForm extends React.Component {
                     </Typography>
 
                     <NativeSelect
-                        value={this.state.property} 
+                        value={this.state.property}
                         onChange={this.handleSelect('property')}
                         input={
                             <Input
@@ -152,7 +151,7 @@ class AddGuestForm extends React.Component {
                             />
                         }
                     >
-                        <option value = {null} >{'Select a Property'}</option>
+                        <option value = {''} >{'Select a Property'}</option>
                         {this.props.properties
                             ? this.props.properties.map(property => {
                                     return (
