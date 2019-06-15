@@ -110,20 +110,20 @@ class AddGuestForm extends React.Component {
 
 	handleSelect = name => event => {
 		if (name === 'property') {
-			let property = this.props.propertyCleaners.find(
-				p => p.property_id === event.target.value
+			let property = this.props.propertyCleaners.properties.find(
+				p => p.property_id === parseInt(event.target.value)
 			);
+
 			this.setState({
 				[name]: property,
-				property_id: event.target.value,
 			});
 		} else if (name === 'cleaner') {
-			let cleaner = this.props.cleaners.find(
-				c => c.cleaner_id === event.target.value
+			let cleaner = this.props.propertyCleaners.cleaners.find(
+				c => c.cleaner_id === parseInt(event.target.value)
 			);
+
 			this.setState({
 				[name]: cleaner,
-				cleaner_id: event.target.value,
 			});
 		}
 	};
@@ -152,11 +152,11 @@ class AddGuestForm extends React.Component {
 					>
 						<option value={null}>{'Select a Property'}</option>
 						{this.props.propertyCleaners
-							? this.props.propertyCleaners.map(property => {
+							? this.props.propertyCleaners.properties.map(property => {
 									return (
 										<option
-											value={property.property_id}
 											key={property.property_id}
+											value={property.property_id}
 										>
 											{property.property_name}
 											{' - '}
@@ -177,15 +177,14 @@ class AddGuestForm extends React.Component {
 						}
 					>
 						<option value="">{'Select a Cleaner'}</option>
-						{this.props.cleaners
-							? this.props.cleaners.map(cleaner => {
-									return (
-										<option value={cleaner.user_id} key={cleaner.user_id}>
-											{cleaner.user_name}
-										</option>
-									);
-							  })
-							: null}
+						{this.state.property &&
+							this.props.propertyCleaners.availableCleaners[
+								this.state.property.property_id
+							].map(({ cleaner_id, cleaner_name }) => (
+								<option key={cleaner_id} value={cleaner_id}>
+									{cleaner_name}
+								</option>
+							))}
 					</NativeSelect>
 
 					<TextField
