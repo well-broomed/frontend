@@ -131,7 +131,7 @@ export const addProperty = property => {
 export const getPropertyCleaners = () => {
 	let options = setHeaders();
 
-	const endpoint = axios.get(`${backendUrl}/api/property/cleaners`, options);
+	const endpoint = axios.get(`${backendUrl}/api/properties/cleaners`, options);
 
 	return dispatch => {
 		dispatch({ type: GETTING_PROPERTY_CLEANERS });
