@@ -7,8 +7,9 @@ import {
 
 const initialState = {
 	userInfo: null,
-	userChecked: null,
+	userChecked: false,
 	user: null,
+	currentUser: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -20,6 +21,7 @@ const authReducer = (state = initialState, action) => {
 				userInfo: action.payload.userInfo,
 				userChecked: true,
 				user: action.payload.user,
+				currentUser: action.payload.user,
 			};
 
 		case UPDATING_USER:
@@ -33,6 +35,7 @@ const authReducer = (state = initialState, action) => {
 				...state,
 				userInfo: action.payload.userInfo,
 				user: action.payload.user,
+				currentUser: action.payload.user,
 				userChecked: true,
 			};
 

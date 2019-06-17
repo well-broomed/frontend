@@ -24,8 +24,6 @@ const styles = {
 		display: 'flex',
 		flexFlow: 'column nowrap',
 		padding: '5%',
-		height: '70vh',
-		width: '70vw',
 	},
 	formField: {
 		margin: '10px 0px',
@@ -42,20 +40,6 @@ class AddGuestForm extends React.Component {
 			checkin: moment(),
 			checkout: moment(),
 		});
-	}
-
-	componentDidUpdate(prevProps) {
-		// reset the form if it's closed
-		if (this.props.isOpen !== prevProps.isOpen) {
-			this.setState({
-				guest_name: '',
-				property_id: null,
-				email: null,
-				cleaner_id: null,
-				cleaner: null,
-				property: null,
-			});
-		}
 	}
 
 	constructor(props) {
@@ -262,7 +246,6 @@ const mapStateToProps = state => {
 	return {
 		// state items
 		user: state.authReducer.user,
-
 		propertyCleaners: state.propertyReducer.propertyCleaners || [],
 		cleaners: state.propertyReducer.cleaners,
 	};

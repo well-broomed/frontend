@@ -25,8 +25,6 @@ const styles = {
 		display: 'flex',
 		flexFlow: 'column nowrap',
 		padding: '5%',
-		height: '70vh',
-		width: '70vw',
 	},
 	formField: {
 		margin: '10px 0px',

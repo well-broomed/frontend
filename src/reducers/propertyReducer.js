@@ -2,6 +2,7 @@ import {
 	// FETCHING_PROPERTIES,
 	PROPERTIES_FETCHED,
 	PROPERTY_ADDED,
+	PROPERTY_DELETED,
 	CLEANERS_FETCHED,
 	FETCHING_PARTNERS,
 	PARTNERS_FETCHED,
@@ -25,6 +26,7 @@ import {
 	UPDATING_DEADLINE,
 	UPDATED_DEADLINE,
 	UPDATE_DEADLINE_ERROR,
+	PROPERTY_UPDATED
 } from '../actions';
 
 const initialState = {
@@ -86,6 +88,12 @@ const propertyReducer = (state = initialState, action) => {
 
 		case PROPERTY_ADDED:
 			return { ...state, refreshProperties: true };
+
+		case PROPERTY_DELETED:
+			return {...state, refreshProperties: true};
+
+		case PROPERTY_UPDATED:
+			return {...state, refreshProperties: true};
 
 		case CLEANERS_FETCHED:
 			return { ...state, cleaners: action.payload, refreshCleaners: false };

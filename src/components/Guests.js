@@ -58,9 +58,9 @@ const TopBar = styled.div`
 //     border: 2px solid black;
 //     `;
 
-function Transition(props) {
-	return <Slide direction="up" {...props} />;
-}
+const Transition = React.forwardRef((props, ref) => (
+	<Slide direction = 'up' {...props} ref = {ref} />
+))
 
 class Guests extends React.Component {
 	componentDidMount() {
@@ -68,27 +68,16 @@ class Guests extends React.Component {
 			this.props.history.replace('/');
 		}
 
-		// if (!this.props.guests) {
 		this.props.fetchAllGuests();
-		// }
 
 		this.props.getPropertyCleaners();
-
-		// if (!this.props.properties) {
-		// 	this.props.getUserProperties();
-		// }
-
-		// if (!this.props.cleaners) {
-		// 	this.props.getCleaners();
-		// }
 	}
 
-	// componentDidUpdate(prevProps) {
-	// 	console.log('newguests');
-	// 	if (prevProps.refreshGuests !== this.props.refreshGuests) {
-	// 		this.props.fetchAllGuests();
-	// 	}
-	// }
+	componentDidUpdate(prevProps){
+		if(prevProps.refreshGuests !== this.props.refreshGuests){
+			this.props.fetchAllGuests();
+		}
+	}
 
 	constructor(props) {
 		super(props);
@@ -122,7 +111,7 @@ class Guests extends React.Component {
 		return (
 			<div>
 				<TopBar>
-					<Typography variant="h2">Guests</Typography>{' '}
+					<Typography variant="h2">Guests</Typography>
 					<Fab
 						color="primary"
 						className={classes.addIcon}
@@ -131,16 +120,17 @@ class Guests extends React.Component {
 						<AddIcon />
 					</Fab>
 				</TopBar>
-				<br />
 
+
+				{/** Add Guest Modal */}
 				<Dialog
 					open={this.state.addModal}
 					TransitionComponent={Transition}
 					onClose={this.handleModalClose}
-					fullWidth={false} // What is this? Causes errors
-					maxWidth={'70%'} // This too
+					fullWidth = {true}
+					maxWidth = {'xl'}
 				>
-					<DialogContent fullWidth={false} maxWidth={'100%'}>
+					<DialogContent>
 						<AddGuestForm
 							isOpen={this.state.addModal}
 							close={this.handleModalClose}
@@ -161,13 +151,10 @@ class Guests extends React.Component {
 						{this.props.guests ? (
 							<div>
 								{this.props.guests.map(guest => {
-									return (
-										<GuestPreview
-											key={guest.guest_id}
-											guest={guest}
-											tab={this.state.tab}
-										/>
-									);
+									return <GuestPreview 
+									guest={guest} 
+									tab={this.state.tab} 
+									key = {guest.guest_id} />;
 								})}
 							</div>
 						) : null}
