@@ -16,8 +16,6 @@ import Button from '@material-ui/core/Button';
 
 import Typography from '@material-ui/core/Typography';
 
-// import axios from 'axios';
-
 import moment from 'moment';
 
 import styled from 'styled-components';
@@ -55,34 +53,7 @@ const CardActions = styled.div`
 	}
 `;
 
-// const token = localStorage.getItem('jwt');
-// const userInfo = localStorage.getItem('userInfo');
-
-// const options = {
-// 	headers: { Authorization: `Bearer ${token}`, 'user-info': userInfo },
-// };
-
-// const backendUrl = 'http://localhost:5000' || process.env.REACT_APP_BACKEND_URL;
-
 class GuestPreview extends React.Component {
-	// componentDidMount(){
-	//     axios.get(`${backendUrl}/api/guests/${this.props.guest.guest_id}`, options).then(res => {
-	//         this.setState({
-	//             guest: res.data.guest
-	//         })
-	//     })
-	// }
-
-	// componentDidUpdate(prevProps){
-	//     if((prevProps.refreshGuests !== this.props.refreshGuests) && this.props.refreshGuests){
-	//         axios.get(`${backendUrl}/api/guests/${this.props.guest.guest_id}`, options).then(res => {
-	//             this.setState({
-	//                 guest: res.data.guest
-	//             })
-	//         })
-	//     }
-	// }
-
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -90,7 +61,6 @@ class GuestPreview extends React.Component {
 			editModal: false,
 		};
 	}
-
 	handleDelete = () => {
 		this.props.deleteGuest(this.props.guest.guest_id);
 
@@ -116,8 +86,6 @@ class GuestPreview extends React.Component {
 		// console.log(this.props.guest);
 		return (
 			<div>
-				<br />
-
 				<Card>
 					<CardContent>
 						<CardContainer>
@@ -179,8 +147,8 @@ class GuestPreview extends React.Component {
 				<Dialog
 					open={this.state.editModal}
 					onClose={this.toggleEdit}
-					fullWidth={false}
-					maxWidth={'70%'}
+                    fullWidth = {true}
+                    maxWidth = 'xl'
 				>
 					<DialogContent>
 						<EditGuestForm close={this.toggleEdit} guest={this.props.guest} />

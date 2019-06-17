@@ -9,7 +9,7 @@ import { addGuest } from '../actions/index';
 
 import moment from 'moment';
 
-import { DateTimePicker } from '@material-ui/pickers';
+import { DateTimePicker } from "@material-ui/pickers";
 
 // Form Components
 
@@ -24,39 +24,24 @@ const styles = {
 		display: 'flex',
 		flexFlow: 'column nowrap',
 		padding: '5%',
-		height: '70vh',
-		width: '70vw',
 	},
 	formField: {
-		margin: '10px 0px',
+        margin: '10px 0px',
 	},
 	formButton: {
-		margin: '10px 0px',
-		padding: '20px',
-	},
+        margin: '10px 0px',
+        padding: '20px',
+	}
 };
 
 class AddGuestForm extends React.Component {
-	componentDidMount() {
-		this.setState({
-			checkin: moment(),
-			checkout: moment(),
-		});
-	}
 
-	componentDidUpdate(prevProps) {
-		// reset the form if it's closed
-		if (this.props.isOpen !== prevProps.isOpen) {
-			this.setState({
-				guest_name: '',
-				property_id: null,
-				email: null,
-				cleaner_id: null,
-				cleaner: null,
-				property: null,
-			});
-		}
-	}
+    componentDidMount(){
+        this.setState({
+            checkin: moment(),
+            checkout: moment(),
+        })
+    }
 
 	constructor(props) {
 		super(props);
@@ -67,15 +52,15 @@ class AddGuestForm extends React.Component {
 			checkin: null,
 			checkout: null,
 			email: null,
-			cleaner_id: null,
-			cleaner: null,
-			property: null,
+            cleaner_id: null,
+            cleaner: '',
+            property: '',
 		};
 	}
 
 	handleInput = name => event => {
 		this.setState({
-			[name]: event.target.value,
+			[name]: event.target.value
 		});
 	};
 
@@ -133,7 +118,7 @@ class AddGuestForm extends React.Component {
 	};
 
 	render() {
-		const { classes } = this.props;
+        const { classes } = this.props;
 
 		return (
 			<div>
@@ -226,27 +211,31 @@ class AddGuestForm extends React.Component {
 						onChange={this.handleInput('guest_name')}
 					/>
 
-					<Typography variant="overline">Check-In</Typography>
-					<DateTimePicker
-						inputVariant="outlined"
-						name="checkin"
-						value={this.state.checkin}
-						onChange={this.handleCheckin}
-					/>
+                    <Typography variant = 'overline'>
+                        Check-In
+                    </Typography>
+                    <DateTimePicker
+                        inputVariant="outlined"
+                        name = 'checkin'
+                        value={this.state.checkin}
+                        onChange={this.handleCheckin}
+                    />
 
-					<Typography variant="overline">Check-Out</Typography>
-					<DateTimePicker
-						inputVariant="outlined"
-						name="checkout"
-						value={this.state.checkout}
-						onChange={this.handleCheckout}
-					/>
-
+                    <Typography variant = 'overline'>
+                        Check-Out
+                    </Typography>
+                    <DateTimePicker
+                        inputVariant="outlined"
+                        name = 'checkout'
+                        value={this.state.checkout}
+                        onChange={this.handleCheckout}
+                    />
+					
 					<Button
 						className={classes.formButton}
 						variant="contained"
 						color="primary"
-						type="submit"
+                        type="submit"
 					>
 						Add Reservation
 					</Button>
@@ -260,9 +249,9 @@ const mapStateToProps = state => {
 	return {
 		// state items
 		user: state.authReducer.user,
-
 		propertyCleaners: state.propertyReducer.propertyCleaners || [],
 		cleaners: state.propertyReducer.cleaners,
+
 	};
 };
 
@@ -271,7 +260,7 @@ export default withRouter(
 		mapStateToProps,
 		{
 			// actions
-			addGuest,
+			addGuest
 		}
 	)(withStyles(styles)(AddGuestForm))
 );
