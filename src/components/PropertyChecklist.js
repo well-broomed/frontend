@@ -41,8 +41,8 @@ function renderInputComponent(inputProps) {
 					inputRef(node);
 				},
 				classes: {
-					input: classes.input
-				}
+					input: classes.input,
+				},
 			}}
 			{...other}
 		/>
@@ -88,7 +88,8 @@ const PropertyChecklist = props => {
 		handleUpdate,
 		handleDeadline,
 		handleDelete,
-		afterStayOptions
+		afterStayOptions,
+		manager,
 	} = props;
 
 	const [newTask, setNewTask] = useState('');
@@ -117,7 +118,7 @@ const PropertyChecklist = props => {
 		onSuggestionsFetchRequested: handleSuggestionsFetchRequested,
 		onSuggestionsClearRequested: handleSuggestionsClearRequested,
 		getSuggestionValue,
-		renderSuggestion
+		renderSuggestion,
 	};
 
 	function getSuggestions(value) {
@@ -148,6 +149,28 @@ const PropertyChecklist = props => {
 		} After Stay`;
 	}
 
+	if (!manager)
+		return (
+			<React.Fragment>
+				{deadline > 0 ? (
+					<Typography variant="h6" className={classes.title}>
+						{hourConverter(deadline)}
+					</Typography>
+				) : (
+					<Typography variant="h6" className={classes.title}>
+						{listTitle}
+					</Typography>
+				)}
+				<List className={classes.root} style={{ marginBottom: '16px' }}>
+					{taskList.map(({ task_id, text }) => (
+						<ListItem>
+							<ListItemText key={task_id} primary={text} />
+						</ListItem>
+					))}
+				</List>
+			</React.Fragment>
+		);
+
 	return (
 		<React.Fragment>
 			{deadline > 0 ? (
@@ -155,7 +178,7 @@ const PropertyChecklist = props => {
 					className={classes.root}
 					value={{
 						value: deadline,
-						label: hourConverter(deadline)
+						label: hourConverter(deadline),
 					}}
 					onChange={({ value: newDeadline }) =>
 						handleDeadline(deadline, newDeadline)
@@ -196,13 +219,13 @@ const PropertyChecklist = props => {
 										onBlur: () => setUpdatingTask(null),
 										onKeyDown: e => {
 											if (e.key === 'Escape') setUpdatingTask(null);
-										}
+										},
 									}}
 									theme={{
 										container: classes.container,
 										suggestionsContainerOpen: classes.suggestionsContainerOpen,
 										suggestionsList: classes.suggestionsList,
-										suggestion: classes.suggestion
+										suggestion: classes.suggestion,
 									}}
 									renderSuggestionsContainer={options => (
 										<Paper {...options.containerProps} square>
@@ -258,13 +281,13 @@ const PropertyChecklist = props => {
 							onBlur: () => newTask || setAddingTask(false),
 							onKeyDown: e => {
 								if (e.key === 'Escape') setAddingTask(false);
-							}
+							},
 						}}
 						theme={{
 							container: classes.container,
 							suggestionsContainerOpen: classes.suggestionsContainerOpen,
 							suggestionsList: classes.suggestionsList,
-							suggestion: classes.suggestion
+							suggestion: classes.suggestion,
 						}}
 						renderSuggestionsContainer={options => (
 							<Paper {...options.containerProps} square>

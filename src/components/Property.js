@@ -253,6 +253,8 @@ const Property = props => {
 		handleDelete,
 	};
 
+	const manager = props.user.role === 'manager';
+
 	return (
 		<React.Fragment>
 			<TopBar>
@@ -286,6 +288,7 @@ const Property = props => {
 						listTitle="Before Stay"
 						deadline={-1}
 						taskList={beforeStay}
+						manager={manager}
 					/>
 
 					<PropertyChecklist
@@ -293,15 +296,17 @@ const Property = props => {
 						listTitle="During Stay"
 						deadline={0}
 						taskList={duringStay}
+						manager={manager}
 					/>
 				</BeforeAndDuringColumn>
 
 				<AfterColumn>
-					{!!afterStay.length && (
-						<Typography variant="h6" className={classes.title}>
-							After Stay
-						</Typography>
-					)}
+					{!!afterStay.length &&
+						(manager && (
+							<Typography variant="h6" className={classes.title}>
+								After Stay
+							</Typography>
+						))}
 
 					{afterStay.map(
 						(taskList, deadline) =>
@@ -312,62 +317,68 @@ const Property = props => {
 									deadline={deadline}
 									taskList={taskList}
 									afterStayOptions={afterStayOptions}
+									manager={manager}
 								/>
 							)
 					)}
 
-					<Typography variant="h6" className={classes.title}>
-						Add "After Stay" List
-					</Typography>
-
-					{/* TODO: Move this to PropertyChecklist */}
-					<Select
-						className={classes.root}
-						value={newDeadline}
-						options={afterStayOptions.filter(
-							option => !afterStay[+option.value]
-						)}
-						onChange={option => {
-							setNewDeadline(option);
-							setNewTask('');
-						}}
-					/>
-					{newDeadline && (
-						<NewTaskForm
-							className={classes.root}
-							onSubmit={event => {
-								handleSubmit(event, newTask, newDeadline.value);
-								setAddingTask(parseInt(newDeadline.value));
-								setNewDeadline(null);
-							}}
-						>
-							{/* onChange is kinda choppy here compared to the other lists. Not sure why. */}
-							<Autosuggest
-								{...autosuggestProps}
-								inputProps={{
-									classes,
-									placeholder: 'Add a task',
-									value: newTask,
-									onChange: handleChange,
-									autoFocus: true,
-									onBlur: () => newTask || setNewDeadline(null),
-									onKeyDown: e => {
-										if (e.key === 'Escape') setNewDeadline(null);
-									},
-								}}
-								theme={{
-									container: classes.container,
-									suggestionsContainerOpen: classes.suggestionsContainerOpen,
-									suggestionsList: classes.suggestionsList,
-									suggestion: classes.suggestion,
-								}}
-								renderSuggestionsContainer={options => (
-									<Paper {...options.containerProps} square>
-										{options.children}
-									</Paper>
+					{manager && (
+						<React.Fragment>
+							{' '}
+							<Typography variant="h6" className={classes.title}>
+								Add "After Stay" List
+							</Typography>
+							{/* TODO: Move this to PropertyChecklist */}
+							<Select
+								className={classes.root}
+								value={newDeadline}
+								options={afterStayOptions.filter(
+									option => !afterStay[+option.value]
 								)}
+								onChange={option => {
+									setNewDeadline(option);
+									setNewTask('');
+								}}
 							/>
-						</NewTaskForm>
+							{newDeadline && (
+								<NewTaskForm
+									className={classes.root}
+									onSubmit={event => {
+										handleSubmit(event, newTask, newDeadline.value);
+										setAddingTask(parseInt(newDeadline.value));
+										setNewDeadline(null);
+									}}
+								>
+									{/* onChange is kinda choppy here compared to the other lists. Not sure why. */}
+									<Autosuggest
+										{...autosuggestProps}
+										inputProps={{
+											classes,
+											placeholder: 'Add a task',
+											value: newTask,
+											onChange: handleChange,
+											autoFocus: true,
+											onBlur: () => newTask || setNewDeadline(null),
+											onKeyDown: e => {
+												if (e.key === 'Escape') setNewDeadline(null);
+											},
+										}}
+										theme={{
+											container: classes.container,
+											suggestionsContainerOpen:
+												classes.suggestionsContainerOpen,
+											suggestionsList: classes.suggestionsList,
+											suggestion: classes.suggestion,
+										}}
+										renderSuggestionsContainer={options => (
+											<Paper {...options.containerProps} square>
+												{options.children}
+											</Paper>
+										)}
+									/>
+								</NewTaskForm>
+							)}
+						</React.Fragment>
 					)}
 				</AfterColumn>
 			</PropertyContainer>
@@ -377,7 +388,7 @@ const Property = props => {
 
 const mapStateToProps = state => {
 	return {
-		userInfo: state.authReducer.user,
+		user: state.authReducer.user || {},
 
 		property: state.propertyReducer.property,
 
