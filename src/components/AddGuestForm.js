@@ -118,6 +118,7 @@ class AddGuestForm extends React.Component {
 
 			this.setState({
 				[name]: property,
+				property_id: property.property_id,
 			});
 		} else if (name === 'cleaner') {
 			let cleaner = this.props.propertyCleaners.cleaners.find(
@@ -128,6 +129,7 @@ class AddGuestForm extends React.Component {
 
 			this.setState({
 				[name]: cleaner,
+				cleaner_id: cleaner.cleaner_id,
 			});
 		}
 	};
