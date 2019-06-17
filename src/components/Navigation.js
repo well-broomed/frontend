@@ -44,34 +44,32 @@ const auth = new Auth();
 const styles = {
 	root: {
 		flexGrow: 1,
-		padding: 0
+		padding: 0,
 	},
 	grow: {
-		flexGrow: 1
+		flexGrow: 1,
 	},
 	menuButton: {
 		marginLeft: -12,
-		marginRight: 20
+		marginRight: 20,
 	},
-	drawer: {
-	},
-	appBar: {
-	},
+	drawer: {},
+	appBar: {},
 	list: {
 		width: 250,
 		margin: '60px 0px',
 	},
 	loginBtn: {
 		background: '#1b5e20',
-		color: 'white'
+		color: 'white',
 	},
 	logoutBtn: {
 		background: '#b71c1c',
-		color: 'white'
+		color: 'white',
 	},
 	loginModal: {
-		background: '#3d3d3d'
-	}
+		background: '#3d3d3d',
+	},
 };
 
 // Slide the login modal from screen bottom
@@ -83,7 +81,7 @@ class Navigation extends React.Component {
 		// modify this to check central state's isloggedin once backend is deployed
 		if (localStorage.getItem('jwt')) {
 			this.setState({
-				isLoggedIn: true
+				isLoggedIn: true,
 			});
 		}
 	}
@@ -99,12 +97,12 @@ class Navigation extends React.Component {
 			right: false,
 			isLoggedIn: false,
 			loginModal: false,
-			accountType: null
+			accountType: null,
 		};
 
 		this.toggleDrawer = (side, open) => () => {
 			this.setState({
-				[side]: open
+				[side]: open,
 			});
 		};
 	}
@@ -112,7 +110,7 @@ class Navigation extends React.Component {
 	toggleModal = event => {
 		event.preventDefault();
 		this.setState({
-			loginModal: !this.state.loginModal
+			loginModal: !this.state.loginModal,
 		});
 	};
 
@@ -122,7 +120,7 @@ class Navigation extends React.Component {
 		this.setState(
 			{
 				accountType: role,
-				loginModal: false
+				loginModal: false,
 			},
 			this.handleLogin
 		);
@@ -150,7 +148,10 @@ class Navigation extends React.Component {
 
 		auth.logout();
 
-		window.location = `https://${process.env.REACT_APP_AUTH0_DOMAIN}/v2/logout`;
+		window.location = `https://${
+			process.env.REACT_APP_AUTH0_DOMAIN
+		}/v2/logout?returnTo=${process.env.REACT_APP_FRONTEND_URL ||
+			'http://localhost:3000'}`;
 	};
 
 	render() {
@@ -208,67 +209,67 @@ class Navigation extends React.Component {
 					</ListItem>
 
 					{localStorage.getItem('jwt') ? (
-					
-					<>
-					<ListItem button key="Properties" component={Link} to="/properties">
-						<ListItemIcon>
-							<BusinessTwoTone />
-						</ListItemIcon>
-						<ListItemText primary="Properties" />
-					</ListItem>
+						<>
+							<ListItem
+								button
+								key="Properties"
+								component={Link}
+								to="/properties"
+							>
+								<ListItemIcon>
+									<BusinessTwoTone />
+								</ListItemIcon>
+								<ListItemText primary="Properties" />
+							</ListItem>
 
-					<ListItem button key="Partners" component={Link} to="/partners">
-						<ListItemIcon>
-							<PeopleTwoTone />
-						</ListItemIcon>
-						<ListItemText primary="Partners" />
-					</ListItem>
+							<ListItem button key="Partners" component={Link} to="/partners">
+								<ListItemIcon>
+									<PeopleTwoTone />
+								</ListItemIcon>
+								<ListItemText primary="Partners" />
+							</ListItem>
 
-					<ListItem button key="Guests" component={Link} to="/guests">
-						<ListItemIcon>
-							<HotelTwoTone />
-						</ListItemIcon>
-						<ListItemText primary="Guests" />
-					</ListItem>
+							<ListItem button key="Guests" component={Link} to="/guests">
+								<ListItemIcon>
+									<HotelTwoTone />
+								</ListItemIcon>
+								<ListItemText primary="Guests" />
+							</ListItem>
 
-					<ListItem button key="Reports" component={Link} to="/reports">
-						<ListItemIcon>
-							<InsertChartTwoTone />
-						</ListItemIcon>
-						<ListItemText primary="Reports" />
-					</ListItem>
-					</>
+							<ListItem button key="Reports" component={Link} to="/reports">
+								<ListItemIcon>
+									<InsertChartTwoTone />
+								</ListItemIcon>
+								<ListItemText primary="Reports" />
+							</ListItem>
+						</>
 					) : null}
-
 				</List>
 
 				{localStorage.getItem('jwt') ? (
 					<>
-					<Divider />
+						<Divider />
 
-					<List>
-						<ListItem button key="Account" component={Link} to="/account">
-							<ListItemIcon>
-								<AccountCircleTwoTone />
-							</ListItemIcon>
-							<ListItemText primary="Account" />
-						</ListItem>
-					</List>			
+						<List>
+							<ListItem button key="Account" component={Link} to="/account">
+								<ListItemIcon>
+									<AccountCircleTwoTone />
+								</ListItemIcon>
+								<ListItemText primary="Account" />
+							</ListItem>
+						</List>
 					</>
-
 				) : (
 					<>
-					<Divider />
-					<br></br>
-					<div style = {{padding: '0px 10px'}}>
-					<Typography variant = 'subtitle'>Please login to access the menu.</Typography>
-					</div>
+						<Divider />
+						<br />
+						<div style={{ padding: '0px 10px' }}>
+							<Typography variant="subtitle">
+								Please login to access the menu.
+							</Typography>
+						</div>
 					</>
 				)}
-
-				
-	
-				
 			</div>
 		);
 
