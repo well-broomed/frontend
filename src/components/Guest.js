@@ -96,13 +96,18 @@ const Guest = props => {
 	}
 
 	const availableCleaners = guest.availableCleaners
-		? guest.availableCleaners.concat(
-				guest.otherCleaners.map(cleaner => ({
-					...cleaner,
-					// Can't figure out a way to style individual options. Help!
-					label: cleaner.label + ' (color: gray)',
+		? guest.availableCleaners
+				.map(({ cleaner_id, cleaner_name }) => ({
+					value: cleaner_id,
+					label: cleaner_name,
 				}))
-		  )
+				.concat(
+					guest.otherCleaners.map(({ cleaner_id, cleaner_name }) => ({
+						value: cleaner_id,
+						// Can't figure out a way to style individual options. Help!
+						label: cleaner_name + '*',
+					}))
+				)
 		: [];
 
 	const checkHandler = (task_id, completed) => {
@@ -209,7 +214,7 @@ const Guest = props => {
 							</Dates>
 
 							<Typography variant="body2" className={classes.reassignmentText}>
-								Assign cleaner
+								Assigned cleaner
 							</Typography>
 							<CleanerSelect
 								value={

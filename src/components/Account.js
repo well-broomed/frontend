@@ -71,8 +71,8 @@ class Account extends React.Component {
     componentDidUpdate(prevProps){
         if(this.props.currentUser !== prevProps.currentUser){
             this.setState({
-                username: this.props.currentUser.user_name,
-                email: this.props.currentUser.email,
+                username: this.props.user.user_name,
+                email: this.props.user.email,
                 passwordOpen: false,
                 usernameOpen: false,
                 emailOpen: false,
@@ -126,7 +126,7 @@ class Account extends React.Component {
     handleSubmit = event => {
         event.preventDefault();
         let changes = {};
-        let user_id = this.props.currentUser.user_id;
+        let user_id = this.props.user.user_id;
         if(event.target.name === 'username'){
             changes.user_name = this.state.username;
             this.props.updateUserProfile(user_id, changes);
@@ -152,22 +152,22 @@ class Account extends React.Component {
         return (
             <div>
                 <Typography variant = 'h2'>Account</Typography>
-                {(this.props.userChecked && this.props.currentUser) ? (
+                {(this.props.userChecked && this.props.user) ? (
                     <div>
-                        {this.props.currentUser.auth_provider === 'auth0' ? (
+                        {this.props.user.auth_provider === 'auth0' ? (
 
                         
                      <Card className = {classes.card}>
                      <CardActionArea>
                          <CardMedia className = {classes.media} 
-                         image = {this.props.currentUser.img_url} 
+                         image = {this.props.user.img_url} 
                          title = 'Profile Picture'/>
                      </CardActionArea>
                      <CardContent>
                         <Typography variant = 'overline'>Username</Typography>
                         {!this.state.usernameOpen ? (
                             <FlexRowNoWrap>
-                            <Typography variant = 'h6'>{this.props.currentUser.user_name}</Typography>
+                            <Typography variant = 'h6'>{this.props.user.user_name}</Typography>
                             <IconButton onClick = {this.toggleInput} name = 'usernameOpen'><EditTwoTone name = 'usernameOpen'/></IconButton>
                             </FlexRowNoWrap>
                         ) : null}
@@ -190,7 +190,7 @@ class Account extends React.Component {
                         <Typography variant = 'overline'>Email</Typography>
                         {!this.state.emailOpen ? (
                             <FlexRowNoWrap>
-                            <Typography variant = 'h6'>{this.props.currentUser.email}</Typography>
+                            <Typography variant = 'h6'>{this.props.user.email}</Typography>
                             <IconButton onClick = {this.toggleInput} name = 'emailOpen'><EditTwoTone name = 'emailOpen'/></IconButton>
                             </FlexRowNoWrap>
                         ) : null}
@@ -210,7 +210,7 @@ class Account extends React.Component {
                         ) : null}
 
                         <Typography variant = 'overline'>Account Type</Typography>
-                        <Typography variant = 'h6'>{this.props.currentUser.role}</Typography>
+                        <Typography variant = 'h6'>{this.props.user.role}</Typography>
 
                         <Typography variant = 'overline'>Password</Typography>
                             <br></br>
@@ -245,22 +245,22 @@ class Account extends React.Component {
                         <Card className = {classes.card}>
                      <CardActionArea>
                          <CardMedia className = {classes.media} 
-                         image = {this.props.currentUser.img_url} 
+                         image = {this.props.user.img_url} 
                          title = 'Profile Picture'/>
                      </CardActionArea>
                      <CardContent>
                         <Typography variant = 'overline'>Username</Typography>
-                        <Typography variant = 'h6'>{this.props.currentUser.user_name}</Typography>
+                        <Typography variant = 'h6'>{this.props.user.user_name}</Typography>
                         
 
                         <Typography variant = 'overline'>Email</Typography>
-                        <Typography variant = 'h6'>{this.props.currentUser.email}</Typography>
+                        <Typography variant = 'h6'>{this.props.user.email}</Typography>
 
                         <Typography variant = 'overline'>Account Type</Typography>
-                        <Typography variant = 'h6'>{this.props.currentUser.role}</Typography>
+                        <Typography variant = 'h6'>{this.props.user.role}</Typography>
 
                         <Typography variant = 'overline'>Login Provider</Typography>
-                        <Typography variant = 'h6'>{this.props.currentUser.auth_provider}</Typography>
+                        <Typography variant = 'h6'>{this.props.user.auth_provider}</Typography>
                         <br></br>
                         <Typography variant = 'subtitle2' color = 'textSecondary'>Because you are logged in via a social login provider, your user profile data is read-only.</Typography>
                         
@@ -282,7 +282,7 @@ class Account extends React.Component {
 const mapStateToProps = state => {
     return {
         // state items
-        currentUser: state.authReducer.currentUser,
+        user: state.authReducer.user,
         userChecked: state.authReducer.userChecked,
     }
 }

@@ -9,7 +9,7 @@ import { addGuest } from '../actions/index';
 
 import moment from 'moment';
 
-import { DateTimePicker } from "@material-ui/pickers";
+import { DateTimePicker } from '@material-ui/pickers';
 
 // Form Components
 
@@ -26,22 +26,21 @@ const styles = {
 		padding: '5%',
 	},
 	formField: {
-        margin: '10px 0px',
+		margin: '10px 0px',
 	},
 	formButton: {
-        margin: '10px 0px',
-        padding: '20px',
-	}
+		margin: '10px 0px',
+		padding: '20px',
+	},
 };
 
 class AddGuestForm extends React.Component {
-
-    componentDidMount(){
-        this.setState({
-            checkin: moment(),
-            checkout: moment(),
-        })
-    }
+	componentDidMount() {
+		this.setState({
+			checkin: moment(),
+			checkout: moment(),
+		});
+	}
 
 	constructor(props) {
 		super(props);
@@ -52,15 +51,15 @@ class AddGuestForm extends React.Component {
 			checkin: null,
 			checkout: null,
 			email: null,
-            cleaner_id: null,
-            cleaner: '',
-            property: '',
+			cleaner_id: null,
+			cleaner: null,
+			property: null,
 		};
 	}
 
 	handleInput = name => event => {
 		this.setState({
-			[name]: event.target.value
+			[name]: event.target.value,
 		});
 	};
 
@@ -103,6 +102,7 @@ class AddGuestForm extends React.Component {
 
 			this.setState({
 				[name]: property,
+				property_id: property.property_id,
 			});
 		} else if (name === 'cleaner') {
 			let cleaner = this.props.propertyCleaners.cleaners.find(
@@ -113,12 +113,13 @@ class AddGuestForm extends React.Component {
 
 			this.setState({
 				[name]: cleaner,
+				cleaner_id: cleaner.cleaner_id,
 			});
 		}
 	};
 
 	render() {
-        const { classes } = this.props;
+		const { classes } = this.props;
 
 		return (
 			<div>
@@ -211,31 +212,27 @@ class AddGuestForm extends React.Component {
 						onChange={this.handleInput('guest_name')}
 					/>
 
-                    <Typography variant = 'overline'>
-                        Check-In
-                    </Typography>
-                    <DateTimePicker
-                        inputVariant="outlined"
-                        name = 'checkin'
-                        value={this.state.checkin}
-                        onChange={this.handleCheckin}
-                    />
+					<Typography variant="overline">Check-In</Typography>
+					<DateTimePicker
+						inputVariant="outlined"
+						name="checkin"
+						value={this.state.checkin}
+						onChange={this.handleCheckin}
+					/>
 
-                    <Typography variant = 'overline'>
-                        Check-Out
-                    </Typography>
-                    <DateTimePicker
-                        inputVariant="outlined"
-                        name = 'checkout'
-                        value={this.state.checkout}
-                        onChange={this.handleCheckout}
-                    />
-					
+					<Typography variant="overline">Check-Out</Typography>
+					<DateTimePicker
+						inputVariant="outlined"
+						name="checkout"
+						value={this.state.checkout}
+						onChange={this.handleCheckout}
+					/>
+
 					<Button
 						className={classes.formButton}
 						variant="contained"
 						color="primary"
-                        type="submit"
+						type="submit"
 					>
 						Add Reservation
 					</Button>
@@ -251,7 +248,6 @@ const mapStateToProps = state => {
 		user: state.authReducer.user,
 		propertyCleaners: state.propertyReducer.propertyCleaners || [],
 		cleaners: state.propertyReducer.cleaners,
-
 	};
 };
 
@@ -260,7 +256,7 @@ export default withRouter(
 		mapStateToProps,
 		{
 			// actions
-			addGuest
+			addGuest,
 		}
 	)(withStyles(styles)(AddGuestForm))
 );
