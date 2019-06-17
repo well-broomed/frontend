@@ -34,6 +34,7 @@ const useStyles = makeStyles(theme => ({
 		width: '100%',
 		maxWidth: 360,
 		backgroundColor: theme.palette.background.paper,
+		margin: '0 0 12px',
 	},
 	guestInfo: {
 		display: 'flex',
@@ -60,6 +61,7 @@ const hourConverter = hours => {
 
 const Guest = props => {
 	const {
+		user,
 		guest,
 		match,
 		getGuest,
@@ -102,17 +104,38 @@ const Guest = props => {
 					label: cleaner_name,
 				}))
 				.concat(
-					guest.otherCleaners.map(({ cleaner_id, cleaner_name }) => ({
-						value: cleaner_id,
-						// Can't figure out a way to style individual options. Help!
-						label: cleaner_name + '*',
-					}))
+					guest.otherCleaners
+						.filter(
+							({ cleaner_id }) =>
+								!guest.availableCleaners.find(
+									cleaner => cleaner.cleaner_id !== cleaner_id
+								)
+						)
+						.map(({ cleaner_id, cleaner_name }) => ({
+							value: cleaner_id,
+							// Can't figure out a way to style individual options. Help!
+							label: cleaner_name + '*',
+						}))
 				)
 		: [];
 
 	const checkHandler = (task_id, completed) => {
 		updateGuestTask(guest.guest_id, task_id, completed);
 	};
+
+	const manager = user.role === 'manager';
+
+	// Need to clear error when leaving page with useEffect() before implementing this
+	// if (gettingGuest) return null;
+
+	// if (getGuestError)
+	// 	return (
+	// 		<Typography variant="h5" style={{ padding: '30px 0 0' }}>
+	// 			{getGuestError.response.status === 404
+	// 				? '404 Guest not found'
+	// 				: `${getGuestError.response.status} Error`}
+	// 		</Typography>
+	// 	);
 
 	return (
 		<React.Fragment>
@@ -214,16 +237,23 @@ const Guest = props => {
 							</Dates>
 
 							<Typography variant="body2" className={classes.reassignmentText}>
-								Assigned cleaner
+								{manager ? 'Assigned cleaner' : 'Request reassignment'}
 							</Typography>
+
+							{/* Ought to list reassignment requests here with an option to cancel them */}
+							{/* Can't reassign if timeNow > after_checkout deadlines */}
+
 							<CleanerSelect
 								value={
+									manager &&
 									guest.cleaner_id && {
 										value: guest.cleaner_id,
 										label: guest.cleaner_name,
 									}
 								}
-								options={availableCleaners}
+								options={availableCleaners.filter(
+									({ value }) => value !== user.user_id
+								)}
 								onChange={({ value }) => reassignCleaner(guest.guest_id, value)}
 							/>
 						</LeftColumn>
@@ -268,6 +298,8 @@ const Guest = props => {
 
 const mapStateToProps = state => {
 	return {
+		user: state.authReducer.user || {},
+
 		guest: state.guestReducer.guest,
 
 		gettingGuest: state.guestReducer.gettingGuest,
