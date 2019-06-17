@@ -106,9 +106,12 @@ const Guest = props => {
 				.concat(
 					guest.otherCleaners
 						.filter(
-							({ cleaner_id }) =>
-								!guest.availableCleaners.find(
-									cleaner => cleaner.cleaner_id !== cleaner_id
+							otherCleaner =>
+								!(
+									guest.availableCleaners.find(
+										availableCleaner =>
+											availableCleaner.cleaner_id === otherCleaner.cleaner_id
+									) || otherCleaner.cleaner_id === guest.cleaner_id
 								)
 						)
 						.map(({ cleaner_id, cleaner_name }) => ({
@@ -251,9 +254,13 @@ const Guest = props => {
 										label: guest.cleaner_name,
 									}
 								}
-								options={availableCleaners.filter(
-									({ value }) => value !== user.user_id
-								)}
+								options={
+									manager
+										? availableCleaners
+										: availableCleaners.filter(
+												({ value }) => value !== user.user_id
+										  )
+								}
 								onChange={({ value }) => reassignCleaner(guest.guest_id, value)}
 							/>
 						</LeftColumn>
