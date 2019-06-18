@@ -163,8 +163,8 @@ const PropertyChecklist = props => {
 				)}
 				<List className={classes.root} style={{ marginBottom: '16px' }}>
 					{taskList.map(({ task_id, text }) => (
-						<ListItem>
-							<ListItemText key={task_id} primary={text} />
+						<ListItem key={task_id}>
+							<ListItemText primary={text} />
 						</ListItem>
 					))}
 				</List>
