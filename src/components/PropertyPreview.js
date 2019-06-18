@@ -40,7 +40,7 @@ const CardContainer = styled.div`
 	justify-content: space-between;
 	padding: 20px;
 
-	a{
+	a {
 		color: black;
 		text-decoration: none;
 		width: 100%;
@@ -49,8 +49,7 @@ const CardContainer = styled.div`
 
 const CardText = styled.div``;
 
-const CardFooter = styled.div`
-	`;
+const CardFooter = styled.div``;
 
 const CardActions = styled.div`
 	width: auto;
@@ -59,163 +58,156 @@ const CardActions = styled.div`
 	align-items: flex-start;
 	justify-content: flex-end;
 
-	svg{
+	svg {
 		cursor: pointer;
 		font-size: 3rem;
 	}
 `;
 
-
 const styles = {
 	card: {
 		maxWidth: '100%',
-		margin: '20px auto'
+		margin: '20px auto',
 	},
 	media: {
-		objectFit: 'cover'
+		objectFit: 'cover',
 	},
 	formControl: {
 		margin: '20px',
-		minWidth: 120
-	}
+		minWidth: 120,
+	},
 };
 
 class PropertyPreview extends React.Component {
-
-	componentDidMount(){
-		if(this.props.cleaners){
-			let defaultCleaner;
-			if(this.props.property.cleaner_id === null){
-				defaultCleaner = this.props.cleaners.filter(
-					cleaner => cleaner.user_id === this.props.property.manager_id
-				)[0];
-			} else {
-				defaultCleaner = this.props.cleaners.filter(
-					cleaner => cleaner.user_id === this.props.property.cleaner_id
-				)[0];
-			}
-			
-			this.setState({
-				cleaner: defaultCleaner
-			})
-		}
-	}
-
-	componentDidUpdate(oldProps) {
-		if (this.props.cleaners !== oldProps.cleaners) {
-			let defaultCleaner;
-			if (this.props.property.cleaner_id === null) {
-				defaultCleaner = this.props.cleaners.filter(
-					cleaner => cleaner.user_id === this.props.property.manager_id
-				)[0];
-			} else {
-				defaultCleaner = this.props.cleaners.filter(
-					cleaner => cleaner.user_id === this.props.property.cleaner_id
-				)[0];
-			}
-
-			this.setState({
-				cleaner: defaultCleaner
-			});
-		}
-	}
-
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			// state
-			cleaner: null,
+			cleaner_id: '',
 			deleteModal: false,
 			editModal: false,
 		};
 	}
 
 	handleSelect = event => {
-		const selectedCleaner = this.props.cleaners.filter(
-			cleaner => cleaner.user_id === event.target.value
-		);
 		this.setState({
-			cleaner: selectedCleaner
+			cleaner_id: event.target.value,
 		});
 
 		this.props.changeCleaner(
 			this.props.property.property_id,
-			event.target.value
+			event.target.value || null
 		);
 	};
 
 	toggleDelete = () => {
 		this.setState({
-			deleteModal: !this.state.deleteModal
-		})
-	}
+			deleteModal: !this.state.deleteModal,
+		});
+	};
 
 	handleDelete = () => {
 		this.props.deleteProperty(this.props.property.property_id);
 
 		this.toggleDelete();
-	}
+	};
 
 	toggleEdit = () => {
 		this.setState({
-			editModal: !this.state.editModal
-		})
+			editModal: !this.state.editModal,
+		});
+	};
+
+	componentDidMount() {
+		this.setState({
+			cleaner_id: this.props.property.cleaner_id || '',
+		});
 	}
 
 	render() {
-		const { classes } = this.props;
-		let role = JSON.parse(localStorage.getItem('role'));
+		const { classes, user, property } = this.props;
+		const role = user.role;
 
-		if(role === 'manager'){
-		return (
-			<div>
+		const availableCleaners = property.availableCleaners;
 
-			{/** Delete Modal **/}
-			<Dialog open = {this.state.deleteModal} onClose = {this.toggleDelete}>
-				<DialogContent>
-					<Typography variant = 'h6'>Are you sure you want to delete {this.props.property.property_name}?</Typography>
-				</DialogContent>
-				<DialogActions>
-					<Button onClick = {this.toggleDelete} variant = 'outlined' color = 'primary'>
-						Cancel
-					</Button>
-					<Button onClick = {this.handleDelete} variant = 'contained' color = 'secondary'>
-						Delete
-					</Button>
-				</DialogActions>
-			</Dialog>
+		// Just in case someone's set as default without also being available. Shouldn't happen but it's not explicitly disallowed on the backend (yet)
+		if (
+			property.cleaner_id &&
+			availableCleaners &&
+			!availableCleaners.find(
+				({ cleaner_id }) => cleaner_id === parseInt(property.cleaner_id)
+			)
+		) {
+			availableCleaners.push({
+				cleaner_id: property.cleaner_id,
+				cleaner_name: property.cleaner_name,
+			});
+		}
 
-			{/** Edit Modal **/}
-			<Dialog open = {this.state.editModal} onClose = {this.toggleEdit} fullWidth={true} maxWidth = 'xl'>
-				<DialogContent>
-					<EditPropertyForm close = {this.toggleEdit} property = {this.props.property} />
-				</DialogContent>
-			</Dialog>
+		if (role === 'manager') {
+			return (
+				<div>
+					{/** Delete Modal **/}
+					<Dialog open={this.state.deleteModal} onClose={this.toggleDelete}>
+						<DialogContent>
+							<Typography variant="h6">
+								Are you sure you want to delete {property.property_name}?
+							</Typography>
+						</DialogContent>
+						<DialogActions>
+							<Button
+								onClick={this.toggleDelete}
+								variant="outlined"
+								color="primary"
+							>
+								Cancel
+							</Button>
+							<Button
+								onClick={this.handleDelete}
+								variant="contained"
+								color="secondary"
+							>
+								Delete
+							</Button>
+						</DialogActions>
+					</Dialog>
 
-			{/** Property Card */}
+					{/** Edit Modal **/}
+					<Dialog
+						open={this.state.editModal}
+						onClose={this.toggleEdit}
+						fullWidth={true}
+						maxWidth="xl"
+					>
+						<DialogContent>
+							<EditPropertyForm close={this.toggleEdit} property={property} />
+						</DialogContent>
+					</Dialog>
 
-				<Card className={classes.card} key={this.props.property.id}>
-					<CardContainer>
-					<Link to = {`/properties/${this.props.property.property_id}`}>
+					{/** Property Card */}
 
-						<CardText>
-							<Typography variant = 'h4'>{this.props.property.property_name}</Typography>
-							<Typography variant = 'h5'>{this.props.property.address}</Typography>
-						</CardText>
-					</Link>
+					<Card className={classes.card} key={property.id}>
+						<CardContainer>
+							<Link to={`/properties/${property.property_id}`}>
+								<CardText>
+									<Typography variant="h4">{property.property_name}</Typography>
+									<Typography variant="h5">{property.address}</Typography>
+								</CardText>
+							</Link>
 
-						<CardActions>
-						<EditTwoTone onClick = {this.toggleEdit} />
-						<DeleteForeverTwoTone onClick = {this.toggleDelete} />
-						</CardActions>
-					</CardContainer>
-					<CardFooter>
-					<FormControl className={classes.formControl}>
-							<InputLabel shrink htmlFor="cleaner-native-label-placeholder">
-								Default Cleaner
-							</InputLabel>
+							<CardActions>
+								<EditTwoTone onClick={this.toggleEdit} />
+								<DeleteForeverTwoTone onClick={this.toggleDelete} />
+							</CardActions>
+						</CardContainer>
+						<CardFooter>
+							<FormControl className={classes.formControl}>
+								<InputLabel shrink htmlFor="cleaner-native-label-placeholder">
+									Default Cleaner
+								</InputLabel>
 								<NativeSelect
+									value={this.state.cleaner_id}
 									onChange={this.handleSelect}
 									input={
 										<Input
@@ -224,40 +216,31 @@ class PropertyPreview extends React.Component {
 										/>
 									}
 								>
-									<option value="">{this.state.cleaner ? this.state.cleaner.user_name : "Unassigned"}</option>
-									{this.props.cleaners
-										? this.props.cleaners.map(cleaner => {
-												if (this.state.cleaner && cleaner.user_id === this.state.cleaner.user_id)
-													return null;
-												return (
-													<option value={cleaner.user_id} key={cleaner.user_id}>
-														{cleaner.user_name}
-													</option>
-												);
-										  })
-										: null}
+									<option value="">Unassigned</option>
+									{availableCleaners.map(cleaner => (
+										<option value={cleaner.cleaner_id} key={cleaner.cleaner_id}>
+											{cleaner.cleaner_name}
+										</option>
+									))}
 								</NativeSelect>
-						</FormControl>
-					</CardFooter>
-				</Card>
-			</div>
-		);
-		}
-
-		else{
-		return (
-			<Card className={classes.card} key={this.props.property.id}>
-					<Link to={`/properties/${this.props.property.property_id}`}>
+							</FormControl>
+						</CardFooter>
+					</Card>
+				</div>
+			);
+		} else {
+			return (
+				<Card className={classes.card} key={property.id}>
+					<Link to={`/properties/${property.property_id}`}>
 						<CardHeader
-							title={this.props.property.property_name}
-							subheader={this.props.property.address}
+							title={property.property_name}
+							subheader={property.address}
 						/>
 					</Link>
 
-					<CardContent/>
+					<CardContent />
 				</Card>
-
-		);
+			);
 		}
 	}
 }
@@ -265,8 +248,7 @@ class PropertyPreview extends React.Component {
 const mapStateToProps = state => {
 	return {
 		// state items
-		cleaners: state.propertyReducer.cleaners,
-		refreshCleaners: state.propertyReducer.refreshCleaners
+		user: state.authReducer.user || {},
 	};
 };
 

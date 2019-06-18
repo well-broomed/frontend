@@ -111,7 +111,10 @@ class GuestPreview extends React.Component {
 							</Link>
 
 							<CardActions>
-								<EditTwoTone onClick={this.toggleEdit} />
+								<EditTwoTone
+									onClick={this.toggleEdit}
+									disabled={this.props.fetching}
+								/>
 								<DeleteForeverTwoTone onClick={this.toggleModal} />
 							</CardActions>
 						</CardContainer>
@@ -147,8 +150,8 @@ class GuestPreview extends React.Component {
 				<Dialog
 					open={this.state.editModal}
 					onClose={this.toggleEdit}
-                    fullWidth = {true}
-                    maxWidth = 'xl'
+					fullWidth={true}
+					maxWidth="xl"
 				>
 					<DialogContent>
 						<EditGuestForm close={this.toggleEdit} guest={this.props.guest} />

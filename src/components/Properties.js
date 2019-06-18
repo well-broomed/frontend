@@ -30,7 +30,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
 // Actions
-import { checkIfUserExists, getUserProperties, getCleaners } from '../actions';
+import { getUserProperties } from '../actions';
 import PropertyPreview from './PropertyPreview';
 
 const TopBar = styled.div`
@@ -56,33 +56,21 @@ const styles = {
 };
 
 const Transition = React.forwardRef((props, ref) => (
-	<Slide direction = 'up' {...props} ref = {ref} />
-))
+	<Slide direction="up" {...props} ref={ref} />
+));
 
 class Properties extends React.Component {
 	componentDidMount() {
 		if (!localStorage.getItem('jwt')) {
 			this.props.history.replace('/');
-		} else if (!localStorage.getItem('userInfo')) {
-			this.props.checkIfUserExists(
-				localStorage.getItem('role') || localStorage.getItem('accountType')
-			);
 		}
 
 		this.props.getUserProperties();
-		this.props.getCleaners();
 	}
 
 	componentDidUpdate(prevProps) {
 		if (prevProps.refreshProperties !== this.props.refreshProperties) {
 			this.props.getUserProperties();
-		}
-
-		if (
-			prevProps.refreshCleaners !== this.props.refreshCleaners &&
-			localStorage.getItem('role') === 'manager'
-		) {
-			this.props.getCleaners();
 		}
 	}
 
@@ -110,19 +98,7 @@ class Properties extends React.Component {
 		// const open = Boolean(anchorEl);
 		const { classes } = this.props;
 		const role = (this.props.user && this.props.user.role) || null;
-		const properties = this.props.properties;
-		let defaultproperties = [];
-		let availableproperties = [];
-		if (role !== 'manager' && this.props.properties && this.props.cleaners) {
-			properties.forEach(property => {
-				if (property.cleaner_id === this.props.cleaners[0].user_id)
-					defaultproperties.push(property);
-				if (property.available === this.props.cleaners[0].user_id)
-					availableproperties.push(property);
-			});
-
-			console.log(properties);
-		}
+		const { user, properties } = this.props;
 
 		if (role === 'manager')
 			return (
@@ -139,19 +115,19 @@ class Properties extends React.Component {
 					</TopBar>
 
 					<Dialog
-					open={this.state.addModal}
-					TransitionComponent={Transition}
-					onClose={this.handleModalClose}
-					fullWidth = {true}
-					maxWidth = {'xl'}
+						open={this.state.addModal}
+						TransitionComponent={Transition}
+						onClose={this.handleModalClose}
+						fullWidth={true}
+						maxWidth={'xl'}
 					>
 						<DialogContent>
 							<AddPropertyForm close={this.handleModalClose} />
 						</DialogContent>
 					</Dialog>
 
-					{this.props.properties ? (
-						this.props.properties.map(property => {
+					{properties && user.user_id ? (
+						properties.map(property => {
 							return (
 								<PropertyPreview
 									property={property}
@@ -173,15 +149,17 @@ class Properties extends React.Component {
 						<Typography variant="h2">Properties</Typography>{' '}
 					</TopBar>
 					<Typography variant="h5"> Your Default Properties </Typography>
-					{defaultproperties ? (
-						defaultproperties.map(property => {
-							return (
-								<PropertyPreview
-									property={property}
-									key={property.property_id}
-								/>
-							);
-						})
+					{properties && user.user_id ? (
+						properties
+							.filter(({ cleaner_id }) => cleaner_id === user.user_id)
+							.map(property => {
+								return (
+									<PropertyPreview
+										property={property}
+										key={property.property_id}
+									/>
+								);
+							})
 					) : (
 						<Typography variant="overline">
 							You have not been assigned as the default partner for any
@@ -190,15 +168,17 @@ class Properties extends React.Component {
 					)}
 
 					<Typography variant="h5">Properties You're Available For </Typography>
-					{availableproperties ? (
-						availableproperties.map(property => {
-							return (
-								<PropertyPreview
-									property={property}
-									key={property.property_id}
-								/>
-							);
-						})
+					{properties && user.user_id ? (
+						properties
+							.filter(({ available }) => available)
+							.map(property => {
+								return (
+									<PropertyPreview
+										property={property}
+										key={property.property_id}
+									/>
+								);
+							})
 					) : (
 						<Typography variant="overline">
 							You have not been assigned as the default partner for any
@@ -213,12 +193,9 @@ class Properties extends React.Component {
 const mapStateToProps = state => {
 	return {
 		// state items
+		user: state.authReducer.user,
 		properties: state.propertyReducer.properties,
 		refreshProperties: state.propertyReducer.refreshProperties,
-		cleaners: state.propertyReducer.cleaners,
-		userInfo: state.authReducer.userInfo,
-		refreshCleaners: state.propertyReducer.refreshCleaners,
-		user: state.authReducer.user,
 	};
 };
 
@@ -227,9 +204,7 @@ export default withRouter(
 		mapStateToProps,
 		{
 			// actions
-			checkIfUserExists,
 			getUserProperties,
-			getCleaners,
 		}
 	)(withStyles(styles)(Properties))
 );

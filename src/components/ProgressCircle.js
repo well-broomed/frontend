@@ -135,7 +135,7 @@ const ProgressCircle = props => {
 					className={classes.cleanerName}
 					align="center"
 				>
-					{guest.cleaner_name || 'unassigned'}
+					{guest.manager_name || guest.cleaner_name || 'unassigned'}
 				</Typography>
 			</div>
 		);

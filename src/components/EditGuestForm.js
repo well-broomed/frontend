@@ -68,10 +68,12 @@ class EditGuestForm extends React.Component {
 
 		this.state = {
 			guest_name: '',
-			email: null,
-			checkin: null,
-			checkout: null,
-			cleaner_id: null,
+			checkin: '',
+			checkout: '',
+			email: '',
+			property: '',
+			property_id: '',
+			cleaner_id: '',
 		};
 	}
 
@@ -89,7 +91,7 @@ class EditGuestForm extends React.Component {
 			guest_name: this.state.guest_name,
 			checkin: this.state.checkin,
 			checkout: this.state.checkout,
-			email: this.state.email || null,
+			email: this.state.email || '',
 			cleaner_id: this.state.cleaner_id,
 		};
 
@@ -111,23 +113,40 @@ class EditGuestForm extends React.Component {
 	};
 
 	handleSelect = name => event => {
-		if (name === 'property') {
-			let property = this.props.properties.find(
-				p => p.property_id === event.target.value
-			);
+		/** Not needed til reassigning property is enabled on backend */
+		// if (name === 'property') {
+		// 	if (!event.target.value) {
+		// 		this.setState({
+		// 			property: '',
+		// 			property_id: '',
+		// 			cleaner_id: '',
+		// 		});
+		// 	} else {
+		// 		let property = this.props.propertyCleaners.properties.find(
+		// 			p => p.property_id === parseInt(event.target.value)
+		// 		);
+
+		// 		this.setState({
+		// 			property,
+		// 			property_id: property.property_id,
+		// 			cleaner_id: property.default_cleaner_id || '',
+		// 		});
+		// 	}
+		// } else if (name === 'cleaner') {
+		if (!event.target.value) {
 			this.setState({
-				[name]: property,
-				property_id: event.target.value,
+				cleaner_id: '',
 			});
-		} else if (name === 'cleaner') {
-			let cleaner = this.props.cleaners.find(
-				c => c.cleaner_id === event.target.value
+		} else {
+			let cleaner = this.props.propertyCleaners.otherCleaners.find(
+				c => c.cleaner_id === parseInt(event.target.value)
 			);
+
 			this.setState({
-				[name]: cleaner,
-				cleaner_id: event.target.value,
+				cleaner_id: cleaner.cleaner_id,
 			});
 		}
+		// }
 	};
 
 	handleClose = event => {
@@ -136,6 +155,29 @@ class EditGuestForm extends React.Component {
 
 	render() {
 		const { classes } = this.props;
+
+		const availableCleaners = this.props.propertyCleaners.availableCleaners
+			? this.props.propertyCleaners.availableCleaners[
+					this.props.guest.property_id
+			  ]
+					.concat(
+						this.props.propertyCleaners.otherCleaners.filter(
+							cleaner =>
+								!this.props.propertyCleaners.availableCleaners[
+									this.props.guest.property_id
+								].find(({ cleaner_id }) => cleaner_id === cleaner.cleaner_id)
+						)
+					)
+					.filter(
+						({ cleaner_id }) => cleaner_id !== this.props.guest.cleaner_id
+					)
+					.map(({ cleaner_id, cleaner_name }) => (
+						<option key={cleaner_id} value={cleaner_id}>
+							{cleaner_name}
+						</option>
+					))
+			: [];
+
 		return (
 			<div>
 				<form
@@ -159,21 +201,10 @@ class EditGuestForm extends React.Component {
 							<Input name="cleaner" id="cleaner-native-label-placeolder" />
 						}
 					>
-						<option value={this.props.guest.cleaner_id}>
+						<option value={this.props.guest.cleaner_id || ''}>
 							{this.props.guest.cleaner_name}
 						</option>
-						{this.props.cleaners
-							? this.props.cleaners.reduce((cleaners, cleaner) => {
-									if (cleaner.user_id !== this.props.guest.cleaner_id) {
-										cleaners.push(
-											<option value={cleaner.user_id} key={cleaner.user_id}>
-												{cleaner.user_name}
-											</option>
-										);
-									}
-									return cleaners;
-							  }, [])
-							: null}
+						{availableCleaners}
 					</NativeSelect>
 
 					<TextField
@@ -226,8 +257,9 @@ class EditGuestForm extends React.Component {
 const mapStateToProps = state => {
 	return {
 		// state items
-		properties: state.propertyReducer.properties,
-		cleaners: state.propertyReducer.cleaners,
+		user: state.authReducer.user,
+		propertyCleaners: state.propertyReducer.propertyCleaners || [],
+		cleaners: state.propertyReducer.cleaners || [],
 	};
 };
 
