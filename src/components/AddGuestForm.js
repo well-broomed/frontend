@@ -47,13 +47,12 @@ class AddGuestForm extends React.Component {
 
 		this.state = {
 			guest_name: '',
-			property_id: '',
 			checkin: '',
 			checkout: '',
 			email: '',
-			cleaner_id: '',
-			cleaner: '',
 			property: '',
+			property_id: '',
+			cleaner_id: '',
 		};
 	}
 
