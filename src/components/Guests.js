@@ -68,6 +68,7 @@ class Guests extends React.Component {
 			this.props.history.replace('/');
 		}
 
+		// Currently called whether you're a manager or an assistant. Harmless, but throws an error for assistants. Can be fixed with hooks or componentDidUpdate
 		this.props.fetchAllGuests();
 
 		this.props.getPropertyCleaners();
