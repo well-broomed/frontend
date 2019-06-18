@@ -61,6 +61,10 @@ const Transition = React.forwardRef((props, ref) => (
 
 class Properties extends React.Component {
 	componentDidMount() {
+		if (!localStorage.getItem('jwt')) {
+			this.props.history.replace('/');
+		}
+
 		this.props.getUserProperties();
 	}
 
