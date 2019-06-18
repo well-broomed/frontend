@@ -23,8 +23,7 @@ const ProgressRow = props => {
 			<PropertyLink to={`/properties/${propertyInfo.property_id}`}>
 				<PropertyName
 					variant="h6"
-					align="center"
-					style={{ letterSpacing: '.03rem' }}
+					// align="center"
 				>
 					{propertyInfo.property_name}
 				</PropertyName>
@@ -57,16 +56,19 @@ const PropertyRowContainer = styled.div`
 `;
 
 const PropertyLink = styled(Link)`
+	display: table;
 	color: inherit;
 	text-decoration: none;
+	margin: 0 auto;
+`;
+
+const PropertyName = styled(Typography)`
+	padding: 8px 20px;
+	letter-spacing: 0.03rem;
 `;
 
 const PropertyRow = styled.div`
 	display: flex;
 	width: 100%;
 	/* margin: 0 0 -20px; */
-`;
-
-const PropertyName = styled(Typography)`
-	padding: 8px 0;
 `;
