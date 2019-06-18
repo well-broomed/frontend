@@ -134,6 +134,7 @@ class PropertyPreview extends React.Component {
 		// Just in case someone's set as default without also being available. Shouldn't happen but it's not explicitly disallowed on the backend (yet)
 		if (
 			property.cleaner_id &&
+			availableCleaners &&
 			!availableCleaners.find(
 				({ cleaner_id }) => cleaner_id === parseInt(property.cleaner_id)
 			)
