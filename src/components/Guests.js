@@ -59,8 +59,8 @@ const TopBar = styled.div`
 //     `;
 
 const Transition = React.forwardRef((props, ref) => (
-	<Slide direction = 'up' {...props} ref = {ref} />
-))
+	<Slide direction="up" {...props} ref={ref} />
+));
 
 class Guests extends React.Component {
 	componentDidMount() {
@@ -73,8 +73,8 @@ class Guests extends React.Component {
 		this.props.getPropertyCleaners();
 	}
 
-	componentDidUpdate(prevProps){
-		if(prevProps.refreshGuests !== this.props.refreshGuests){
+	componentDidUpdate(prevProps) {
+		if (prevProps.refreshGuests !== this.props.refreshGuests) {
 			this.props.fetchAllGuests();
 		}
 	}
@@ -88,9 +88,11 @@ class Guests extends React.Component {
 	}
 
 	handleModalOpen = () => {
-		this.setState({
-			addModal: true,
-		});
+		if (!this.props.gettingPropertyCleaners) {
+			this.setState({
+				addModal: true,
+			});
+		}
 	};
 
 	handleModalClose = () => {
@@ -121,14 +123,13 @@ class Guests extends React.Component {
 					</Fab>
 				</TopBar>
 
-
 				{/** Add Guest Modal */}
 				<Dialog
 					open={this.state.addModal}
 					TransitionComponent={Transition}
 					onClose={this.handleModalClose}
-					fullWidth = {true}
-					maxWidth = {'xl'}
+					fullWidth={true}
+					maxWidth={'xl'}
 				>
 					<DialogContent>
 						<AddGuestForm
@@ -151,10 +152,13 @@ class Guests extends React.Component {
 						{this.props.guests ? (
 							<div>
 								{this.props.guests.map(guest => {
-									return <GuestPreview 
-									guest={guest} 
-									tab={this.state.tab} 
-									key = {guest.guest_id} />;
+									return (
+										<GuestPreview
+											guest={guest}
+											tab={this.state.tab}
+											key={guest.guest_id}
+										/>
+									);
 								})}
 							</div>
 						) : null}
