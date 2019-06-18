@@ -139,38 +139,49 @@ export const addProperty = property => {
 export const deleteProperty = property_id => {
 	let options = setHeaders();
 
-	const endpoint = axios.delete(`${backendUrl}/api/properties/${property_id}`, options);
+	const endpoint = axios.delete(
+		`${backendUrl}/api/properties/${property_id}`,
+		options
+	);
 
 	return dispatch => {
-		dispatch({type: DELETING_PROPERTY});
+		dispatch({ type: DELETING_PROPERTY });
 
-		endpoint.then(res => {
-			dispatch({type: PROPERTY_DELETED})
-		}).catch(err => {
-			console.log(err);
-			dispatch({type: ERROR})
-		})
-	}
-}
+		endpoint
+			.then(res => {
+				dispatch({ type: PROPERTY_DELETED });
+			})
+			.catch(err => {
+				console.log(err);
+				dispatch({ type: ERROR });
+			});
+	};
+};
 
 export const updateProperty = (property_id, property) => {
 	let options = setHeaders();
 
-	const endpoint = axios.put(`${backendUrl}/api/properties/${property_id}`, property, options);
+	const endpoint = axios.put(
+		`${backendUrl}/api/properties/${property_id}`,
+		property,
+		options
+	);
 
 	return dispatch => {
-		dispatch({type: UPDATING_PROPERTY});
+		dispatch({ type: UPDATING_PROPERTY });
 
-		endpoint.then(res => {
-			console.log('update property res', res.data);
+		endpoint
+			.then(res => {
+				console.log('update property res', res.data);
 
-			dispatch({type: PROPERTY_UPDATED, payload: res.data});
-		}).catch(err => {
-			console.log(err);
-			return dispatch({type: ERROR})
-		})
-	}
-}
+				dispatch({ type: PROPERTY_UPDATED, payload: res.data });
+			})
+			.catch(err => {
+				console.log(err);
+				return dispatch({ type: ERROR });
+			});
+	};
+};
 
 export const getPropertyCleaners = () => {
 	let options = setHeaders();
@@ -262,7 +273,7 @@ export const changeCleaner = (property_id, cleaner_id) => {
 	let options = setHeaders();
 
 	const endpoint = axios.put(
-		`${backendUrl}/api/cleaners/update/${property_id}`,
+		`${backendUrl}/api/properties/${property_id}`,
 		{ cleaner_id },
 		options
 	);
