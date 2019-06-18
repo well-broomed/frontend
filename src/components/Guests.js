@@ -157,6 +157,7 @@ class Guests extends React.Component {
 											guest={guest}
 											tab={this.state.tab}
 											key={guest.guest_id}
+											fetching={this.props.gettingPropertyCleaners}
 										/>
 									);
 								})}
