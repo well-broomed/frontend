@@ -47,13 +47,13 @@ class AddGuestForm extends React.Component {
 
 		this.state = {
 			guest_name: '',
-			property_id: null,
-			checkin: null,
-			checkout: null,
-			email: null,
-			cleaner_id: null,
-			cleaner: null,
-			property: null,
+			property_id: '',
+			checkin: '',
+			checkout: '',
+			email: '',
+			cleaner_id: '',
+			cleaner: '',
+			property: '',
 		};
 	}
 
@@ -94,32 +94,59 @@ class AddGuestForm extends React.Component {
 
 	handleSelect = name => event => {
 		if (name === 'property') {
-			let property = this.props.propertyCleaners.properties.find(
-				p => p.property_id === parseInt(event.target.value)
-			);
+			if (!event.target.value) {
+				this.setState({
+					property: '',
+					property_id: '',
+					cleaner_id: '',
+				});
+			} else {
+				let property = this.props.propertyCleaners.properties.find(
+					p => p.property_id === parseInt(event.target.value)
+				);
 
-			console.log('property:', property);
-
-			this.setState({
-				[name]: property,
-				property_id: property.property_id,
-			});
+				this.setState({
+					property,
+					property_id: property.property_id,
+					cleaner_id: property.default_cleaner_id || '',
+				});
+			}
 		} else if (name === 'cleaner') {
-			let cleaner = this.props.propertyCleaners.cleaners.find(
-				c => c.cleaner_id === parseInt(event.target.value)
-			);
+			if (!event.target.value) {
+				this.setState({
+					cleaner_id: '',
+				});
+			} else {
+				let cleaner = this.props.propertyCleaners.otherCleaners.find(
+					c => c.cleaner_id === parseInt(event.target.value)
+				);
 
-			console.log('cleaner:', cleaner);
-
-			this.setState({
-				[name]: cleaner,
-				cleaner_id: cleaner.cleaner_id,
-			});
+				this.setState({
+					cleaner_id: cleaner.cleaner_id,
+				});
+			}
 		}
 	};
 
 	render() {
 		const { classes } = this.props;
+
+		const availableCleaners =
+			this.state.property &&
+			this.props.propertyCleaners.availableCleaners[this.state.property_id]
+				.concat(
+					this.props.propertyCleaners.otherCleaners.filter(
+						cleaner =>
+							!this.props.propertyCleaners.availableCleaners[
+								this.state.property_id
+							].find(({ cleaner_id }) => cleaner_id === cleaner.cleaner_id)
+					)
+				)
+				.map(({ cleaner_id, cleaner_name }) => (
+					<option key={cleaner_id} value={cleaner_id}>
+						{cleaner_name}
+					</option>
+				));
 
 		return (
 			<div>
@@ -134,13 +161,13 @@ class AddGuestForm extends React.Component {
 					<Typography variant="overline">Property</Typography>
 
 					<NativeSelect
-						value={this.state.property && this.state.property.property_id}
+						value={this.state.property && this.state.property_id}
 						onChange={this.handleSelect('property')}
 						input={
 							<Input name="property" id="property-native-label-placeolder" />
 						}
 					>
-						<option value={null}>{'Select a Property'}</option>
+						<option value={''}>{'Select a Property'}</option>
 						{this.props.propertyCleaners
 							? this.props.propertyCleaners.properties.map(property => {
 									return (
@@ -154,49 +181,24 @@ class AddGuestForm extends React.Component {
 										</option>
 									);
 							  })
-							: null}
+							: ''}
 					</NativeSelect>
 
 					<Typography variant="overline">Cleaner</Typography>
 
 					<NativeSelect
-						value={this.state.cleaner && this.state.cleaner.cleaner_id}
+						value={
+							(this.state.property && this.state.cleaner_id) ||
+							(this.state.property && this.state.property.default_cleaner_id) ||
+							''
+						}
 						onChange={this.handleSelect('cleaner')}
 						input={
 							<Input name="cleaner" id="cleaner-native-label-placeolder" />
 						}
 					>
 						<option value="">{'Select a Cleaner'}</option>
-						{this.state.property &&
-							this.props.propertyCleaners.availableCleaners[
-								this.state.property.property_id
-							]
-								.concat([
-									{
-										cleaner_id: this.props.user.user_id,
-										cleaner_name: this.props.user.user_name,
-									},
-								])
-								.concat(
-									this.props.propertyCleaners.cleaners
-										.map(({ cleaner_id, cleaner_name }) => ({
-											cleaner_id,
-											cleaner_name: cleaner_name + '*',
-										}))
-										.filter(
-											cleaner =>
-												!this.props.propertyCleaners.availableCleaners[
-													this.state.property.property_id
-												].find(
-													({ cleaner_id }) => cleaner_id === cleaner.cleaner_id
-												)
-										)
-								)
-								.map(({ cleaner_id, cleaner_name }) => (
-									<option key={cleaner_id} value={cleaner_id}>
-										{cleaner_name}
-									</option>
-								))}
+						{availableCleaners}
 					</NativeSelect>
 
 					<Typography variant="caption">
@@ -247,7 +249,7 @@ const mapStateToProps = state => {
 		// state items
 		user: state.authReducer.user,
 		propertyCleaners: state.propertyReducer.propertyCleaners || [],
-		cleaners: state.propertyReducer.cleaners,
+		cleaners: state.propertyReducer.cleaners || [],
 	};
 };
 
