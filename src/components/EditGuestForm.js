@@ -207,6 +207,11 @@ class EditGuestForm extends React.Component {
 						{availableCleaners}
 					</NativeSelect>
 
+					<Typography variant="caption">
+						Cleaners with a * have not made themselves available and should be
+						contacted before assignment.
+					</Typography>
+
 					<TextField
 						className={classes.formField}
 						id="standard-dense"
