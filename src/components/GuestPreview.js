@@ -110,13 +110,15 @@ class GuestPreview extends React.Component {
 								</CardText>
 							</Link>
 
-							<CardActions>
-								<EditTwoTone
-									onClick={this.toggleEdit}
-									disabled={this.props.fetching}
-								/>
-								<DeleteForeverTwoTone onClick={this.toggleModal} />
-							</CardActions>
+							{this.props.user.role === 'manager' && (
+								<CardActions>
+									<EditTwoTone
+										onClick={this.toggleEdit}
+										disabled={this.props.fetching}
+									/>
+									<DeleteForeverTwoTone onClick={this.toggleModal} />
+								</CardActions>
+							)}
 						</CardContainer>
 					</CardContent>
 				</Card>
@@ -165,6 +167,7 @@ class GuestPreview extends React.Component {
 const mapStateToProps = state => {
 	return {
 		// state items
+		user: state.authReducer.user || {},
 		// tasks: state.propertyReducer.tasks,
 		// guests: state.guestReducer.guests,
 		// refreshGuests: state.guestReducer.refreshGuests,
