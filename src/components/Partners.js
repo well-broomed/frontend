@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core';
 
 //Actions
-import { getPartners, getUserProperties } from '../actions';
+import { getPartners, getDefaultProperties } from '../actions';
 
 //Component
 import PartnerCard from './PartnerCard';
@@ -22,47 +22,39 @@ import PartnerCard from './PartnerCard';
 const styles = {
 	card: {
 		maxWidth: 600,
-		margin: '20px auto'
+		margin: '20px auto 20px 0',
 	},
 	invite: {
 		maxWidth: 600,
-		margin: '20px auto'
+		margin: '20px auto 20px 0',
 	},
 	img: {
-		width: 40
+		width: 40,
 	},
 	content: {
-		display: 'flex'
+		display: 'flex',
 	},
 	contentTypography: {
-		margin: 'auto'
-	}
+		margin: 'auto',
+	},
 };
 
 class Partners extends React.Component {
-
 	componentDidMount() {
-		if(!localStorage.getItem('jwt')){
+		if (!localStorage.getItem('jwt')) {
 			this.props.history.replace('/');
 		}
-		
-		if(!this.props.properties){
-			this.props.getUserProperties();
-		}
-		if(!this.props.cleaners){
-			this.props.getPartners();
-		}
-		
-		if(!this.props.partners){
-			this.props.getUserProperties();
-			this.props.getPartners();
-		}	
+
+		this.props.getPartners();
+		this.props.getDefaultProperties();
 	}
 
-
 	componentDidUpdate(prevProps) {
-		if(this.props.refreshProperties !== prevProps.refreshProperties){
-			this.props.getUserProperties();
+		if (this.props.refreshProperties !== prevProps.refreshProperties) {
+			this.props.getDefaultProperties();
+		}
+
+		if (this.props.refreshCleaners !== prevProps.refreshCleaners) {
 			this.props.getPartners();
 		}
 	}
@@ -70,18 +62,16 @@ class Partners extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			partners: this.props.cleaners,
-			email: ''
+			partners: this.props.partners,
+			email: '',
 		};
 	}
 
-
-
 	handleInputChange = event => {
 		this.setState({
-			[event.target.name]: event.target.value
+			[event.target.name]: event.target.value,
 		});
-	}
+	};
 
 	sendEmail = async e => {
 		if (!this.state.email) return;
@@ -94,15 +84,16 @@ class Partners extends React.Component {
 		let options = {
 			headers: {
 				Authorization: `Bearer ${token}`,
-				'user-info': userInfo
-			}
+				'user-info': userInfo,
+			},
 		};
 
 		let body = {
-			cleaner_email: this.state.email
+			cleaner_email: this.state.email,
 		};
 
-		const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
+		const backendUrl =
+			process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 		try {
 			const res = await axios.post(`${backendUrl}/api/invites/`, body, options);
 			console.log(res);
@@ -110,40 +101,50 @@ class Partners extends React.Component {
 			console.log(err);
 		}
 
-		this.setState({email: ''});
+		this.setState({ email: '' });
 	};
 
 	render() {
-		const { classes } = this.props;
+		const { classes, user, partners, defaultProperties } = this.props;
+
 		return (
-			<div>
-				<Typography variant="h2">Partners</Typography>
-				{this.props.cleaners ? (
-					this.props.cleaners.map(partner => {
-						return <PartnerCard partner={partner} key={partner.user_id} />;
-					})
-				) : (
-					<Typography variant="overline">
-						No partners have been invited yet.
-					</Typography>
-				)}
-				<div className={classes.invite}>
-					<Typography variant="h5">
-						{' '}
-						Send an invite to add more partners!{' '}
-					</Typography>
-					<TextField
-						value={this.state.email}
-						onChange={this.handleInputChange}
-						placeholder="Partner's Email"
-						type="text"
-						name="email"
-					/>
-					<Button type="submit" onClick={this.sendEmail}>
-						Send Invite
-					</Button>
+			user.role === 'manager' && (
+				<div>
+					<Typography variant="h2">Partners</Typography>
+
+					<div className={classes.invite}>
+						<Typography variant="h5">
+							Send an invite to add a new partner!
+						</Typography>
+						<TextField
+							value={this.state.email}
+							onChange={this.handleInputChange}
+							placeholder="Partner's Email"
+							type="text"
+							name="email"
+						/>
+						<Button type="submit" onClick={this.sendEmail}>
+							Send Invite
+						</Button>
+					</div>
+
+					{partners && defaultProperties ? (
+						partners.map(partner => {
+							return (
+								<PartnerCard
+									key={partner.cleaner_id}
+									partner={partner}
+									defaultProperties={defaultProperties}
+								/>
+							);
+						})
+					) : (
+						<Typography variant="overline">
+							No partners have been invited yet.
+						</Typography>
+					)}
 				</div>
-			</div>
+			)
 		);
 	}
 }
@@ -151,10 +152,13 @@ class Partners extends React.Component {
 const mapStateToProps = state => {
 	return {
 		// state items
-		properties: state.propertyReducer.properties,
-		cleaners: state.propertyReducer.partners,
+		user: state.authReducer.user || {},
+
+		partners: state.propertyReducer.partners,
+		defaultProperties: state.propertyReducer.defaultProperties,
+
 		refreshCleaners: state.propertyReducer.refreshCleaners,
-		refreshProperties: state.propertyReducer.refreshProperties
+		refreshProperties: state.propertyReducer.refreshProperties,
 	};
 };
 
@@ -164,7 +168,7 @@ export default withRouter(
 		{
 			// actions
 			getPartners,
-			getUserProperties
+			getDefaultProperties,
 		}
 	)(withStyles(styles)(Partners))
 );
