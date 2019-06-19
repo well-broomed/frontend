@@ -190,74 +190,77 @@ const PropertyChecklist = props => {
 					{listTitle}
 				</Typography>
 			)}
-			<List className={classes.root}>
-				{taskList.map(({ task_id, text }) => (
-					<ListItemWrapper key={task_id}>
-						{updatingTask === task_id ? (
-							<UpdateTaskForm
-								className={classes.root}
-								onSubmit={event => {
-									event.preventDefault();
+			{taskList.length ? (
+				<List className={classes.root}>
+					{taskList.map(({ task_id, text }) => (
+						<ListItemWrapper key={task_id}>
+							{updatingTask === task_id ? (
+								<UpdateTaskForm
+									className={classes.root}
+									onSubmit={event => {
+										event.preventDefault();
 
-									if (updatedTask.replace(/\s/g, '').length) {
-										handleUpdate(event, task_id, updatedTask, deadline);
+										if (updatedTask.replace(/\s/g, '').length) {
+											handleUpdate(event, task_id, updatedTask, deadline);
 
-										setUpdatingTask(null);
-									}
+											setUpdatingTask(null);
+										}
 
-									setUpdatedTask('');
-								}}
-							>
-								<Autosuggest
-									{...autosuggestProps}
-									inputProps={{
-										classes,
-										placeholder: 'Update task',
-										value: updatedTask,
-										onChange: handleUpdatedChange,
-										autoFocus: true,
-										onBlur: () => setUpdatingTask(null),
-										onKeyDown: e => {
-											if (e.key === 'Escape') setUpdatingTask(null);
-										},
+										setUpdatedTask('');
 									}}
-									theme={{
-										container: classes.container,
-										suggestionsContainerOpen: classes.suggestionsContainerOpen,
-										suggestionsList: classes.suggestionsList,
-										suggestion: classes.suggestion,
+								>
+									<Autosuggest
+										{...autosuggestProps}
+										inputProps={{
+											classes,
+											placeholder: 'Update task',
+											value: updatedTask,
+											onChange: handleUpdatedChange,
+											autoFocus: true,
+											onBlur: () => setUpdatingTask(null),
+											onKeyDown: e => {
+												if (e.key === 'Escape') setUpdatingTask(null);
+											},
+										}}
+										theme={{
+											container: classes.container,
+											suggestionsContainerOpen:
+												classes.suggestionsContainerOpen,
+											suggestionsList: classes.suggestionsList,
+											suggestion: classes.suggestion,
+										}}
+										renderSuggestionsContainer={options => (
+											<Paper {...options.containerProps} square>
+												{options.children}
+											</Paper>
+										)}
+									/>
+								</UpdateTaskForm>
+							) : (
+								<ListItem
+									role={undefined}
+									button
+									onClick={() => {
+										setUpdatedTask(text);
+										setUpdatingTask(task_id);
 									}}
-									renderSuggestionsContainer={options => (
-										<Paper {...options.containerProps} square>
-											{options.children}
-										</Paper>
-									)}
-								/>
-							</UpdateTaskForm>
-						) : (
-							<ListItem
-								role={undefined}
-								button
-								onClick={() => {
-									setUpdatedTask(text);
-									setUpdatingTask(task_id);
-								}}
-							>
-								<ListItemText primary={text} />
-								<SecondaryActionWrapper>
-									<ListItemSecondaryAction
-										onClick={event => handleDelete(event, task_id)}
-									>
-										<IconButton aria-label="Delete">
-											<DeleteIcon />
-										</IconButton>
-									</ListItemSecondaryAction>
-								</SecondaryActionWrapper>
-							</ListItem>
-						)}
-					</ListItemWrapper>
-				))}
-			</List>
+								>
+									<ListItemText primary={text} />
+									<SecondaryActionWrapper>
+										<ListItemSecondaryAction
+											onClick={event => handleDelete(event, task_id)}
+										>
+											<IconButton aria-label="Delete">
+												<DeleteIcon />
+											</IconButton>
+										</ListItemSecondaryAction>
+									</SecondaryActionWrapper>
+								</ListItem>
+							)}
+						</ListItemWrapper>
+					))}
+				</List>
+			) : null}
 			{addingTask === deadline ? (
 				<NewTaskForm
 					className={classes.root}
