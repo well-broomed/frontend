@@ -31,7 +31,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 // Actions
-import { changeCleaner, deleteProperty } from '../actions/propertyActions';
+import { changeCleaner, deleteProperty, changeAvailableCleaner } from '../actions/propertyActions';
 
 const CardContainer = styled.div`
 	width: 100%;
@@ -100,6 +100,14 @@ class PropertyPreview extends React.Component {
 			event.target.value || null
 		);
 	};
+
+	handleMakeAvailable = () => {
+		this.props.changeAvailableCleaner(
+			this.props.property.property_id,
+			this.props.user.user_id,
+			true
+		);
+	}
 
 	toggleDelete = () => {
 		this.setState({
@@ -238,7 +246,15 @@ class PropertyPreview extends React.Component {
 						/>
 					</Link>
 
-					<CardContent />
+					<CardContent>
+					{this.props.markable ? <Button
+							variant="contained"
+							color="secondary"
+							onClick={this.handleMakeAvailable}
+						>
+							Mark available
+						</Button> : null}
+					</CardContent>
 				</Card>
 			);
 		}
@@ -259,6 +275,7 @@ export default withRouter(
 			// actions
 			changeCleaner,
 			deleteProperty,
+			changeAvailableCleaner,
 		}
 	)(withStyles(styles)(PropertyPreview))
 );

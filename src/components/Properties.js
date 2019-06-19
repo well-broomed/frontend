@@ -185,6 +185,24 @@ class Properties extends React.Component {
 							properties.
 						</Typography>
 					)}
+
+					<Typography variant="h5"> Manager's Properties </Typography> {/*For lack of a better name, possible placeholder*/}
+					{properties && user.user_id ? ( //Used extra properties array returned in tweaked endpoint changed to regular name
+						properties
+							.map(property => {
+								return (
+									<PropertyPreview
+										property={property}
+										key={property.property_id}
+										markable={true}
+									/>
+								);
+							})
+					) : (
+						<Typography variant="overline">
+							Your Manager currently does not have any properties.
+						</Typography>
+					)}
 				</div>
 			);
 	}
