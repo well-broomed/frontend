@@ -14,6 +14,11 @@ export const GETTING_PROPERTY_CLEANERS = 'GETTING_PROPERTY_CLEANERS';
 export const GOT_PROPERTY_CLEANERS = 'GOT_PROPERTY_CLEANERS';
 export const GET_PROPERTY_CLEANERS_ERROR = 'GET_PROPERTY_CLEANERS_ERROR';
 
+// getDefaultProperties
+export const GETTING_DEFAULT_PROPERTIES = 'GETTING_DEFAULT_PROPERTIES';
+export const GOT_DEFAULT_PROPERTIES = 'GOT_DEFAULT_PROPERTIES';
+export const GET_DEFAULT_PROPERTIES_ERROR = 'GET_DEFAULT_PROPERTIES_ERROR';
+
 export const ADDING_PROPERTY = 'ADDING_PROPERTY';
 export const PROPERTY_ADDED = 'PROPERTY_ADDED';
 
@@ -22,9 +27,6 @@ export const PROPERTY_UPDATED = 'PROPERTY_UPDATED';
 
 export const DELETING_PROPERTY = 'DELETING_PROPERTY';
 export const PROPERTY_DELETED = 'PROPERTY_DELETED';
-
-export const FETCHING_CLEANERS = 'FETCHING_CLEANERS';
-export const CLEANERS_FETCHED = 'CLEANERS_FETCHED';
 
 export const UPDATING_CLEANER = 'UPDATING_CLEANER';
 export const CLEANER_UPDATED = 'CLEANER_UPDATED';
@@ -205,32 +207,10 @@ export const getPropertyCleaners = () => {
 	};
 };
 
-export const getCleaners = () => {
-	let options = setHeaders();
-
-	const endpoint = axios.get(`${backendUrl}/api/cleaners`, options);
-
-	return dispatch => {
-		dispatch({ type: FETCHING_CLEANERS });
-
-		endpoint
-			.then(res => {
-				dispatch({
-					type: CLEANERS_FETCHED,
-					payload: res.data.cleaner_profiles,
-				});
-			})
-			.catch(err => {
-				console.log(err);
-				dispatch({ type: ERROR });
-			});
-	};
-};
-
 export const getPartners = () => {
 	let options = setHeaders();
 
-	const endpoint = axios.get(`${backendUrl}/api/cleaners/partners`, options);
+	const endpoint = axios.get(`${backendUrl}/api/users/partners`, options);
 
 	return dispatch => {
 		dispatch({ type: FETCHING_PARTNERS });
@@ -242,6 +222,28 @@ export const getPartners = () => {
 			.catch(err => {
 				console.log(err);
 				dispatch({ type: ERROR });
+			});
+	};
+};
+
+export const getDefaultProperties = () => {
+	let options = setHeaders();
+
+	const endpoint = axios.get(`${backendUrl}/api/properties/defaults`, options);
+
+	return dispatch => {
+		dispatch({ type: GETTING_DEFAULT_PROPERTIES });
+
+		endpoint
+			.then(res => {
+				dispatch({
+					type: GOT_DEFAULT_PROPERTIES,
+					payload: res.data.defaultProperties,
+				});
+			})
+			.catch(err => {
+				console.log(err);
+				dispatch({ type: GET_DEFAULT_PROPERTIES_ERROR });
 			});
 	};
 };

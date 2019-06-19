@@ -3,7 +3,6 @@ import {
 	PROPERTIES_FETCHED,
 	PROPERTY_ADDED,
 	PROPERTY_DELETED,
-	CLEANERS_FETCHED,
 	FETCHING_PARTNERS,
 	PARTNERS_FETCHED,
 	CLEANER_UPDATED,
@@ -13,6 +12,9 @@ import {
 	GETTING_PROPERTY_CLEANERS,
 	GOT_PROPERTY_CLEANERS,
 	GET_PROPERTY_CLEANERS_ERROR,
+	GETTING_DEFAULT_PROPERTIES,
+	GOT_DEFAULT_PROPERTIES,
+	GET_DEFAULT_PROPERTIES_ERROR,
 	ADDING_TASK,
 	ADDED_TASK,
 	ADD_TASK_ERROR,
@@ -26,7 +28,7 @@ import {
 	UPDATING_DEADLINE,
 	UPDATED_DEADLINE,
 	UPDATE_DEADLINE_ERROR,
-	PROPERTY_UPDATED
+	PROPERTY_UPDATED,
 } from '../actions';
 
 const initialState = {
@@ -86,17 +88,31 @@ const propertyReducer = (state = initialState, action) => {
 				gettingPropertyCleaners: undefined,
 			};
 
+		case GETTING_DEFAULT_PROPERTIES:
+			return { ...state, gettingDefaultProperties: true };
+
+		case GOT_DEFAULT_PROPERTIES:
+			return {
+				...state,
+				defaultProperties: action.payload,
+				gettingDefaultProperties: undefined,
+			};
+
+		case GET_DEFAULT_PROPERTIES_ERROR:
+			return {
+				...state,
+				getDefaultPropertiesError: action.payload,
+				gettingDefaultProperties: undefined,
+			};
+
 		case PROPERTY_ADDED:
 			return { ...state, refreshProperties: true };
 
 		case PROPERTY_DELETED:
-			return {...state, refreshProperties: true};
+			return { ...state, refreshProperties: true };
 
 		case PROPERTY_UPDATED:
-			return {...state, refreshProperties: true};
-
-		case CLEANERS_FETCHED:
-			return { ...state, cleaners: action.payload, refreshCleaners: false };
+			return { ...state, refreshProperties: true };
 
 		case CLEANER_UPDATED:
 			return { ...state, refreshCleaners: true, refreshProperties: true };
@@ -105,7 +121,7 @@ const propertyReducer = (state = initialState, action) => {
 			return { ...state, refreshCleaners: false };
 
 		case PARTNERS_FETCHED:
-			return { ...state, partners: action.payload };
+			return { ...state, partners: action.payload, refreshCleaners: false };
 
 		// Tasks
 		case ADDING_TASK:
