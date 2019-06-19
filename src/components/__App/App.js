@@ -69,7 +69,7 @@ class App extends Component {
 							<Route exact path="/account" component={Account} />
 							<Route path="/callback" component={Callback} />
 							<Route path="/redirect" component={Redirect} />
-							<Route path="/invite/:invite_code" component={Invite} />
+							<Route path="/invite" component={Invite} />
 						</Switch>
 					</ComponentContainer>
 				</MuiPickersUtilsProvider>

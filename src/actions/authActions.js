@@ -48,6 +48,35 @@ export const checkIfUserExists = role => {
 	};
 };
 
+export const inviteLogin = (role, inviteCode) => {
+	const token = localStorage.getItem('jwt');
+
+	const options = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const body = {
+		role: role,
+	};
+
+	const endpoint = axios.post(`${backendUrl}/api/users/login/${inviteCode}`, body, options);
+
+	return dispatch => {
+		dispatch({type: CHECKING_USER});
+
+		endpoint.then(res => {
+			console.log('invite login res', res.data);
+
+			dispatch({type: USER_CHECKED, payload: res.data})
+		}).catch(err => {
+			console.log(err);
+			dispatch({type: ERROR})
+		})
+	}
+}
+
 export const updateUserProfile = (user_id, changes) => {
 	let token = localStorage.getItem('jwt');
 	let userInfo = localStorage.getItem('userInfo');

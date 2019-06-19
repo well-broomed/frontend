@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core';
 
 //Actions
-import { getPartners, getUserProperties } from '../actions';
+import { getPartners, getUserProperties, sendInvite } from '../actions';
 
 //Component
 import PartnerCard from './PartnerCard';
@@ -83,35 +83,16 @@ class Partners extends React.Component {
 		});
 	}
 
-	sendEmail = async e => {
-		if (!this.state.email) return;
-		e.preventDefault();
-		console.log('sending email');
+	handleSubmit = event => {
+		console.log(this.state.email);
 
-		let token = localStorage.getItem('jwt');
-		let userInfo = localStorage.getItem('userInfo');
+		this.props.sendInvite(this.state.email);
 
-		let options = {
-			headers: {
-				Authorization: `Bearer ${token}`,
-				'user-info': userInfo
-			}
-		};
+		this.setState({
+			email: ''
+		})
 
-		let body = {
-			cleaner_email: this.state.email
-		};
-
-		const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
-		try {
-			const res = await axios.post(`${backendUrl}/api/invites/`, body, options);
-			console.log(res);
-		} catch (err) {
-			console.log(err);
-		}
-
-		this.setState({email: ''});
-	};
+	}
 
 	render() {
 		const { classes } = this.props;
@@ -139,7 +120,7 @@ class Partners extends React.Component {
 						type="text"
 						name="email"
 					/>
-					<Button type="submit" onClick={this.sendEmail}>
+					<Button type="submit" onClick={this.handleSubmit}>
 						Send Invite
 					</Button>
 				</div>
@@ -164,7 +145,8 @@ export default withRouter(
 		{
 			// actions
 			getPartners,
-			getUserProperties
+			getUserProperties,
+			sendInvite,
 		}
 	)(withStyles(styles)(Partners))
 );
