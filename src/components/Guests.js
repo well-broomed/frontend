@@ -5,12 +5,7 @@ import { connect } from 'react-redux';
 // Router
 import { withRouter } from 'react-router-dom';
 
-import {
-	fetchAllGuests,
-	// getUserProperties,
-	// getCleaners,
-	getPropertyCleaners,
-} from '../actions/index';
+import { fetchAllGuests, getPropertyCleaners } from '../actions/index';
 
 import AddGuestForm from './AddGuestForm';
 
@@ -185,8 +180,6 @@ const mapStateToProps = state => {
 		propertyCleaners: state.propertyReducer.propertyCleaners,
 
 		refreshGuests: state.guestReducer.refreshGuests,
-		// refreshProperties: state.propertyReducer.refreshProperties,
-		// refreshCleaners: state.propertyReducer.refreshCleaners,
 
 		gettingPropertyCleaners: state.propertyReducer.gettingPropertyCleaners,
 		getPropertyCleanersError: state.propertyReducer.getPropertyCleanersError,
@@ -199,8 +192,6 @@ export default withRouter(
 		{
 			// actions
 			fetchAllGuests,
-			// getUserProperties,
-			// getCleaners,
 			getPropertyCleaners,
 		}
 	)(withStyles(styles)(Guests))
