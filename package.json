@@ -26,7 +26,7 @@
 		"auth0-js": "^9.10.4",
 		"auth0-lock": "^11.16.0",
 		"autosuggest-highlight": "^3.1.1",
-		"axios": "^0.18.0",
+		"axios": "^0.19.0",
 		"mailgun-js": "^0.22.0",
 		"moment": "^2.24.0",
 		"prop-types": "^15.7.2",
