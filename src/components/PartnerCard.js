@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 //Redux actions
 import {
 	changeCleaner,
-	changeAvailableCleaner
+	changeAvailableCleaner,
 } from '../actions/propertyActions';
 
 //Material-ui
@@ -30,16 +30,16 @@ import { withStyles } from '@material-ui/core';
 const styles = {
 	card: {
 		maxWidth: 600,
-		margin: '20px auto'
+		margin: '20px auto',
 	},
 	img: {
-		width: 40
+		width: 40,
 	},
 	content: {
-		display: 'flex'
+		display: 'flex',
 	},
 	contentTypography: {
-		margin: 'auto'
+		margin: 'auto',
 	},
 	paper: {
 		maxWidth: 600,
@@ -47,8 +47,8 @@ const styles = {
 		padding: '5px',
 		'flex-direction': 'column',
 		'align-items': 'center',
-		display: 'flex'
-	}
+		display: 'flex',
+	},
 };
 
 class PartnerCard extends React.Component {
@@ -58,33 +58,7 @@ class PartnerCard extends React.Component {
 			open: false,
 			defaultDialog: false,
 			availableDialog: false,
-			properties: [],
-			defaultproperties: [],
-			availableproperties: []
 		};
-	}
-
-	componentDidUpdate(prevProps) {
-		if (prevProps.properties !== this.props.properties) {
-			const properties = this.props.properties;
-			let defaultproperties = [];
-			let availableproperties = [];
-
-			
-				properties.forEach(property => {
-					if (property.cleaner_id === this.props.partner.user_id)
-						defaultproperties.push(property);
-						// This is bugging the site
-					// if (
-					// 	property.available_cleaners.some(
-					// 		cleaner => cleaner['cleaner_id'] === this.props.partner.user_id
-					// 	)
-					// )
-						availableproperties.push(property);
-				});	
-
-			this.setState({ defaultproperties, availableproperties, properties });
-		}
 	}
 
 	handleDefaultDialogOpen = () => {
@@ -92,8 +66,15 @@ class PartnerCard extends React.Component {
 	};
 
 	handleDefaultDialogClose = property_id => {
-		if (property_id)
-			this.props.changeCleaner(property_id, this.props.partner.user_id);
+		if (property_id) {
+			if (
+				this.props.partner.defaultProperties.find(
+					property => property.property_id === property_id
+				)
+			)
+				this.props.changeCleaner(property_id, null);
+			else this.props.changeCleaner(property_id, this.props.partner.cleaner_id);
+		}
 		this.setState({ defaultDialog: false });
 	};
 
@@ -103,16 +84,20 @@ class PartnerCard extends React.Component {
 
 	handleAvailableDialogClose = property => {
 		if (property) {
-			if (this.state.availableproperties.includes(property))
+			if (
+				this.props.partner.availableProperties.find(
+					({ property_id }) => property_id === property.property_id
+				)
+			)
 				this.props.changeAvailableCleaner(
 					property.property_id,
-					this.props.partner.user_id,
+					this.props.partner.cleaner_id,
 					false
 				);
 			else
 				this.props.changeAvailableCleaner(
 					property.property_id,
-					this.props.partner.user_id,
+					this.props.partner.cleaner_id,
 					true
 				);
 		}
@@ -121,24 +106,62 @@ class PartnerCard extends React.Component {
 
 	handlePartnerHouse = event => {
 		this.setState({
-			open: !this.state.open
+			open: !this.state.open,
 		});
 	};
 
 	render() {
-		const { classes } = this.props;
+		const { classes, partner, defaultProperties } = this.props;
+
+		const defaultPropertyList = partner.defaultProperties
+			.map(property => ({
+				...property,
+				property_name: property.property_name + ' - click to unassign',
+			}))
+			.concat(
+				defaultProperties
+					.filter(
+						({ property_id }) =>
+							!partner.defaultProperties.find(
+								property => property.property_id === property_id
+							)
+					)
+					.map(property => ({
+						...property,
+						property_name:
+							property.property_name +
+							(property.cleaner_name
+								? ` - currently assigned to ${property.cleaner_name}`
+								: ''),
+					}))
+			);
+
+		const availablePropertyList = partner.availableProperties
+			.map(property => ({
+				...property,
+				property_name: property.property_name + ' - click to unassign',
+			}))
+			.concat(
+				defaultProperties.filter(
+					({ property_id }) =>
+						!partner.availableProperties.find(
+							property => property.property_id === property_id
+						)
+				)
+			);
+
 		return (
 			<div>
-				<Card key={this.props.partner.user_id} className={classes.card}>
+				<Card key={partner.cleaner_id} className={classes.card}>
 					<CardHeader
-						title={this.props.partner.user_name}
-						subheader={this.props.partner.address}
+						title={partner.cleaner_name}
+						subheader={partner.address}
 						avatar={
 							<Avatar>
 								<img
 									alt="partner avatar"
 									className={classes.img}
-									src={this.props.partner.img_url}
+									src={partner.img_url}
 								/>
 							</Avatar>
 						}
@@ -153,10 +176,10 @@ class PartnerCard extends React.Component {
 					/>
 					<CardContent className={classes.content}>
 						<Typography component="p" className={classes.contentTypography}>
-							Default Properties: {this.state.defaultproperties.length}
+							Default Properties: {partner.defaultProperties.length}
 						</Typography>
 						<Typography component="p" className={classes.contentTypography}>
-							Available Properties: {this.state.availableproperties.length}
+							Available Properties: {partner.availableProperties.length}
 						</Typography>
 					</CardContent>
 				</Card>
@@ -166,8 +189,8 @@ class PartnerCard extends React.Component {
 						<Typography variant="h6" component="h3">
 							Default Properties
 						</Typography>
-						{this.state.defaultproperties.length ? (
-							this.state.defaultproperties.map(property => {
+						{partner.defaultProperties.length ? (
+							partner.defaultProperties.map(property => {
 								return (
 									<Typography key={property.property_id} component="p">
 										{' '}
@@ -191,13 +214,18 @@ class PartnerCard extends React.Component {
 							open={this.state.defaultDialog}
 							onClose={() => this.handleDefaultDialogClose()}
 						>
-							<DialogTitle>Your Properties</DialogTitle>
+							<DialogTitle>{`${
+								partner.cleaner_name
+							}'s Default Properties`}</DialogTitle>
 							<List>
-								{this.props.properties.map(property => (
+								{defaultPropertyList.map(property => (
 									<ListItem
 										button
 										selected={
-											this.state.defaultproperties.includes(property)
+											partner.defaultProperties.find(
+												({ property_id }) =>
+													property_id === property.property_id
+											)
 												? true
 												: false
 										}
@@ -215,8 +243,8 @@ class PartnerCard extends React.Component {
 						<Typography variant="h6" component="h3">
 							Available Properties
 						</Typography>
-						{this.state.availableproperties.length ? (
-							this.state.availableproperties.map(property => {
+						{partner.availableProperties.length ? (
+							partner.availableProperties.map(property => {
 								return (
 									<Typography key={property.property_id} component="p">
 										{' '}
@@ -240,13 +268,18 @@ class PartnerCard extends React.Component {
 							open={this.state.availableDialog}
 							onClose={() => this.handleAvailableDialogClose()}
 						>
-							<DialogTitle>Your Properties</DialogTitle>
+							<DialogTitle>{`${
+								partner.cleaner_name
+							}'s Available Properties`}</DialogTitle>
 							<List>
-								{this.props.properties.map(property => (
+								{availablePropertyList.map(property => (
 									<ListItem
 										button
 										selected={
-											this.state.availableproperties.includes(property)
+											partner.availableProperties.find(
+												({ property_id }) =>
+													property_id === property.property_id
+											)
 												? true
 												: false
 										}
@@ -279,7 +312,7 @@ export default withRouter(
 		{
 			// actions
 			changeCleaner,
-			changeAvailableCleaner
+			changeAvailableCleaner,
 		}
 	)(withStyles(styles)(PartnerCard))
 );

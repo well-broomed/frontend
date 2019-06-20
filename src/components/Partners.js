@@ -33,7 +33,7 @@ import { withStyles } from '@material-ui/core';
 import styled from 'styled-components';
 
 //Actions
-import { getPartners, getUserProperties, sendInvite, getAllInvites, } from '../actions';
+import { getPartners, getUserProperties, sendInvite, getAllInvites, getDefaultProperties } from '../actions';
 
 //Component
 import PartnerCard from './PartnerCard';
@@ -44,17 +44,17 @@ const styles = {
 	},
 	card: {
 		maxWidth: 600,
-		margin: '20px auto'
+		margin: '20px auto 20px 0',
 	},
 	invite: {
 		maxWidth: 600,
-		margin: '20px auto'
+		margin: '20px auto 20px 0',
 	},
 	img: {
-		width: 40
+		width: 40,
 	},
 	content: {
-		display: 'flex'
+		display: 'flex',
 	},
 	contentTypography: {
 		margin: 'auto'
@@ -64,7 +64,7 @@ const styles = {
 	},
 	paper: {
 		width: '100%'
-	}
+	},
 };
 
 
@@ -77,16 +77,15 @@ const TopBar = styled.div`
 `;
 
 class Partners extends React.Component {
-
 	componentDidMount() {
-		if(!localStorage.getItem('jwt')){
+		if (!localStorage.getItem('jwt')) {
 			this.props.history.replace('/');
 		}
 
 		this.props.getPartners();
 		this.props.getAllInvites();
+		this.props.getDefaultProperties();
 	}
-
 
 	componentDidUpdate(prevProps) {
 		// follow the action cascade for user > properties > partners
@@ -94,7 +93,11 @@ class Partners extends React.Component {
 			this.props.getUserProperties();
 		}
 
-		if(this.props.refreshCleaners !== prevProps.refreshCleaners){
+		if (this.props.refreshProperties !== prevProps.refreshProperties) {
+			this.props.getDefaultProperties();
+		}
+
+		if (this.props.refreshCleaners !== prevProps.refreshCleaners) {
 			this.props.getPartners();
 		}
 
@@ -106,7 +109,7 @@ class Partners extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			partners: this.props.cleaners,
+			partners: this.props.partners,
 			email: '',
 			emailModal: false,
 			formSent: false,
@@ -128,9 +131,9 @@ class Partners extends React.Component {
 
 	handleInputChange = event => {
 		this.setState({
-			[event.target.name]: event.target.value
+			[event.target.name]: event.target.value,
 		});
-	}
+	};
 
 	handleSubmit = event => {
 		this.props.sendInvite(this.state.email);
@@ -156,7 +159,8 @@ class Partners extends React.Component {
 	}
 
 	render() {
-		const { classes } = this.props;
+		const { classes, user, partners, defaultProperties } = this.props;
+
 		return (
 			<div>
 				<TopBar>
@@ -254,8 +258,11 @@ class Partners extends React.Component {
 const mapStateToProps = state => {
 	return {
 		// state items
-		properties: state.propertyReducer.properties,
-		cleaners: state.propertyReducer.partners,
+		user: state.authReducer.user || {},
+
+		partners: state.propertyReducer.partners,
+		defaultProperties: state.propertyReducer.defaultProperties,
+
 		refreshCleaners: state.propertyReducer.refreshCleaners,
 		refreshProperties: state.propertyReducer.refreshProperties,
 		invites: state.partnerReducer.invites,
@@ -272,6 +279,7 @@ export default withRouter(
 			getUserProperties,
 			sendInvite,
 			getAllInvites,
+			getDefaultProperties,
 		}
 	)(withStyles(styles)(Partners))
 );

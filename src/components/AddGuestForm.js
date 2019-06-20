@@ -201,8 +201,8 @@ class AddGuestForm extends React.Component {
 					</NativeSelect>
 
 					<Typography variant="caption">
-						Cleaners with a * have not made themselves available to this
-						property and should be contacted before assignment.
+						Cleaners with a * have not made themselves available and should be
+						contacted before assignment.
 					</Typography>
 
 					<TextField

@@ -32,7 +32,6 @@ import AddIcon from '@material-ui/icons/Add';
 // Actions
 import { getUserProperties } from '../actions';
 import PropertyPreview from './PropertyPreview';
-import { thisExpression } from '@babel/types';
 
 const TopBar = styled.div`
 	width: 100%;
@@ -40,16 +39,11 @@ const TopBar = styled.div`
 	flex-flow: row nowrap;
 	justify-content: space-between;
 	align-items: center;
+	margin: 0 0 20px;
 `;
 
 const styles = {
-	card: {
-		maxWidth: 600,
-		margin: '20px auto',
-	},
-	media: {
-		objectFit: 'cover',
-	},
+	title: { padding: '10px 0 0' },
 	addIcon: {
 		fontSize: '5rem',
 		cursor: 'pointer',
@@ -101,7 +95,9 @@ class Properties extends React.Component {
 		const role = (this.props.user && this.props.user.role) || null;
 		const { user, properties } = this.props;
 
-		if (role === 'manager')
+		if (!(properties && user.user_id)) {
+			return null;
+		} else if (role === 'manager')
 			return (
 				<div>
 					<TopBar>
@@ -127,7 +123,7 @@ class Properties extends React.Component {
 						</DialogContent>
 					</Dialog>
 
-					{this.props.properties && user.user_id ? (
+					{properties.length ? (
 						properties.map(property => {
 							return (
 								<PropertyPreview
@@ -143,51 +139,76 @@ class Properties extends React.Component {
 					)}
 				</div>
 			);
-		else
+		else {
+			const defaultProperties = properties.filter(
+				({ cleaner_id }) => cleaner_id === user.user_id
+			);
+
+			const availableProperties = properties.filter(
+				({ cleaner_id, available }) => cleaner_id !== user.user_id && available
+			);
+
+			const otherProperties = properties.filter(
+				({ cleaner_id, available }) => cleaner_id !== user.user_id && !available
+			);
+
 			return (
 				<div>
 					<TopBar>
 						<Typography variant="h2">Properties</Typography>{' '}
 					</TopBar>
-					<Typography variant="h5"> Your Default Properties </Typography>
-					{properties && user.user_id ? (
-						properties
-							.filter(({ cleaner_id }) => cleaner_id === user.user_id)
-							.map(property => {
-								return (
-									<PropertyPreview
-										property={property}
-										key={property.property_id}
-									/>
-								);
-							})
+					{defaultProperties.length ? (
+						<React.Fragment>
+							<Typography variant="h5" className={classes.title}>
+								Your Default Properties
+							</Typography>
+							{properties
+								.filter(({ cleaner_id }) => cleaner_id === user.user_id)
+								.map(property => {
+									return (
+										<PropertyPreview
+											property={property}
+											key={property.property_id}
+										/>
+									);
+								})}
+						</React.Fragment>
+					) : null}
+
+					<Typography variant="h5" className={classes.title}>
+						Properties You're Available For
+					</Typography>
+					{availableProperties.length ? (
+						availableProperties.map(property => {
+							return (
+								<PropertyPreview
+									property={property}
+									key={property.property_id}
+								/>
+							);
+						})
 					) : (
 						<Typography variant="overline">
-							You have not been assigned as the default partner for any
-							properties.
+							You have not made yourself available to any properties.
 						</Typography>
 					)}
 
-					<Typography variant="h5">Properties You're Available For </Typography>
-					{properties && user.user_id ? (
-						properties
-							.filter(({ available }) => available)
-							.map(property => {
-								return (
-									<PropertyPreview
-										property={property}
-										key={property.property_id}
-									/>
-								);
-							})
-					) : (
-						<Typography variant="overline">
-							You have not been assigned as the default partner for any
-							properties.
-						</Typography>
-					)}
+					{otherProperties.length ? (
+						<React.Fragment>
+							<Typography variant="h5" className={classes.title}>
+								Other Properties
+							</Typography>
+							{otherProperties.map(property => (
+								<PropertyPreview
+									property={property}
+									key={property.property_id}
+								/>
+							))}
+						</React.Fragment>
+					) : null}
 				</div>
 			);
+		}
 	}
 }
 

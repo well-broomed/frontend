@@ -156,6 +156,8 @@ class Navigation extends React.Component {
 	render() {
 		const { classes } = this.props;
 
+		const { user } = this.props;
+
 		// changes the listed path in the navbar depending on the current component being rendered
 		let pathName = this.props.location.pathname.split('/');
 		let pathRoute;
@@ -220,12 +222,14 @@ class Navigation extends React.Component {
 								<ListItemText primary="Properties" />
 							</ListItem>
 
-							<ListItem button key="Partners" component={Link} to="/partners">
-								<ListItemIcon>
-									<PeopleTwoTone />
-								</ListItemIcon>
-								<ListItemText primary="Partners" />
-							</ListItem>
+							{user.role === 'manager' && (
+								<ListItem button key="Partners" component={Link} to="/partners">
+									<ListItemIcon>
+										<PeopleTwoTone />
+									</ListItemIcon>
+									<ListItemText primary="Partners" />
+								</ListItem>
+							)}
 
 							<ListItem button key="Guests" component={Link} to="/guests">
 								<ListItemIcon>
@@ -332,6 +336,7 @@ class Navigation extends React.Component {
 const mapStateToProps = state => {
 	return {
 		// state items
+		user: state.authReducer.user || {},
 	};
 };
 
