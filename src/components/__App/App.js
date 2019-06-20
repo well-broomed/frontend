@@ -42,18 +42,6 @@ class App extends Component {
 				localStorage.getItem('accountType') || localStorage.getItem('role')
 			);
 		}
-
-		if (
-			(localStorage.getItem('isLoggedIn') &&
-				!localStorage.getItem('userInfo')) ||
-			!localStorage.getItem('currentUser')
-		) {
-			this.props.checkIfUserExists(
-				localStorage.getItem('accountType') || localStorage.getItem('role')
-			);
-		} else if (!this.props.user && localStorage.getItem('currentUser')) {
-			this.props.setUser(JSON.parse(localStorage.getItem('currentUser')));
-		}
 	}
 
 	render() {

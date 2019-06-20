@@ -65,6 +65,7 @@ class Properties extends React.Component {
 		if (!localStorage.getItem('jwt')) {
 			this.props.history.replace('/');
 		}
+		this.props.getUserProperties();
 	}
 
 	componentDidUpdate(prevProps) {
@@ -126,7 +127,7 @@ class Properties extends React.Component {
 						</DialogContent>
 					</Dialog>
 
-					{properties && user.user_id ? (
+					{this.props.properties && user.user_id ? (
 						properties.map(property => {
 							return (
 								<PropertyPreview

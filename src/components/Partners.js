@@ -76,17 +76,6 @@ const TopBar = styled.div`
 	align-items: center;
 `;
 
-const TableContainer = styled.div`
-	width: 100%;
-
-	div{
-		width: 100%;
-	}
-	table{
-		width: 100%; 
-	}
-	`;
-
 class Partners extends React.Component {
 
 	componentDidMount() {
