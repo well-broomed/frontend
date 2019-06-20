@@ -24,7 +24,7 @@ import { withStyles } from '@material-ui/core';
 import styled from 'styled-components';
 
 //Actions
-import { getPartners, getUserProperties, sendInvite } from '../actions';
+import { getPartners, getUserProperties, sendInvite, getAllInvites, } from '../actions';
 
 //Component
 import PartnerCard from './PartnerCard';
@@ -67,6 +67,7 @@ class Partners extends React.Component {
 		}
 
 		this.props.getPartners();
+		this.props.getAllInvites();
 	}
 
 
@@ -201,6 +202,7 @@ export default withRouter(
 			getPartners,
 			getUserProperties,
 			sendInvite,
+			getAllInvites,
 		}
 	)(withStyles(styles)(Partners))
 );

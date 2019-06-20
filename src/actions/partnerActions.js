@@ -2,8 +2,11 @@ import axios from 'axios';
 
 export const SENDING_INVITE = 'SENDING_INVITE';
 export const INVITE_SENT = 'INVITE_SENT';
-export const ERROR = 'ERROR';
 
+export const FETCHING_INVITES = 'FETCHING_INVITES';
+export const INVITES_FETCHED = 'INVITES_FETCHED';
+
+export const ERROR = 'ERROR';
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || `http://localhost:5000`;
 
@@ -43,3 +46,21 @@ export const sendInvite = email => {
         })
     }
 };
+
+export const getAllInvites = () => {
+    let options = setHeaders();
+
+    const endpoint = axios.get(`${backendUrl}/api/invites/all`, options);
+
+    return dispatch => {
+        dispatch({type: FETCHING_INVITES});
+
+        endpoint.then(res => {
+            console.log('all invites', res.data.invites);
+            dispatch({type: INVITES_FETCHED, payload: res.data.invites});
+        }).catch(err => {
+            console.log(err);
+            dispatch({type: ERROR})
+        })
+    }
+}
