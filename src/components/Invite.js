@@ -12,7 +12,41 @@ import {checkInvite} from '../actions/index';
 import Button from '@material-ui/core/Button';
 
 import Auth from './Auth';
-import { isObject } from 'util';
+
+import styled from 'styled-components';
+
+const TopBar = styled.div`
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: center;
+	margin-bottom: 20px;
+	`;
+
+const CardContainer = styled.div`
+
+	width: 100%;
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+	align-items: center;
+
+	div{
+		width: 50%;
+		text-align: center;
+	}
+
+	div > div{
+		width: 100%;
+		text-align: center;
+	}
+	
+	.action-box{
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: center;
+	}
+
+	`;
 
 const auth = new Auth();
 
@@ -51,27 +85,32 @@ class Invite extends Component {
 		console.log(this.state.inviteInfo, 'invite info');
 		return (
 			<div>
-				<Typography variant = 'h2'>
+			<TopBar>
+			<Typography variant = 'h2'>
 			Welcome to WellBroomed!
 			</Typography>
+			</TopBar>
 			{this.state.inviteInfo ? (
 				<div>
+					<CardContainer>
 					<Card>
 						<CardContent>
-							<Typography variant = 'body1'>
-								You have been invited by <strong>{this.state.inviteInfo.manager_profile.user_name}</strong> ({this.state.inviteInfo.manager_profile.email}) to join WellBroomed!
+							<Typography variant = 'h5'>
+								You have been invited by <strong>{this.state.inviteInfo.manager_profile.user_name}</strong> ({this.state.inviteInfo.manager_profile.email}) to join WellBroomed.
 							</Typography>
 
-							<Typography variant = 'h5'>
+							<Typography variant = 'body1'>
 								To accept your invitation, please click below and create an account with the email on your invitation ({this.state.inviteInfo.email}).
 							</Typography>
 						</CardContent>
 						
 						<CardActions>
+							<div className = 'action-box'>
 							<Button variant = 'contained' color = 'primary' onClick = {this.handleLogin}>Accept</Button>
+							</div>
 						</CardActions>
 					</Card>
-					
+					</CardContainer>
 				
 				</div>
 			): (<div><h4>Loading invitation information...</h4></div>)}
