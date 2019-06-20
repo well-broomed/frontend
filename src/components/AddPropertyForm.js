@@ -38,7 +38,7 @@ class AddPropertyForm extends React.Component {
 			addModal: false,
 			property_name: '',
 			address: '',
-			img_url: null,
+			image: null,
 			cleaner_id: null,
 			guest_guide: null,
 			assistant_guide: null
@@ -50,6 +50,19 @@ class AddPropertyForm extends React.Component {
 			[name]: event.target.value
 		});
 	};
+
+	handleImage = ({ target }) => {
+        const fileReader = new FileReader();
+
+        fileReader.readAsDataURL(target.files[0]);
+        fileReader.onload = (e) => {
+            this.setState({
+                image: e.target.result
+            });
+		};
+		
+		console.log(this.state);
+    };
 
 	handleSubmit = event => {
 		event.preventDefault();
@@ -99,6 +112,7 @@ class AddPropertyForm extends React.Component {
 						value={this.state.address}
 						onChange={this.handleInput('address')}
 					/>
+
 					<TextField
 						className={classes.formField}
 						id="standard-dense"
@@ -113,6 +127,14 @@ class AddPropertyForm extends React.Component {
 						value={this.state.assistant_guide}
 						onChange={this.handleInput('assistant_guide')}
 					/>
+					<Button variant="contained" component="label">
+						Upload File
+						<input
+							accept="image/*"
+							onChange={this.handleImage} 
+							type="file" 
+							style={{ display: 'none' }} />
+					</Button>
 					<Button
 						className={classes.formButton}
 						variant="contained"
