@@ -59,11 +59,11 @@ class Properties extends React.Component {
 		if (!localStorage.getItem('jwt')) {
 			this.props.history.replace('/');
 		}
+
 		this.props.getUserProperties();
 	}
 
 	componentDidUpdate(prevProps) {
-		// refreshProperties will be set to true once the user is checked
 		if (prevProps.refreshProperties !== this.props.refreshProperties) {
 			this.props.getUserProperties();
 		}
@@ -192,7 +192,6 @@ class Properties extends React.Component {
 							You have not made yourself available to any properties.
 						</Typography>
 					)}
-
 					{otherProperties.length ? (
 						<React.Fragment>
 							<Typography variant="h5" className={classes.title}>
@@ -211,17 +210,14 @@ class Properties extends React.Component {
 		}
 	}
 }
-
 const mapStateToProps = state => {
 	return {
 		// state items
 		user: state.authReducer.user,
 		properties: state.propertyReducer.properties,
 		refreshProperties: state.propertyReducer.refreshProperties,
-		userChecked: state.authReducer.userChecked,
 	};
 };
-
 export default withRouter(
 	connect(
 		mapStateToProps,

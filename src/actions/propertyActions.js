@@ -85,12 +85,7 @@ export const getUserProperties = () => {
 
 		fetchUrl
 			.then(res => {
-				// handle an empty array and return null if no properties found
-				if(res.data.properties.length === 0){
-					dispatch({ type: PROPERTIES_FETCHED, payload: null });
-				} else {
-					dispatch({ type: PROPERTIES_FETCHED, payload: res.data.properties });
-				}
+				dispatch({ type: PROPERTIES_FETCHED, payload: res.data.properties });
 			})
 			.catch(err => {
 				console.log(err);
