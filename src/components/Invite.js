@@ -20,6 +20,7 @@ const TopBar = styled.div`
 	flex-flow: row nowrap;
 	justify-content: center;
 	margin-bottom: 20px;
+	text-align: center;
 	`;
 
 const CardContainer = styled.div`
@@ -31,7 +32,7 @@ const CardContainer = styled.div`
 	align-items: center;
 
 	div{
-		width: 50%;
+		width: 75%;
 		text-align: center;
 	}
 

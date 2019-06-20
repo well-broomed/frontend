@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 // Axios
 import axios from 'axios';
+
+import moment from 'moment';
 //Material-UI
 import {
 	TextField, 
@@ -15,7 +17,14 @@ import {
 	Dialog, 
 	DialogTitle, 
 	DialogContent, 
-	DialogActions} from '@material-ui/core';
+	DialogActions,
+	Table,
+	TableHead,
+	TableRow,
+	TableCell,
+	TableBody,
+	Paper,
+	} from '@material-ui/core';
 
 import AddIcon from '@material-ui/icons/Add';
 
@@ -30,6 +39,9 @@ import { getPartners, getUserProperties, sendInvite, getAllInvites, } from '../a
 import PartnerCard from './PartnerCard';
 
 const styles = {
+	root: {
+		width: '100%',
+	},
 	card: {
 		maxWidth: 600,
 		margin: '20px auto'
@@ -46,6 +58,12 @@ const styles = {
 	},
 	contentTypography: {
 		margin: 'auto'
+	},
+	table: {
+		minWidth: 650,
+	},
+	paper: {
+		width: '100%'
 	}
 };
 
@@ -58,6 +76,16 @@ const TopBar = styled.div`
 	align-items: center;
 `;
 
+const TableContainer = styled.div`
+	width: 100%;
+
+	div{
+		width: 100%;
+	}
+	table{
+		width: 100%; 
+	}
+	`;
 
 class Partners extends React.Component {
 
@@ -124,6 +152,16 @@ class Partners extends React.Component {
 		}, 2000);
 	}
 
+	parseStatus = (status) => {
+		if(status === 0){
+			return 'Pending';
+		} else if(status === 1){
+			return 'Accepted';
+		} else if(status === 2){
+			return 'Rejected';
+		}
+	}
+
 	render() {
 		const { classes } = this.props;
 		return (
@@ -178,7 +216,41 @@ class Partners extends React.Component {
 								</>)}
 						
 					</Dialog>
-				</div>
+					</div>
+
+
+					{/** Invitations Table **/}
+					<Typography variant = 'h2'>Invitations</Typography>
+					{this.props.invites ? (
+						<Paper className = {classes.paper}>
+						<Table size = 'small' className = {classes.table}>
+						<TableHead>
+							<TableRow>
+								<TableCell>Partner Email</TableCell>
+								<TableCell align = 'right'>Invite Code</TableCell>
+								<TableCell align = 'right'>Created At</TableCell>
+								<TableCell align = 'right'>Status</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{this.props.invites.map(invite => (
+								<TableRow key = {invite.createdAt}>
+									<TableCell component = 'th' scope = 'row'>
+										{invite.email}
+									</TableCell>
+									<TableCell align = 'right'>{invite.inviteCode}</TableCell>
+									<TableCell align = 'right'>{moment(invite.createdAt).format('LLL')}</TableCell>
+									<TableCell align = 'right'>{this.parseStatus(invite.status)}</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+					</Paper>
+					) : (<>Loading invitations...</>)}
+
+					
+
+
 			</div>
 		);
 	}
@@ -190,7 +262,8 @@ const mapStateToProps = state => {
 		properties: state.propertyReducer.properties,
 		cleaners: state.propertyReducer.partners,
 		refreshCleaners: state.propertyReducer.refreshCleaners,
-		refreshProperties: state.propertyReducer.refreshProperties
+		refreshProperties: state.propertyReducer.refreshProperties,
+		invites: state.partnerReducer.invites,
 	};
 };
 
