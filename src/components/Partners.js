@@ -177,8 +177,8 @@ class Partners extends React.Component {
 
 
 
-				{this.props.cleaners ? (
-					this.props.cleaners.map(partner => {
+				{this.props.partners ? (
+					this.props.partners.map(partner => {
 						return <PartnerCard partner={partner} key={partner.user_id} />;
 					})
 				) : (

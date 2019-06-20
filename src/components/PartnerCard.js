@@ -112,44 +112,54 @@ class PartnerCard extends React.Component {
 
 	render() {
 		const { classes, partner, defaultProperties } = this.props;
-
-		const defaultPropertyList = partner.defaultProperties
-			.map(property => ({
-				...property,
-				property_name: property.property_name + ' - click to unassign',
-			}))
-			.concat(
-				defaultProperties
-					.filter(
+		let defaultPropertyList = [];
+		if(partner.defaultProperties){
+			if(partner.defaultProperties.length > 0){
+				defaultPropertyList = partner.defaultProperties
+				.map(property => ({
+					...property,
+					property_name: property.property_name + ' - click to unassign',
+				}))
+				.concat(
+					defaultProperties
+						.filter(
+							({ property_id }) =>
+								!partner.defaultProperties.find(
+									property => property.property_id === property_id
+								)
+						)
+						.map(property => ({
+							...property,
+							property_name:
+								property.property_name +
+								(property.cleaner_name
+									? ` - currently assigned to ${property.cleaner_name}`
+									: ''),
+						}))
+				);
+			}
+		}
+		
+		// These conditionals are necessary to prevent mapping undefined values (e.g. []) that will crash the application
+		let availablePropertyList = []
+		if(partner.availableProperties){
+			if(partner.availableProperties.length > 0){
+				partner.availableProperties
+				.map(property => ({
+					...property,
+					property_name: property.property_name + ' - click to unassign',
+				}))
+				.concat(
+					defaultProperties.filter(
 						({ property_id }) =>
-							!partner.defaultProperties.find(
+							!partner.availableProperties.find(
 								property => property.property_id === property_id
 							)
 					)
-					.map(property => ({
-						...property,
-						property_name:
-							property.property_name +
-							(property.cleaner_name
-								? ` - currently assigned to ${property.cleaner_name}`
-								: ''),
-					}))
-			);
-
-		const availablePropertyList = partner.availableProperties
-			.map(property => ({
-				...property,
-				property_name: property.property_name + ' - click to unassign',
-			}))
-			.concat(
-				defaultProperties.filter(
-					({ property_id }) =>
-						!partner.availableProperties.find(
-							property => property.property_id === property_id
-						)
-				)
-			);
-
+				);
+			}
+		}
+		
 		return (
 			<div>
 				<Card key={partner.cleaner_id} className={classes.card}>
