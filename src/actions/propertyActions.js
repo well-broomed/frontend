@@ -250,7 +250,7 @@ export const changeAvailableCleaner = (property_id, cleaner_id, available) => {
 	let options = setHeaders();
 
 	const endpoint = axios.put(
-		`${backendUrl}/api/properties/${property_id}/available/${cleaner_id}`,
+		`${backendUrl}/api/properties/${property_id}/available/${cleaner_id || ''}`,
 		{ available },
 		options
 	);
