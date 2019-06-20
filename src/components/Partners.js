@@ -7,11 +7,21 @@ import { withRouter } from 'react-router-dom';
 // Axios
 import axios from 'axios';
 //Material-UI
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import {
+	TextField, 
+	Typography, 
+	Fab, 
+	Button, 
+	Dialog, 
+	DialogTitle, 
+	DialogContent, 
+	DialogActions} from '@material-ui/core';
+
+import AddIcon from '@material-ui/icons/Add';
 
 import { withStyles } from '@material-ui/core';
+
+import styled from 'styled-components';
 
 //Actions
 import { getPartners, getUserProperties, sendInvite } from '../actions';
@@ -39,30 +49,34 @@ const styles = {
 	}
 };
 
+
+const TopBar = styled.div`
+	width: 100%;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	align-items: center;
+`;
+
+
 class Partners extends React.Component {
 
 	componentDidMount() {
 		if(!localStorage.getItem('jwt')){
 			this.props.history.replace('/');
 		}
-		
-		if(!this.props.properties){
-			this.props.getUserProperties();
-		}
-		if(!this.props.cleaners){
-			this.props.getPartners();
-		}
-		
-		if(!this.props.partners){
-			this.props.getUserProperties();
-			this.props.getPartners();
-		}	
+
+		this.props.getPartners();
 	}
 
 
 	componentDidUpdate(prevProps) {
+		// follow the action cascade for user > properties > partners
 		if(this.props.refreshProperties !== prevProps.refreshProperties){
 			this.props.getUserProperties();
+		}
+
+		if(this.props.refreshCleaners !== prevProps.refreshCleaners){
 			this.props.getPartners();
 		}
 	}
@@ -71,11 +85,24 @@ class Partners extends React.Component {
 		super(props);
 		this.state = {
 			partners: this.props.cleaners,
-			email: ''
+			email: '',
+			emailModal: false,
+			formSent: false,
 		};
 	}
 
-
+	toggleEmail = event => {
+		this.setState({
+			emailModal: !this.state.emailModal,
+		})
+		// reset the form once the modal fades
+		setTimeout(() => {
+			this.setState({
+				email: '',
+				formSent: false,
+			})
+		}, 500)
+	}
 
 	handleInputChange = event => {
 		this.setState({
@@ -84,21 +111,36 @@ class Partners extends React.Component {
 	}
 
 	handleSubmit = event => {
-		console.log(this.state.email);
-
 		this.props.sendInvite(this.state.email);
 
 		this.setState({
-			email: ''
+			formSent: true,
 		})
 
+		// toggle the modal after confirmation
+		setTimeout(() => {
+			this.toggleEmail();
+		}, 2000);
 	}
 
 	render() {
 		const { classes } = this.props;
 		return (
 			<div>
+				<TopBar>
 				<Typography variant="h2">Partners</Typography>
+						<Fab
+							color="primary"
+							className={classes.addIcon}
+							onClick={this.toggleEmail}
+						>
+							<AddIcon />
+						</Fab>
+				</TopBar>
+
+
+
+
 				{this.props.cleaners ? (
 					this.props.cleaners.map(partner => {
 						return <PartnerCard partner={partner} key={partner.user_id} />;
@@ -109,20 +151,32 @@ class Partners extends React.Component {
 					</Typography>
 				)}
 				<div className={classes.invite}>
-					<Typography variant="h5">
-						{' '}
-						Send an invite to add more partners!{' '}
-					</Typography>
-					<TextField
-						value={this.state.email}
-						onChange={this.handleInputChange}
-						placeholder="Partner's Email"
-						type="text"
-						name="email"
-					/>
-					<Button type="submit" onClick={this.handleSubmit}>
-						Send Invite
-					</Button>
+					
+					{/** Email Modal */}
+					<Dialog open = {this.state.emailModal} onClose = {this.toggleEmail} maxWidth = 'xl' fullWidth = {true}>
+					{!this.state.formSent ? (
+								<>
+								<DialogTitle>Send An Email Invitation</DialogTitle>
+								<DialogContent>
+									
+									<TextField fullWidth variant = 'outlined' autoFocus value = {this.state.email} onChange = {this.handleInputChange}
+									placeholder = "Partner's Email"
+									type='text'
+									name='email'/>
+								</DialogContent>
+								<DialogActions>
+									<Button onClick = {this.toggleEmail} variant = 'outlined'>Cancel</Button>
+									<Button onClick = {this.handleSubmit} variant = 'contained' color = 'primary'>Submit</Button>
+								</DialogActions>
+								</>
+								) : (
+								<>
+								<DialogTitle>
+									Invitation has been sent to {this.state.email}.
+								</DialogTitle>
+								</>)}
+						
+					</Dialog>
 				</div>
 			</div>
 		);

@@ -241,7 +241,12 @@ export const getPartners = () => {
 
 		endpoint
 			.then(res => {
-				dispatch({ type: PARTNERS_FETCHED, payload: res.data.partners });
+				// send null payload if empty array
+				if(res.data.partners.length === 0){
+					dispatch({ type: PARTNERS_FETCHED, payload: null });
+				} else {
+					dispatch({ type: PARTNERS_FETCHED, payload: res.data.partners });
+				}
 			})
 			.catch(err => {
 				console.log(err);
