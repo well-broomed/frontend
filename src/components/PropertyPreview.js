@@ -47,7 +47,13 @@ const CardContainer = styled.div`
 	}
 `;
 
-const CardText = styled.div``;
+const CardText = styled.div`
+	transition: color 0.1s ease-in-out;
+	:hover{
+			color: #3f51b5;
+			transition: color 0.2s ease-in-out;
+		}
+	`;
 
 const CardFooter = styled.div``;
 
