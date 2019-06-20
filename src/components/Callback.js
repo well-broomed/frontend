@@ -17,12 +17,16 @@ class Callback extends React.Component {
 
 		// handle invitation logins
 		if(localStorage.getItem('inviteCode')){
-			console.log('invite login');
 			await auth.handleAuthentication().then(status => {
-				console.log('login success, sending invite code');
+				
+				// the jwt is in localstorage, so complete the login flow
 				let role = localStorage.getItem('role');
 				let inviteCode = localStorage.getItem('inviteCode');
+
 				this.props.inviteLogin(role, inviteCode);
+
+				// remove the invite code from localstorage
+				localStorage.removeItem('inviteCode');
 			})
 		} else {
 			await auth.handleAuthentication().then(status => {

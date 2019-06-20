@@ -37,6 +37,12 @@ const ComponentContainer = styled.div`
 
 class App extends Component {
 	componentDidMount() {
+		if(!this.props.userChecked){
+			this.props.checkIfUserExists(
+				localStorage.getItem('accountType') || localStorage.getItem('role')
+			);
+		}
+
 		if (
 			(localStorage.getItem('isLoggedIn') &&
 				!localStorage.getItem('userInfo')) ||

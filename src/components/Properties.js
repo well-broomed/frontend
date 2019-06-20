@@ -32,6 +32,7 @@ import AddIcon from '@material-ui/icons/Add';
 // Actions
 import { getUserProperties } from '../actions';
 import PropertyPreview from './PropertyPreview';
+import { thisExpression } from '@babel/types';
 
 const TopBar = styled.div`
 	width: 100%;
@@ -70,6 +71,10 @@ class Properties extends React.Component {
 
 	componentDidUpdate(prevProps) {
 		if (prevProps.refreshProperties !== this.props.refreshProperties) {
+			this.props.getUserProperties();
+		}
+
+		if(prevProps.userChecked !== this.props.userChecked){
 			this.props.getUserProperties();
 		}
 	}
@@ -196,6 +201,7 @@ const mapStateToProps = state => {
 		user: state.authReducer.user,
 		properties: state.propertyReducer.properties,
 		refreshProperties: state.propertyReducer.refreshProperties,
+		userChecked: state.authReducer.userChecked,
 	};
 };
 

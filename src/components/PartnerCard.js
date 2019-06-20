@@ -70,16 +70,18 @@ class PartnerCard extends React.Component {
 			let defaultproperties = [];
 			let availableproperties = [];
 
-			properties.forEach(property => {
-				if (property.cleaner_id === this.props.partner.user_id)
-					defaultproperties.push(property);
-				if (
-					property.available_cleaners.some(
-						cleaner => cleaner['cleaner_id'] === this.props.partner.user_id
-					)
-				)
-					availableproperties.push(property);
-			});
+			
+				properties.forEach(property => {
+					if (property.cleaner_id === this.props.partner.user_id)
+						defaultproperties.push(property);
+						// This is bugging the site
+					// if (
+					// 	property.available_cleaners.some(
+					// 		cleaner => cleaner['cleaner_id'] === this.props.partner.user_id
+					// 	)
+					// )
+						availableproperties.push(property);
+				});	
 
 			this.setState({ defaultproperties, availableproperties, properties });
 		}
@@ -266,7 +268,8 @@ class PartnerCard extends React.Component {
 const mapStateToProps = state => {
 	return {
 		// state items
-		properties: state.propertyReducer.properties
+		properties: state.propertyReducer.properties,
+		partners: state.propertyReducer.partners,
 	};
 };
 
