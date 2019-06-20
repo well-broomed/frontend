@@ -66,7 +66,7 @@ class Properties extends React.Component {
 			this.props.history.replace('/');
 		}
 
-		this.props.getUserProperties();
+		// this.props.getUserProperties();
 	}
 
 	componentDidUpdate(prevProps) {

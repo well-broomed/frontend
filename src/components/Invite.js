@@ -6,6 +6,8 @@ import { Typography } from '@material-ui/core';
 
 import {checkInvite} from '../actions/index';
 
+import Button from '@material-ui/core/Button';
+
 import Auth from './Auth';
 
 const auth = new Auth();
@@ -45,20 +47,22 @@ class Invite extends Component {
 		console.log(this.state.inviteInfo, 'invite info');
 		return (
 			<div>
+				<Typography variant = 'h2'>
 			Welcome to WellBroomed!
+			</Typography>
 			{this.state.inviteInfo ? (
 				<div>
-				You have been invited by {this.state.inviteInfo.manager_profile.user_name} to join WellBroomed!
+					<Typography variant = 'body1'>
+				You have been invited by <strong>{this.state.inviteInfo.manager_profile.user_name}</strong> ({this.state.inviteInfo.manager_profile.email}) to join WellBroomed!
+					</Typography>
 
-				Please login or create an account with your {this.state.inviteInfo.email} email address.
+				<Typography variant = 'h5'>
+				To accept your invitation, please click below and create an account with the email on your invitation ({this.state.inviteInfo.email}).
+				</Typography>
+				<Button variant = 'contained' color = 'primary' onClick = {this.handleLogin}>Accept</Button>
 				</div>
 			): (<div><h4>Loading invitation information...</h4></div>)}
 
-			To accept your invitation, please click below to create an account.
-			<button onClick = {this.handleLogin}>Sign Up</button>
-
-			If you already have an account, click here to log in.
-			<button onClick = {this.handleLogin}>Sign In</button>
 			</div>
 		);
 	}
