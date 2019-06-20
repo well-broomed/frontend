@@ -37,8 +37,6 @@ export const sendInvite = email => {
         dispatch({type: SENDING_INVITE})
 
         endpoint.then(res => {
-            console.log('send invite res', res.data);
-
             dispatch({type: INVITE_SENT})
         }).catch(err => {
             console.log(err);
@@ -56,8 +54,12 @@ export const getAllInvites = () => {
         dispatch({type: FETCHING_INVITES});
 
         endpoint.then(res => {
-            console.log('all invites', res.data.invites);
-            dispatch({type: INVITES_FETCHED, payload: res.data.invites});
+            if(res.data.invites.length === 0){
+                dispatch({type: INVITES_FETCHED, payload: null});
+            } else {
+                dispatch({type: INVITES_FETCHED, payload: res.data.invites});
+            }
+            
         }).catch(err => {
             console.log(err);
             dispatch({type: ERROR})

@@ -108,6 +108,10 @@ class Partners extends React.Component {
 		if(this.props.refreshCleaners !== prevProps.refreshCleaners){
 			this.props.getPartners();
 		}
+
+		if(this.props.refreshInvites !== prevProps.refreshInvites){
+			this.props.getAllInvites();
+		}
 	}
 
 	constructor(props) {
@@ -186,7 +190,7 @@ class Partners extends React.Component {
 					})
 				) : (
 					<Typography variant="overline">
-						No partners have been invited yet.
+						No partners have been added yet.
 					</Typography>
 				)}
 				<div className={classes.invite}>
@@ -246,7 +250,9 @@ class Partners extends React.Component {
 						</TableBody>
 					</Table>
 					</Paper>
-					) : (<>Loading invitations...</>)}
+					) : (<>
+						<Typography variant = 'overline'>No Invitations Have Been Sent</Typography>
+						</>)}
 
 					
 
@@ -264,6 +270,7 @@ const mapStateToProps = state => {
 		refreshCleaners: state.propertyReducer.refreshCleaners,
 		refreshProperties: state.propertyReducer.refreshProperties,
 		invites: state.partnerReducer.invites,
+		refreshInvites: state.partnerReducer.refreshInvites,
 	};
 };
 
