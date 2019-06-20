@@ -41,7 +41,7 @@ class Callback extends React.Component {
 	componentDidUpdate() {
 		if (this.props.userChecked === true) {
 			localStorage.removeItem('accountType');
-			this.props.history.replace('/reports');
+			this.props.history.replace('/properties');
 		}
 	}
 

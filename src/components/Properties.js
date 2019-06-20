@@ -65,16 +65,11 @@ class Properties extends React.Component {
 		if (!localStorage.getItem('jwt')) {
 			this.props.history.replace('/');
 		}
-
-		// this.props.getUserProperties();
 	}
 
 	componentDidUpdate(prevProps) {
+		// refreshProperties will be set to true once the user is checked
 		if (prevProps.refreshProperties !== this.props.refreshProperties) {
-			this.props.getUserProperties();
-		}
-
-		if(prevProps.userChecked !== this.props.userChecked){
 			this.props.getUserProperties();
 		}
 	}

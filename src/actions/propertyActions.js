@@ -83,8 +83,12 @@ export const getUserProperties = () => {
 
 		fetchUrl
 			.then(res => {
-				// localStorage.setItem('userId', res.data.profile.id);
-				dispatch({ type: PROPERTIES_FETCHED, payload: res.data.properties });
+				// handle an empty array and return null if no properties found
+				if(res.data.properties.length === 0){
+					dispatch({ type: PROPERTIES_FETCHED, payload: null });
+				} else {
+					dispatch({ type: PROPERTIES_FETCHED, payload: res.data.properties });
+				}
 			})
 			.catch(err => {
 				console.log(err);
