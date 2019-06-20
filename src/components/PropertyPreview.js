@@ -31,7 +31,11 @@ import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 // Actions
-import { changeCleaner, deleteProperty, changeAvailableCleaner } from '../actions/propertyActions';
+import {
+	changeCleaner,
+	deleteProperty,
+	changeAvailableCleaner,
+} from '../actions/propertyActions';
 
 const CardContainer = styled.div`
 	width: 100%;
@@ -66,8 +70,8 @@ const CardActions = styled.div`
 
 const styles = {
 	card: {
-		maxWidth: '100%',
-		margin: '20px auto',
+		maxWidth: '600px',
+		margin: '12px 0 20px 0',
 	},
 	media: {
 		objectFit: 'cover',
@@ -76,6 +80,11 @@ const styles = {
 		margin: '20px',
 		minWidth: 120,
 	},
+	available: {
+		display: 'flex',
+		justifyContent: 'flex-end',
+	},
+	button: { width: '196px' },
 };
 
 class PropertyPreview extends React.Component {
@@ -101,13 +110,13 @@ class PropertyPreview extends React.Component {
 		);
 	};
 
-	handleMakeAvailable = () => {
+	handleMakeAvailable = available => {
 		this.props.changeAvailableCleaner(
 			this.props.property.property_id,
-			this.props.user.user_id,
-			true
+			null,
+			available
 		);
-	}
+	};
 
 	toggleDelete = () => {
 		this.setState({
@@ -246,14 +255,27 @@ class PropertyPreview extends React.Component {
 						/>
 					</Link>
 
-					<CardContent>
-					{this.props.markable ? <Button
-							variant="contained"
-							color="secondary"
-							onClick={this.handleMakeAvailable}
-						>
-							Mark available
-						</Button> : null}
+					<CardContent className={classes.available}>
+						{property.cleaner_id !== user.user_id &&
+							(property.available ? (
+								<Button
+									className={classes.button}
+									variant="contained"
+									color="default"
+									onClick={() => this.handleMakeAvailable(false)}
+								>
+									Mark as Unavailable
+								</Button>
+							) : (
+								<Button
+									className={classes.button}
+									variant="contained"
+									color="primary"
+									onClick={() => this.handleMakeAvailable(true)}
+								>
+									Mark as Available
+								</Button>
+							))}
 					</CardContent>
 				</Card>
 			);
