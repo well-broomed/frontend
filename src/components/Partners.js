@@ -6,20 +6,42 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 // Axios
 import axios from 'axios';
+
+import moment from 'moment';
 //Material-UI
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import {
+	TextField, 
+	Typography, 
+	Fab, 
+	Button, 
+	Dialog, 
+	DialogTitle, 
+	DialogContent, 
+	DialogActions,
+	Table,
+	TableHead,
+	TableRow,
+	TableCell,
+	TableBody,
+	Paper,
+	} from '@material-ui/core';
+
+import AddIcon from '@material-ui/icons/Add';
 
 import { withStyles } from '@material-ui/core';
 
+import styled from 'styled-components';
+
 //Actions
-import { getPartners, getDefaultProperties } from '../actions';
+import { getPartners, getUserProperties, sendInvite, getAllInvites, getDefaultProperties } from '../actions';
 
 //Component
 import PartnerCard from './PartnerCard';
 
 const styles = {
+	root: {
+		width: '100%',
+	},
 	card: {
 		maxWidth: 600,
 		margin: '20px auto 20px 0',
@@ -35,9 +57,24 @@ const styles = {
 		display: 'flex',
 	},
 	contentTypography: {
-		margin: 'auto',
+		margin: 'auto'
+	},
+	table: {
+		minWidth: 650,
+	},
+	paper: {
+		width: '100%'
 	},
 };
+
+
+const TopBar = styled.div`
+	width: 100%;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	align-items: center;
+`;
 
 class Partners extends React.Component {
 	componentDidMount() {
@@ -46,16 +83,26 @@ class Partners extends React.Component {
 		}
 
 		this.props.getPartners();
+		this.props.getAllInvites();
 		this.props.getDefaultProperties();
 	}
 
 	componentDidUpdate(prevProps) {
+		// follow the action cascade for user > properties > partners
+		if(this.props.refreshProperties !== prevProps.refreshProperties){
+			this.props.getUserProperties();
+		}
+
 		if (this.props.refreshProperties !== prevProps.refreshProperties) {
 			this.props.getDefaultProperties();
 		}
 
 		if (this.props.refreshCleaners !== prevProps.refreshCleaners) {
 			this.props.getPartners();
+		}
+
+		if(this.props.refreshInvites !== prevProps.refreshInvites){
+			this.props.getAllInvites();
 		}
 	}
 
@@ -64,7 +111,22 @@ class Partners extends React.Component {
 		this.state = {
 			partners: this.props.partners,
 			email: '',
+			emailModal: false,
+			formSent: false,
 		};
+	}
+
+	toggleEmail = event => {
+		this.setState({
+			emailModal: !this.state.emailModal,
+		})
+		// reset the form once the modal fades
+		setTimeout(() => {
+			this.setState({
+				email: '',
+				formSent: false,
+			})
+		}, 500)
 	}
 
 	handleInputChange = event => {
@@ -73,78 +135,120 @@ class Partners extends React.Component {
 		});
 	};
 
-	sendEmail = async e => {
-		if (!this.state.email) return;
-		e.preventDefault();
-		console.log('sending email');
+	handleSubmit = event => {
+		this.props.sendInvite(this.state.email);
 
-		let token = localStorage.getItem('jwt');
-		let userInfo = localStorage.getItem('userInfo');
+		this.setState({
+			formSent: true,
+		})
 
-		let options = {
-			headers: {
-				Authorization: `Bearer ${token}`,
-				'user-info': userInfo,
-			},
-		};
+		// toggle the modal after confirmation
+		setTimeout(() => {
+			this.toggleEmail();
+		}, 2000);
+	}
 
-		let body = {
-			cleaner_email: this.state.email,
-		};
-
-		const backendUrl =
-			process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
-		try {
-			const res = await axios.post(`${backendUrl}/api/invites/`, body, options);
-			console.log(res);
-		} catch (err) {
-			console.log(err);
+	parseStatus = (status) => {
+		if(status === 0){
+			return 'Pending';
+		} else if(status === 1){
+			return 'Accepted';
+		} else if(status === 2){
+			return 'Rejected';
 		}
-
-		this.setState({ email: '' });
-	};
+	}
 
 	render() {
-		const { classes, user, partners, defaultProperties } = this.props;
+		const { classes } = this.props;
 
 		return (
-			user.role === 'manager' && (
-				<div>
-					<Typography variant="h2">Partners</Typography>
+			<div>
+				<TopBar>
+				<Typography variant="h2">Partners</Typography>
+						<Fab
+							color="primary"
+							className={classes.addIcon}
+							onClick={this.toggleEmail}
+						>
+							<AddIcon />
+						</Fab>
+				</TopBar>
 
-					<div className={classes.invite}>
-						<Typography variant="h5">
-							Send an invite to add a new partner!
-						</Typography>
-						<TextField
-							value={this.state.email}
-							onChange={this.handleInputChange}
-							placeholder="Partner's Email"
-							type="text"
-							name="email"
-						/>
-						<Button type="submit" onClick={this.sendEmail}>
-							Send Invite
-						</Button>
-					</div>
 
-					{partners && defaultProperties ? (
-						partners.map(partner => {
-							return (
-								<PartnerCard
-									key={partner.cleaner_id}
-									partner={partner}
-									defaultProperties={defaultProperties}
-								/>
-							);
-						})
-					) : (
-						<Typography variant="overline">
-							No partners have been invited yet.
-						</Typography>
-					)}
-				</div>
-			)
+
+
+				{this.props.partners ? (
+					this.props.partners.map(partner => {
+						return <PartnerCard partner={partner} key={partner.user_id} />;
+					})
+				) : (
+					<Typography variant="overline">
+						No partners have been added yet.
+					</Typography>
+				)}
+					
+					{/** Email Modal */}
+					<Dialog open = {this.state.emailModal} onClose = {this.toggleEmail} maxWidth = 'xl' fullWidth = {true}>
+					{!this.state.formSent ? (
+								<>
+								<DialogTitle>Send An Email Invitation</DialogTitle>
+								<DialogContent>
+									
+									<TextField fullWidth variant = 'outlined' autoFocus value = {this.state.email} onChange = {this.handleInputChange}
+									placeholder = "Partner's Email"
+									type='text'
+									name='email'/>
+								</DialogContent>
+								<DialogActions>
+									<Button onClick = {this.toggleEmail} variant = 'outlined'>Cancel</Button>
+									<Button onClick = {this.handleSubmit} variant = 'contained' color = 'primary'>Submit</Button>
+								</DialogActions>
+								</>
+								) : (
+								<>
+								<DialogTitle>
+									Invitation has been sent to {this.state.email}.
+								</DialogTitle>
+								</>)}
+						
+					</Dialog>
+
+
+					{/** Invitations Table **/}
+					<Typography variant = 'h2'>Invitations</Typography>
+					{this.props.invites ? (
+						<Paper className = {classes.paper}>
+						<Table size = 'small' className = {classes.table}>
+						<TableHead>
+							<TableRow>
+								<TableCell>Partner Email</TableCell>
+								<TableCell align = 'right'>Invite Code</TableCell>
+								<TableCell align = 'right'>Created At</TableCell>
+								<TableCell align = 'right'>Status</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{this.props.invites.map(invite => (
+								<TableRow key = {invite.createdAt}>
+									<TableCell component = 'th' scope = 'row'>
+										{invite.email}
+									</TableCell>
+									<TableCell align = 'right'>{invite.inviteCode}</TableCell>
+									<TableCell align = 'right'>{moment(invite.createdAt).format('LLL')}</TableCell>
+									<TableCell align = 'right'>{this.parseStatus(invite.status)}</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+					</Paper>
+					) : (<>
+						<Typography variant = 'overline'>No Invitations Have Been Sent</Typography>
+						</>)}
+
+					
+
+
+			</div>
 		);
 	}
 }
@@ -159,6 +263,8 @@ const mapStateToProps = state => {
 
 		refreshCleaners: state.propertyReducer.refreshCleaners,
 		refreshProperties: state.propertyReducer.refreshProperties,
+		invites: state.partnerReducer.invites,
+		refreshInvites: state.partnerReducer.refreshInvites,
 	};
 };
 
@@ -168,6 +274,9 @@ export default withRouter(
 		{
 			// actions
 			getPartners,
+			getUserProperties,
+			sendInvite,
+			getAllInvites,
 			getDefaultProperties,
 		}
 	)(withStyles(styles)(Partners))

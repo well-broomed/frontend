@@ -61,27 +61,6 @@ class PartnerCard extends React.Component {
 		};
 	}
 
-	// componentDidUpdate(prevProps) {
-	// 	if (prevProps.properties !== this.props.properties) {
-	// 		const properties = this.props.properties;
-	// 		let defaultProperties = [];
-	// 		let availableProperties = [];
-
-	// 		properties.forEach(property => {
-	// 			if (property.cleaner_id === this.props.partner.cleaner_id)
-	// 				defaultProperties.push(property);
-	// 			if (
-	// 				property.available_cleaners.some(
-	// 					cleaner => cleaner['cleaner_id'] === this.props.partner.cleaner_id
-	// 				)
-	// 			)
-	// 				availableProperties.push(property);
-	// 		});
-
-	// 		this.setState({ defaultProperties, availableProperties, properties });
-	// 	}
-	// }
-
 	handleDefaultDialogOpen = () => {
 		this.setState({ defaultDialog: true });
 	};
@@ -133,44 +112,55 @@ class PartnerCard extends React.Component {
 
 	render() {
 		const { classes, partner, defaultProperties } = this.props;
-
-		const defaultPropertyList = partner.defaultProperties
-			.map(property => ({
-				...property,
-				property_name: property.property_name + ' - click to unassign',
-			}))
-			.concat(
-				defaultProperties
-					.filter(
+		// These conditionals are necessary to prevent mapping undefined values (e.g. []) that will crash the application
+		let defaultPropertyList = [];
+		if(partner.defaultProperties){
+			if(partner.defaultProperties.length > 0){
+				defaultPropertyList = partner.defaultProperties
+				.map(property => ({
+					...property,
+					property_name: property.property_name + ' - click to unassign',
+				}))
+				.concat(
+					partner.defaultProperties
+						.filter(
+							({ property_id }) =>
+								!partner.defaultProperties.find(
+									property => property.property_id === property_id
+								)
+						)
+						.map(property => ({
+							...property,
+							property_name:
+								property.property_name +
+								(property.cleaner_name
+									? ` - currently assigned to ${property.cleaner_name}`
+									: ''),
+						}))
+				);
+			}
+		}
+		
+		// These conditionals are necessary to prevent mapping undefined values (e.g. []) that will crash the application
+		let availablePropertyList = []
+		if(partner.availableProperties && defaultProperties){
+			if(partner.availableProperties.length > 0 && defaultProperties.length > 0){
+				availablePropertyList = partner.availableProperties
+				.map(property => ({
+					...property,
+					property_name: property.property_name + ' - click to unassign',
+				}))
+				.concat(
+					partner.defaultProperties.filter(
 						({ property_id }) =>
-							!partner.defaultProperties.find(
+							!partner.availableProperties.find(
 								property => property.property_id === property_id
 							)
 					)
-					.map(property => ({
-						...property,
-						property_name:
-							property.property_name +
-							(property.cleaner_name
-								? ` - currently assigned to ${property.cleaner_name}`
-								: ''),
-					}))
-			);
-
-		const availablePropertyList = partner.availableProperties
-			.map(property => ({
-				...property,
-				property_name: property.property_name + ' - click to unassign',
-			}))
-			.concat(
-				defaultProperties.filter(
-					({ property_id }) =>
-						!partner.availableProperties.find(
-							property => property.property_id === property_id
-						)
-				)
-			);
-
+				);
+			}
+		}
+		
 		return (
 			<div>
 				<Card key={partner.cleaner_id} className={classes.card}>
@@ -293,23 +283,28 @@ class PartnerCard extends React.Component {
 								partner.cleaner_name
 							}'s Available Properties`}</DialogTitle>
 							<List>
-								{availablePropertyList.map(property => (
-									<ListItem
-										button
-										selected={
-											partner.availableProperties.find(
-												({ property_id }) =>
-													property_id === property.property_id
-											)
-												? true
-												: false
-										}
-										onClick={() => this.handleAvailableDialogClose(property)}
-										key={property.property_id}
-									>
-										<ListItemText primary={property.property_name} />
-									</ListItem>
-								))}
+								{availablePropertyList.length > 0 ? (
+									<>
+									{availablePropertyList.map(property => (
+										<ListItem
+											button
+											selected={
+												partner.availableProperties.find(
+													({ property_id }) =>
+														property_id === property.property_id
+												)
+													? true
+													: false
+											}
+											onClick={() => this.handleAvailableDialogClose(property)}
+											key={property.property_id}
+										>
+											<ListItemText primary={property.property_name} />
+										</ListItem>
+									))}
+									</>
+								) : (null)}
+								
 							</List>
 						</Dialog>
 					</Paper>
@@ -322,6 +317,8 @@ class PartnerCard extends React.Component {
 const mapStateToProps = state => {
 	return {
 		// state items
+		properties: state.propertyReducer.properties,
+		partners: state.propertyReducer.partners,
 	};
 };
 

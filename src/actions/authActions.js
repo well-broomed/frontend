@@ -6,6 +6,9 @@ export const USER_CHECKED = 'USER_CHECKED';
 export const UPDATING_USER = 'UPDATING_USER';
 export const USER_UPDATED = 'USER_UPDATED';
 
+export const FETCHING_INVITE = 'FETCHING_INVITE';
+export const INVITE_FETCHED = 'INVITE_FETCHED';
+
 export const SET_USER = 'SET_USER';
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || `http://localhost:5000`;
@@ -48,6 +51,35 @@ export const checkIfUserExists = role => {
 	};
 };
 
+export const inviteLogin = (role, inviteCode) => {
+	const token = localStorage.getItem('jwt');
+
+	const options = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const body = {
+		role: role,
+	};
+
+	const endpoint = axios.post(`${backendUrl}/api/users/login/${inviteCode}`, body, options);
+
+	return dispatch => {
+		dispatch({type: CHECKING_USER});
+
+		endpoint.then(res => {
+			console.log('invite login res', res.data);
+
+			dispatch({type: USER_CHECKED, payload: res.data})
+		}).catch(err => {
+			console.log(err);
+			dispatch({type: ERROR})
+		})
+	}
+}
+
 export const updateUserProfile = (user_id, changes) => {
 	let token = localStorage.getItem('jwt');
 	let userInfo = localStorage.getItem('userInfo');
@@ -83,3 +115,21 @@ export const setUser = user => {
 		dispatch({ type: SET_USER, payload: user });
 	};
 };
+
+export const checkInvite = inviteCode => {
+
+	const endpoint = axios.get(`${backendUrl}/api/invites/info/${inviteCode}`);
+
+	return dispatch => {
+		dispatch({type: FETCHING_INVITE});
+
+		endpoint.then(res => {
+			console.log('invite fetch', res.data);
+			dispatch({type: INVITE_FETCHED, payload: res.data.inviteInfo});
+		}).catch(err => {
+			console.log(err);
+			dispatch({type: ERROR})
+		})
+	}
+	
+}

@@ -18,6 +18,9 @@ import PersonAddTwoTone from '@material-ui/icons/PersonAddTwoTone';
 import TimelapseTwoTone from '@material-ui/icons/TimelapseTwoTone';
 import NotificationsActiveTwoTone from '@material-ui/icons/NotificationsActiveTwoTone';
 
+import Auth from './Auth';
+const auth = new Auth;
+
 const FeatureGrid = styled.div`
     display: flex;
     flex-flow: row wrap;
@@ -91,6 +94,10 @@ class Home extends React.Component {
 
     }
 
+    handleLogin = () => {
+        auth.login();
+    }
+
     render(){
         return (
             <div>
@@ -144,7 +151,7 @@ class Home extends React.Component {
                 <CallToAction>
 
                 <Typography variant = 'h5'>Ready to simplify your property management tasks?</Typography>
-                <Button size = 'large' variant = 'contained' color = 'primary'>Sign Me Up!</Button>
+                <Button size = 'large' variant = 'contained' color = 'primary' onClick = {this.handleLogin}>Sign Me Up!</Button>
                 </CallToAction>
 
                 

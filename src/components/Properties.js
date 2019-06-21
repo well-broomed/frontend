@@ -39,11 +39,16 @@ const TopBar = styled.div`
 	flex-flow: row nowrap;
 	justify-content: space-between;
 	align-items: center;
-	margin: 0 0 20px;
 `;
 
 const styles = {
-	title: { padding: '10px 0 0' },
+	card: {
+		maxWidth: 600,
+		margin: '20px auto',
+	},
+	media: {
+		objectFit: 'cover',
+	},
 	addIcon: {
 		fontSize: '5rem',
 		cursor: 'pointer',
@@ -59,11 +64,11 @@ class Properties extends React.Component {
 		if (!localStorage.getItem('jwt')) {
 			this.props.history.replace('/');
 		}
-
 		this.props.getUserProperties();
 	}
 
 	componentDidUpdate(prevProps) {
+		// refreshProperties will be set to true once the user is checked
 		if (prevProps.refreshProperties !== this.props.refreshProperties) {
 			this.props.getUserProperties();
 		}
@@ -95,9 +100,7 @@ class Properties extends React.Component {
 		const role = (this.props.user && this.props.user.role) || null;
 		const { user, properties } = this.props;
 
-		if (!(properties && user.user_id)) {
-			return null;
-		} else if (role === 'manager')
+		if (role === 'manager')
 			return (
 				<div>
 					<TopBar>
@@ -123,7 +126,7 @@ class Properties extends React.Component {
 						</DialogContent>
 					</Dialog>
 
-					{properties.length ? (
+					{this.props.properties && user.user_id ? (
 						properties.map(property => {
 							return (
 								<PropertyPreview
@@ -139,88 +142,62 @@ class Properties extends React.Component {
 					)}
 				</div>
 			);
-		else {
-			const defaultProperties = properties.filter(
-				({ cleaner_id }) => cleaner_id === user.user_id
-			);
-
-			const availableProperties = properties.filter(
-				({ cleaner_id, available }) => cleaner_id !== user.user_id && available
-			);
-
-			const otherProperties = properties.filter(
-				({ cleaner_id, available }) => cleaner_id !== user.user_id && !available
-			);
-
+		else
 			return (
 				<div>
 					<TopBar>
 						<Typography variant="h2">Properties</Typography>{' '}
 					</TopBar>
-					{defaultProperties.length ? (
-						<React.Fragment>
-							<Typography variant="h5" className={classes.title}>
-								Your Default Properties
-							</Typography>
-							{properties
-								.filter(({ cleaner_id }) => cleaner_id === user.user_id)
-								.map(property => {
-									return (
-										<PropertyPreview
-											property={property}
-											key={property.property_id}
-										/>
-									);
-								})}
-						</React.Fragment>
-					) : null}
-
-					<Typography variant="h5" className={classes.title}>
-						Properties You're Available For
-					</Typography>
-					{availableProperties.length ? (
-						availableProperties.map(property => {
-							return (
-								<PropertyPreview
-									property={property}
-									key={property.property_id}
-								/>
-							);
-						})
+					<Typography variant="h5"> Your Default Properties </Typography>
+					{properties && user.user_id ? (
+						properties
+							.filter(({ cleaner_id }) => cleaner_id === user.user_id)
+							.map(property => {
+								return (
+									<PropertyPreview
+										property={property}
+										key={property.property_id}
+									/>
+								);
+							})
 					) : (
 						<Typography variant="overline">
-							You have not made yourself available to any properties.
+							You have not been assigned as the default partner for any
+							properties.
 						</Typography>
 					)}
 
-					{otherProperties.length ? (
-						<React.Fragment>
-							<Typography variant="h5" className={classes.title}>
-								Other Properties
-							</Typography>
-							{otherProperties.map(property => (
-								<PropertyPreview
-									property={property}
-									key={property.property_id}
-								/>
-							))}
-						</React.Fragment>
-					) : null}
+					<Typography variant="h5">Properties You're Available For </Typography>
+					{properties && user.user_id ? (
+						properties
+							.filter(({ available }) => available)
+							.map(property => {
+								return (
+									<PropertyPreview
+										property={property}
+										key={property.property_id}
+									/>
+								);
+							})
+					) : (
+						<Typography variant="overline">
+							You have not been assigned as the default partner for any
+							properties.
+						</Typography>
+					)}
 				</div>
 			);
-		}
 	}
 }
-
 const mapStateToProps = state => {
 	return {
 		// state items
 		user: state.authReducer.user,
 		properties: state.propertyReducer.properties,
 		refreshProperties: state.propertyReducer.refreshProperties,
+		userChecked: state.authReducer.userChecked,
 	};
 };
-
 export default withRouter(
 	connect(
 		mapStateToProps,

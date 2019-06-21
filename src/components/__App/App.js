@@ -37,16 +37,10 @@ const ComponentContainer = styled.div`
 
 class App extends Component {
 	componentDidMount() {
-		if (
-			(localStorage.getItem('isLoggedIn') &&
-				!localStorage.getItem('userInfo')) ||
-			!localStorage.getItem('currentUser')
-		) {
+		if(!this.props.userChecked){
 			this.props.checkIfUserExists(
 				localStorage.getItem('accountType') || localStorage.getItem('role')
 			);
-		} else if (!this.props.user && localStorage.getItem('currentUser')) {
-			this.props.setUser(JSON.parse(localStorage.getItem('currentUser')));
 		}
 	}
 
@@ -69,7 +63,7 @@ class App extends Component {
 							<Route exact path="/account" component={Account} />
 							<Route path="/callback" component={Callback} />
 							<Route path="/redirect" component={Redirect} />
-							<Route path="/invite/:invite_code" component={Invite} />
+							<Route path="/invite" component={Invite} />
 						</Switch>
 					</ComponentContainer>
 				</MuiPickersUtilsProvider>
