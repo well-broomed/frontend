@@ -159,7 +159,7 @@ class Partners extends React.Component {
 	}
 
 	render() {
-		const { classes, user, partners, defaultProperties } = this.props;
+		const { classes } = this.props;
 
 		return (
 			<div>
@@ -186,7 +186,6 @@ class Partners extends React.Component {
 						No partners have been added yet.
 					</Typography>
 				)}
-				<div className={classes.invite}>
 					
 					{/** Email Modal */}
 					<Dialog open = {this.state.emailModal} onClose = {this.toggleEmail} maxWidth = 'xl' fullWidth = {true}>
@@ -213,7 +212,6 @@ class Partners extends React.Component {
 								</>)}
 						
 					</Dialog>
-					</div>
 
 
 					{/** Invitations Table **/}

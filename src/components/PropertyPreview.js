@@ -31,11 +31,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 // Actions
-import {
-	changeCleaner,
-	deleteProperty,
-	changeAvailableCleaner,
-} from '../actions/propertyActions';
+import { changeCleaner, deleteProperty } from '../actions/propertyActions';
 
 const CardContainer = styled.div`
 	width: 100%;
@@ -43,7 +39,6 @@ const CardContainer = styled.div`
 	flex-flow: row nowrap;
 	justify-content: space-between;
 	padding: 20px;
-
 	a {
 		color: black;
 		text-decoration: none;
@@ -67,7 +62,6 @@ const CardActions = styled.div`
 	flex-flow: row nowrap;
 	align-items: flex-start;
 	justify-content: flex-end;
-
 	svg {
 		cursor: pointer;
 		font-size: 3rem;
@@ -76,8 +70,8 @@ const CardActions = styled.div`
 
 const styles = {
 	card: {
-		maxWidth: '600px',
-		margin: '12px 0 20px 0',
+		maxWidth: '100%',
+		margin: '20px auto',
 	},
 	media: {
 		objectFit: 'cover',
@@ -86,11 +80,6 @@ const styles = {
 		margin: '20px',
 		minWidth: 120,
 	},
-	available: {
-		display: 'flex',
-		justifyContent: 'flex-end',
-	},
-	button: { width: '196px' },
 };
 
 class PropertyPreview extends React.Component {
@@ -113,14 +102,6 @@ class PropertyPreview extends React.Component {
 		this.props.changeCleaner(
 			this.props.property.property_id,
 			event.target.value || null
-		);
-	};
-
-	handleMakeAvailable = available => {
-		this.props.changeAvailableCleaner(
-			this.props.property.property_id,
-			null,
-			available
 		);
 	};
 
@@ -261,28 +242,7 @@ class PropertyPreview extends React.Component {
 						/>
 					</Link>
 
-					<CardContent className={classes.available}>
-						{property.cleaner_id !== user.user_id &&
-							(property.available ? (
-								<Button
-									className={classes.button}
-									variant="contained"
-									color="default"
-									onClick={() => this.handleMakeAvailable(false)}
-								>
-									Mark as Unavailable
-								</Button>
-							) : (
-								<Button
-									className={classes.button}
-									variant="contained"
-									color="primary"
-									onClick={() => this.handleMakeAvailable(true)}
-								>
-									Mark as Available
-								</Button>
-							))}
-					</CardContent>
+					<CardContent />
 				</Card>
 			);
 		}
@@ -303,7 +263,6 @@ export default withRouter(
 			// actions
 			changeCleaner,
 			deleteProperty,
-			changeAvailableCleaner,
 		}
 	)(withStyles(styles)(PropertyPreview))
 );

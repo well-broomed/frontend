@@ -85,7 +85,11 @@ export const getUserProperties = () => {
 
 		fetchUrl
 			.then(res => {
-				dispatch({ type: PROPERTIES_FETCHED, payload: res.data.properties });
+				if(res.data.properties.length === 0){
+					dispatch({ type: PROPERTIES_FETCHED, payload: null });
+				} else {
+					dispatch({ type: PROPERTIES_FETCHED, payload: res.data.properties });
+				}
 			})
 			.catch(err => {
 				console.log(err);
@@ -173,8 +177,6 @@ export const updateProperty = (property_id, property) => {
 
 		endpoint
 			.then(res => {
-				console.log('update property res', res.data);
-
 				dispatch({ type: PROPERTY_UPDATED, payload: res.data });
 			})
 			.catch(err => {
