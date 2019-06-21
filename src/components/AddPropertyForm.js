@@ -57,11 +57,11 @@ class AddPropertyForm extends React.Component {
         fileReader.readAsDataURL(target.files[0]);
         fileReader.onload = (e) => {
             this.setState({
-                image: e.target.result
+                image: toString(e.target.result)
             });
 		};
 		
-		console.log(this.state);
+		console.log(target.files[0]);
     };
 
 	handleSubmit = event => {
@@ -130,6 +130,7 @@ class AddPropertyForm extends React.Component {
 					<Button variant="contained" component="label">
 						Upload File
 						<input
+							value={''}
 							accept="image/*"
 							onChange={this.handleImage} 
 							type="file" 
