@@ -36,11 +36,16 @@ const useStyles = makeStyles(theme => ({
 	dates: {
 		fontWeight: 500,
 		margin: '4px 0 0',
+		[theme.breakpoints.down(600)]: {
+			fontSize: '.9rem',
+		},
 	},
 	deadline: {
 		fontWeight: 500,
+		fontSize: '.9rem',
 		margin: '-7px 0 0',
-		[theme.breakpoints.down(810)]: {
+		[theme.breakpoints.down(600)]: {
+			fontSize: '.8rem',
 			lineHeight: 1.1,
 			margin: '-5px 0 3px',
 		},
@@ -142,7 +147,11 @@ const Dates = styled.div`
 	display: flex;
 	flex-direction: column;
 
-	@media (max-width: 580px) {
-		margin: -24px 4px 0;
+	@media (max-width: 780px) {
+		margin: -10px 4px 0;
+	}
+
+	@media (max-width: 540px) {
+		margin: -30px 4px 0;
 	}
 `;
