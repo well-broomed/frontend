@@ -54,6 +54,11 @@ const useStyles = makeStyles(theme => ({
 		maxWidth: 360,
 		backgroundColor: theme.palette.background.paper,
 	},
+	propertyName: {
+		[theme.breakpoints.down(810)]: {
+			fontSize: 38,
+		},
+	},
 	newTask: {
 		height: 250,
 		flexGrow: 1,
@@ -268,7 +273,7 @@ const Property = props => {
 				/>
 
 				<TitleContainer>
-					<Typography variant="h3">
+					<Typography variant="h3" className={classes.propertyName}>
 						{props.property.property_name || null}
 					</Typography>
 
@@ -436,14 +441,26 @@ const TitleContainer = styled.div`
 
 const PropertyContainer = styled.div`
 	display: flex;
+
+	@media (max-width: 960px) {
+		flex-direction: column;
+	}
 `;
 
 const BeforeAndDuringColumn = styled.div`
 	width: 50%;
+
+	@media (max-width: 960px) {
+		width: 100%;
+	}
 `;
 
 const AfterColumn = styled.div`
 	width: 50%;
+
+	@media (max-width: 960px) {
+		width: 100%;
+	}
 `;
 
 const NewTaskForm = styled.form`
