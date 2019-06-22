@@ -276,6 +276,7 @@ class Partners extends React.Component {
 						</Typography>
 					</>
 				)}
+
 			</div>
 		);
 	}
