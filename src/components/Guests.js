@@ -159,42 +159,65 @@ class Guests extends React.Component {
 							</Tabs>
 						</AppBar>
 						<br></br>
-			
+					
+						{/** Upcoming Guests **/}
 						{this.state.tab === 0 ? (
-							<>
-							{upcomingGuests.map(guest => {
-								return (
-									<GuestPreview guest = {guest} tab = {this.state.tab} key = {guest.guest_id} fetching = {this.props.gettingPropertyCleaners} />
-								)
-							})}
-							</>
-						) : (null)}
+								<>
+								{upcomingGuests.length > 0 ? (
+									upcomingGuests.map(guest => {
+										return (
+											<GuestPreview guest = {guest} tab = {this.state.tab} key = {guest.guest_id} fetching = {this.props.gettingPropertyCleaners} />
+										)
+									})
+								) : (
+									<Typography variant = 'overline'>
+										You have no upcoming guests.
+									</Typography>
+			
+								)}
+								</>
+							) : (
+								null
+								)}
 
+							{/** Current Guests **/}
 							{this.state.tab === 1 ? (
 								<>
-								{currentGuests.map(guest => {
-									return (
-										<GuestPreview guest = {guest} tab = {this.state.tab} key = {guest.guest_id} fetching = {this.props.gettingPropertyCleaners} />
-									)
-								})}
+								{currentGuests.length > 0 ? (
+									currentGuests.map(guest => {
+										return (
+											<GuestPreview guest = {guest} tab = {this.state.tab} key = {guest.guest_id} fetching = {this.props.gettingPropertyCleaners} />
+										)
+									})
+								) : (
+									<Typography variant = 'overline'>
+										You have no current guests.
+									</Typography>
+			
+								)}
 								</>
-							) : (null)}
+							) : (
+								null
+								)}
 
+							{/** Previous Guests **/}
 							{this.state.tab === 2 ? (
 								<>
-								{previousGuests.map(guest => {
-									return (
-										<GuestPreview guest = {guest} tab = {this.state.tab} key = {guest.guest_id} fetching = {this.props.gettingPropertyCleaners} />
-									)
-								})}
+								{previousGuests.length > 0 ? (
+									previousGuests.map(guest => {
+										return (
+											<GuestPreview guest = {guest} tab = {this.state.tab} key = {guest.guest_id} fetching = {this.props.gettingPropertyCleaners} />
+										)
+									})
+								) : (
+									<Typography variant = 'overline'>
+										You have no previous guests.
+									</Typography>
+								)}
 								</>
-							) : (null)}
-						{/* 
-                        {this.state.tab === 0 && <TabContainer>Upcoming</TabContainer>}
-
-                        {this.state.tab === 1 && <TabContainer>Incomplete</TabContainer>}
-
-                        {this.state.tab === 2 && <TabContainer>Complete</TabContainer>} */}
+							) : (
+								null
+								)}
 					</div>
 				) : null}
 			</div>
