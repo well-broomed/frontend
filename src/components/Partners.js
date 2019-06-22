@@ -10,13 +10,13 @@ import axios from 'axios';
 import moment from 'moment';
 //Material-UI
 import {
-	TextField, 
-	Typography, 
-	Fab, 
-	Button, 
-	Dialog, 
-	DialogTitle, 
-	DialogContent, 
+	TextField,
+	Typography,
+	Fab,
+	Button,
+	Dialog,
+	DialogTitle,
+	DialogContent,
 	DialogActions,
 	Table,
 	TableHead,
@@ -24,7 +24,7 @@ import {
 	TableCell,
 	TableBody,
 	Paper,
-	} from '@material-ui/core';
+} from '@material-ui/core';
 
 import AddIcon from '@material-ui/icons/Add';
 
@@ -33,7 +33,13 @@ import { withStyles } from '@material-ui/core';
 import styled from 'styled-components';
 
 //Actions
-import { getPartners, getUserProperties, sendInvite, getAllInvites, getDefaultProperties } from '../actions';
+import {
+	getPartners,
+	getUserProperties,
+	sendInvite,
+	getAllInvites,
+	getDefaultProperties,
+} from '../actions';
 
 //Component
 import PartnerCard from './PartnerCard';
@@ -57,16 +63,18 @@ const styles = {
 		display: 'flex',
 	},
 	contentTypography: {
-		margin: 'auto'
+		margin: 'auto',
 	},
 	table: {
 		minWidth: 650,
 	},
 	paper: {
-		width: '100%'
+		width: '100%',
+	},
+	invitationsTitle: {
+		margin: '8px 0 12px',
 	},
 };
-
 
 const TopBar = styled.div`
 	width: 100%;
@@ -89,7 +97,7 @@ class Partners extends React.Component {
 
 	componentDidUpdate(prevProps) {
 		// follow the action cascade for user > properties > partners
-		if(this.props.refreshProperties !== prevProps.refreshProperties){
+		if (this.props.refreshProperties !== prevProps.refreshProperties) {
 			this.props.getUserProperties();
 		}
 
@@ -101,7 +109,7 @@ class Partners extends React.Component {
 			this.props.getPartners();
 		}
 
-		if(this.props.refreshInvites !== prevProps.refreshInvites){
+		if (this.props.refreshInvites !== prevProps.refreshInvites) {
 			this.props.getAllInvites();
 		}
 	}
@@ -119,15 +127,15 @@ class Partners extends React.Component {
 	toggleEmail = event => {
 		this.setState({
 			emailModal: !this.state.emailModal,
-		})
+		});
 		// reset the form once the modal fades
 		setTimeout(() => {
 			this.setState({
 				email: '',
 				formSent: false,
-			})
-		}, 500)
-	}
+			});
+		}, 500);
+	};
 
 	handleInputChange = event => {
 		this.setState({
@@ -140,23 +148,23 @@ class Partners extends React.Component {
 
 		this.setState({
 			formSent: true,
-		})
+		});
 
 		// toggle the modal after confirmation
 		setTimeout(() => {
 			this.toggleEmail();
 		}, 2000);
-	}
+	};
 
-	parseStatus = (status) => {
-		if(status === 0){
+	parseStatus = status => {
+		if (status === 0) {
 			return 'Pending';
-		} else if(status === 1){
+		} else if (status === 1) {
 			return 'Accepted';
-		} else if(status === 2){
+		} else if (status === 2) {
 			return 'Rejected';
 		}
-	}
+	};
 
 	render() {
 		const { classes } = this.props;
@@ -164,16 +172,15 @@ class Partners extends React.Component {
 		return (
 			<div>
 				<TopBar>
-				<Typography variant="h2">Partners</Typography>
-						<Fab
-							color="primary"
-							className={classes.addIcon}
-							onClick={this.toggleEmail}
-						>
-							<AddIcon />
-						</Fab>
+					<Typography variant="h2">Partners</Typography>
+					<Fab
+						color="primary"
+						className={classes.addIcon}
+						onClick={this.toggleEmail}
+					>
+						<AddIcon />
+					</Fab>
 				</TopBar>
-
 
 				{this.props.partners ? (
 					this.props.partners.map(partner => {
@@ -184,64 +191,91 @@ class Partners extends React.Component {
 						No partners have been added yet.
 					</Typography>
 				)}
-					
-					{/** Email Modal */}
-					<Dialog open = {this.state.emailModal} onClose = {this.toggleEmail} maxWidth = 'xl' fullWidth = {true}>
+
+				{/** Email Modal */}
+				<Dialog
+					open={this.state.emailModal}
+					onClose={this.toggleEmail}
+					maxWidth="xl"
+					fullWidth={true}
+				>
 					{!this.state.formSent ? (
-								<>
-								<DialogTitle>Send An Email Invitation</DialogTitle>
-								<DialogContent>
-									
-									<TextField fullWidth variant = 'outlined' autoFocus value = {this.state.email} onChange = {this.handleInputChange}
-									placeholder = "Partner's Email"
-									type='text'
-									name='email'/>
-								</DialogContent>
-								<DialogActions>
-									<Button onClick = {this.toggleEmail} variant = 'outlined'>Cancel</Button>
-									<Button onClick = {this.handleSubmit} variant = 'contained' color = 'primary'>Submit</Button>
-								</DialogActions>
-								</>
-								) : (
-								<>
-								<DialogTitle>
-									Invitation has been sent to {this.state.email}.
-								</DialogTitle>
-								</>)}
-						
-					</Dialog>
+						<>
+							<DialogTitle>Send An Email Invitation</DialogTitle>
+							<DialogContent>
+								<TextField
+									fullWidth
+									variant="outlined"
+									autoFocus
+									value={this.state.email}
+									onChange={this.handleInputChange}
+									placeholder="Partner's Email"
+									type="text"
+									name="email"
+								/>
+							</DialogContent>
+							<DialogActions>
+								<Button onClick={this.toggleEmail} variant="outlined">
+									Cancel
+								</Button>
+								<Button
+									onClick={this.handleSubmit}
+									variant="contained"
+									color="primary"
+								>
+									Submit
+								</Button>
+							</DialogActions>
+						</>
+					) : (
+						<>
+							<DialogTitle>
+								Invitation has been sent to {this.state.email}.
+							</DialogTitle>
+						</>
+					)}
+				</Dialog>
 
-
-					{/** Invitations Table **/}
-					<Typography variant = 'h2'>Invitations</Typography>
-					{this.props.invites ? (
-						<Paper className = {classes.paper}>
-						<Table size = 'small' className = {classes.table}>
-						<TableHead>
-							<TableRow>
-								<TableCell>Partner Email</TableCell>
-								<TableCell align = 'right'>Invite Code</TableCell>
-								<TableCell align = 'right'>Created At</TableCell>
-								<TableCell align = 'right'>Status</TableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{this.props.invites.map(invite => (
-								<TableRow key = {invite.createdAt}>
-									<TableCell component = 'th' scope = 'row'>
-										{invite.email}
-									</TableCell>
-									<TableCell align = 'right'>{invite.inviteCode}</TableCell>
-									<TableCell align = 'right'>{moment(invite.createdAt).format('LLL')}</TableCell>
-									<TableCell align = 'right'>{this.parseStatus(invite.status)}</TableCell>
+				{/** Invitations Table **/}
+				<Typography variant="h2" className={classes.invitationsTitle}>
+					Invitations
+				</Typography>
+				{this.props.invites ? (
+					<Paper className={classes.paper}>
+						<Table size="small" className={classes.table}>
+							<TableHead>
+								<TableRow>
+									<TableCell>Partner Email</TableCell>
+									<TableCell align="right">Invite Code</TableCell>
+									<TableCell align="right">Created At</TableCell>
+									<TableCell align="right">Status</TableCell>
 								</TableRow>
-							))}
-						</TableBody>
-					</Table>
+							</TableHead>
+							<TableBody>
+								{this.props.invites.map(invite => (
+									<TableRow key={invite.createdAt}>
+										<TableCell component="th" scope="row">
+											{invite.email}
+										</TableCell>
+										<TableCell align="right">{invite.inviteCode}</TableCell>
+										<TableCell align="right">
+											{moment(invite.createdAt).format('LLL')}
+										</TableCell>
+										<TableCell align="right">
+											{this.parseStatus(invite.status)}
+										</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
 					</Paper>
-					) : (<>
-						<Typography variant = 'overline'>No Invitations Have Been Sent</Typography>
-						</>)}
+				) : (
+					<>
+						<Typography variant="overline">
+							No Invitations Have Been Sent
+						</Typography>
+					</>
+				)}
 
 			</div>
 		);

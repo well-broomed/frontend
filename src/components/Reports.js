@@ -41,7 +41,7 @@ const styles = {
 		height: '200px',
 	},
 	appbar: {
-		marginTop: '15px',
+		marginTop: '20px',
 	},
 	divider: {
 		margin: '15px 0',
@@ -188,13 +188,19 @@ class Reports extends React.Component {
 				<Typography variant="h2">Reports</Typography>
 
 				{user.role && (
-					<AppBar position="static" color="default" className={classes.appbar}>
+					<AppBar
+						position="static"
+						// color="default"
+
+						className={classes.appbar}
+					>
 						<Tabs
 							value={this.state.tabValue}
 							onChange={this.handleTabChange}
-							indicatorColor="primary"
-							textColor="primary"
-							centered
+							variant="fullWidth"
+							// indicatorColor="primary"
+							// textColor="primary"
+							// centered
 						>
 							<Tab label="Current" />
 							<Tab label="Past" />

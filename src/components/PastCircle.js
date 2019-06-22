@@ -33,9 +33,17 @@ const useStyles = makeStyles(theme => ({
 		fontWeight: 500,
 		margin: '0 0 -5px',
 	},
+	dates: {
+		fontWeight: 500,
+		margin: '4px 0 0',
+	},
 	deadline: {
 		fontWeight: 500,
-		// margin: '6px 0 0',
+		margin: '-7px 0 0',
+		[theme.breakpoints.down(810)]: {
+			lineHeight: 1.1,
+			margin: '-5px 0 3px',
+		},
 	},
 	cleanerName: {
 		margin: '-4px 0 14px',
@@ -85,22 +93,27 @@ const PastCircle = props => {
 					/>
 				</div>
 
-				<Typography
-					variant="h6"
-					className={classes.propertyName}
-					align="center"
-				>
-					{guest.property_name}
-				</Typography>
+				<Dates>
+					<Typography
+						variant="subtitle1"
+						className={classes.dates}
+						align="center"
+						style={{ color }}
+					>
+						{`${moment(guest.checkin).format('MMM DD')} - ${moment(
+							guest.checkout
+						).format('MMM DD')}`}
+					</Typography>
 
-				<Typography
-					variant="subtitle1"
-					className={classes.deadline}
-					align="center"
-					style={{ color }}
-				>
-					{moment(guest.checkout).format('MMM DD h:mma')}
-				</Typography>
+					<Typography
+						variant="subtitle1"
+						className={classes.deadline}
+						align="center"
+						style={{ color }}
+					>
+						{`${moment(guest.checkout).format('h:mma')} checkout`}
+					</Typography>
+				</Dates>
 			</GuestLink>
 
 			{/* todo: make this a link to the partner page */}
@@ -123,4 +136,13 @@ const GuestLink = styled(Link)`
 	align-items: center;
 	color: inherit;
 	text-decoration: none;
+`;
+
+const Dates = styled.div`
+	display: flex;
+	flex-direction: column;
+
+	@media (max-width: 580px) {
+		margin: -24px 4px 0;
+	}
 `;

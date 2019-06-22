@@ -31,9 +31,17 @@ const useStyles = makeStyles(theme => ({
 		alignItems: 'center',
 		width: '33%',
 	},
+	dates: {
+		fontWeight: 500,
+		margin: '4px 0 0',
+	},
 	deadline: {
 		fontWeight: 500,
-		margin: '6px 0 0',
+		margin: '-7px 0 0',
+		[theme.breakpoints.down(810)]: {
+			lineHeight: 1.1,
+			margin: '-5px 0 3px',
+		},
 	},
 	cleanerName: {
 		margin: '-4px 0 14px',
@@ -119,14 +127,40 @@ const ProgressCircle = props => {
 						/>
 					</div>
 
-					<Typography
-						variant="subtitle1"
-						className={classes.deadline}
-						align="center"
-						style={{ color }}
-					>
-						{moment(deadline).format('MMM DD h:mma')}
-					</Typography>
+					<Dates>
+						<Typography
+							variant="subtitle1"
+							className={classes.dates}
+							align="center"
+							style={{ color }}
+						>
+							{`${moment(guest.checkin).format('MMM DD')} - ${moment(
+								guest.checkout
+							).format('MMM DD')}`}
+						</Typography>
+
+						{(recent || current) && (
+							<Typography
+								variant="subtitle1"
+								className={classes.deadline}
+								align="center"
+								style={{ color }}
+							>
+								{`${moment(guest.checkout).format('h:mma')} checkout`}
+							</Typography>
+						)}
+
+						{upcoming && (
+							<Typography
+								variant="subtitle1"
+								className={classes.deadline}
+								align="center"
+								style={{ color }}
+							>
+								{`${moment(guest.checkin).format('h:mma')} checkin`}
+							</Typography>
+						)}
+					</Dates>
 				</GuestLink>
 
 				{/* todo: make this a link to the partner page */}
@@ -157,6 +191,15 @@ const GuestLink = styled(Link)`
 	flex-direction: column;
 	align-items: center;
 	text-decoration: none;
+`;
+
+const Dates = styled.div`
+	display: flex;
+	flex-direction: column;
+
+	@media (max-width: 580px) {
+		margin: -24px 4px 0;
+	}
 `;
 
 const Blank = styled.div`
