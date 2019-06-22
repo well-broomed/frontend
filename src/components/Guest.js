@@ -30,6 +30,17 @@ import Link from '@material-ui/core/Link';
 import DescriptionOutlined from '@material-ui/icons/DescriptionOutlined';
 
 const useStyles = makeStyles(theme => ({
+	guestName: {
+		[theme.breakpoints.down(960)]: {
+			fontSize: 38,
+		},
+	},
+	completion: {
+		[theme.breakpoints.down(960)]: {
+			alignSelf: 'flex-end',
+			fontSize: 80,
+		},
+	},
 	checkList: {
 		width: '100%',
 		maxWidth: 360,
@@ -47,7 +58,8 @@ const useStyles = makeStyles(theme => ({
 		boxShadow: 'none',
 	},
 	guide: { fontSize: '64px', padding: 0 },
-	reassignmentText: { margin: '0 0 -2.5rem 0.9rem' },
+	time: { margin: '-4px 0 0' },
+	reassignmentText: { margin: '0 0 -0.6rem 0.9rem' },
 	otherCleaner: { color: 'red' },
 }));
 
@@ -154,7 +166,9 @@ const Guest = props => {
 					/>
 
 					<TitleContainer>
-						<Typography variant="h3">{guest.guest_name || null}</Typography>
+						<Typography variant="h3" className={classes.guestName}>
+							{guest.guest_name || null}
+						</Typography>
 
 						<Typography variant="h6">
 							{gettingGuest && !guest.property_name ? (
@@ -173,7 +187,7 @@ const Guest = props => {
 					</TitleContainer>
 				</LeftStuff>
 
-				<Typography variant="h1">
+				<Typography variant="h1" className={classes.completion}>
 					{guest.tasks &&
 						Math.floor(
 							(guest.tasks.reduce(
@@ -227,6 +241,9 @@ const Guest = props => {
 											? moment(guest.checkin).format('M/D')
 											: '--/--'}
 									</Typography>
+									<Typography variant="h6" className={classes.time}>
+										{guest.checkout && moment(guest.checkout).format('h:mma')}
+									</Typography>
 								</DateColumn>
 
 								<DateColumn>
@@ -235,6 +252,9 @@ const Guest = props => {
 										{guest.checkout
 											? moment(guest.checkout).format('M/D')
 											: '--/--'}
+									</Typography>
+									<Typography variant="h6" className={classes.time}>
+										{guest.checkout && moment(guest.checkout).format('h:mma')}
 									</Typography>
 								</DateColumn>
 							</Dates>
@@ -330,15 +350,27 @@ export default withRouter(
 
 const TopBar = styled.div`
 	width: 100%;
+	max-width: 900px;
 	display: flex;
 	justify-content: space-between;
 	align-items: flex-end;
 	padding: 10px 0 20px;
+
+	@media (max-width: 960px) {
+		flex-direction: column;
+		align-items: flex-start;
+		max-width: 400px;
+		padding: 10px 0 10px;
+	}
 `;
 
 const LeftStuff = styled.div`
 	display: flex;
 	align-items: flex-end;
+
+	@media (max-width: 960px) {
+		margin: 0 0 10px;
+	}
 `;
 
 const PropertyImg = styled.img`
@@ -356,16 +388,33 @@ const TitleContainer = styled.div`
 
 const GuestContainer = styled.div`
 	display: flex;
+	max-width: 900px;
+
+	@media (max-width: 960px) {
+		flex-direction: column-reverse;
+	}
 `;
 
 const Checklists = styled.div`
 	width: 50%;
+
+	@media (max-width: 960px) {
+		width: 100%;
+	}
 `;
 
 const GuestInfo = styled.div`
-	width: 50%;
+	width: 100%;
+	max-width: 400px;
 	/* padding: 32px 0 0; */
 	padding: 2rem 0 0;
+	margin: 0 0 0 auto;
+
+	@media (max-width: 960px) {
+		flex-direction: column-reverse;
+		padding: 0;
+		margin: 0 0 16px;
+	}
 `;
 
 const LeftColumn = styled.div`
