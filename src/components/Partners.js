@@ -175,8 +175,6 @@ class Partners extends React.Component {
 				</TopBar>
 
 
-
-
 				{this.props.partners ? (
 					this.props.partners.map(partner => {
 						return <PartnerCard partner={partner} key={partner.user_id} />;
@@ -244,9 +242,6 @@ class Partners extends React.Component {
 					) : (<>
 						<Typography variant = 'overline'>No Invitations Have Been Sent</Typography>
 						</>)}
-
-					
-
 
 			</div>
 		);
