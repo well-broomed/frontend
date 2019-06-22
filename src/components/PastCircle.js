@@ -151,6 +151,10 @@ const Dates = styled.div`
 		margin: -10px 4px 0;
 	}
 
+	@media (max-width: 620px) {
+		margin: -20px 4px 0;
+	}
+
 	@media (max-width: 540px) {
 		margin: -30px 4px 0;
 	}
