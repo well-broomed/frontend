@@ -6,12 +6,15 @@ import EditPropertyForm from './EditPropertyForm';
 // Cards
 import Card from '@material-ui/core/Card';
 import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import Typography from '@material-ui/core/Typography';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
+import Switch from '@material-ui/core/Switch';
+
 
 // Dialog Modals
 import Dialog from '@material-ui/core/Dialog';
@@ -31,7 +34,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 // Actions
-import { changeCleaner, deleteProperty } from '../actions/propertyActions';
+import { changeCleaner, deleteProperty, addAvailability, deleteAvailability, } from '../actions/index';
 
 const CardContainer = styled.div`
 	width: 100%;
@@ -83,6 +86,40 @@ const styles = {
 };
 
 class PropertyPreview extends React.Component {
+	// check this property's availability status against the availabilities in state
+
+
+	componentDidMount(){
+
+		this.setState({
+			cleaner_id: this.props.property.cleaner_id || '',
+		});
+
+		if(this.props.availableProperties){
+			let currentProperty = this.props.property.property_id;
+
+			let searchResult = this.props.availableProperties.find(property => property.property_id === currentProperty);
+			if(searchResult || searchResult !== undefined){
+				this.setState({
+					available: true,
+				})
+			}
+		}
+	}
+
+	componentDidUpdate(prevProps){
+		if(prevProps.availableProperties !== this.props.availableProperties){
+			let currentProperty = this.props.property.property_id;
+
+			let searchResult = this.props.availableProperties.find(property => property.property_id === currentProperty);
+			if(searchResult || searchResult !== undefined){
+				this.setState({
+					available: true,
+				})
+			}
+		}
+	}
+
 	constructor(props) {
 		super(props);
 
@@ -91,6 +128,7 @@ class PropertyPreview extends React.Component {
 			cleaner_id: '',
 			deleteModal: false,
 			editModal: false,
+			available: false, // default to false until avail can be checked
 		};
 	}
 
@@ -123,10 +161,21 @@ class PropertyPreview extends React.Component {
 		});
 	};
 
-	componentDidMount() {
-		this.setState({
-			cleaner_id: this.props.property.cleaner_id || '',
-		});
+	handleSwitch = name => event => {
+
+		// parse the change to be made
+		if(!this.state.available === true){
+			this.setState({
+				[name]: true,
+			})
+			this.props.addAvailability(this.props.user.user_id, this.props.property.property_id);
+		} else {
+			this.setState({
+				[name]: false,
+			})
+			this.props.deleteAvailability(this.props.user.user_id, this.props.property.property_id);
+		}
+
 	}
 
 	render() {
@@ -152,6 +201,7 @@ class PropertyPreview extends React.Component {
 		if (role === 'manager') {
 			return (
 				<div>
+					
 					{/** Delete Modal **/}
 					<Dialog open={this.state.deleteModal} onClose={this.toggleDelete}>
 						<DialogContent>
@@ -234,16 +284,25 @@ class PropertyPreview extends React.Component {
 			);
 		} else {
 			return (
-				<Card className={classes.card} key={property.id}>
-					<Link to={`/properties/${property.property_id}`}>
-						<CardHeader
-							title={property.property_name}
-							subheader={property.address}
-						/>
-					</Link>
+				<>
+				<br></br>
+				<Card>
+					<CardContainer>
+							<Link to={`/properties/${property.property_id}`}>
+								<CardText>
+									<Typography variant="h4">{property.property_name}</Typography>
+									<Typography variant="h5">{property.address}</Typography>
+								</CardText>
+							</Link>
 
-					<CardContent />
+							<CardActions>
+								{!this.props.assigned ? (
+								<FormControlLabel control = {<Switch checked = {this.state.available} onChange = {this.handleSwitch('available')} value = 'available' />} label = {this.state.available ? 'Available' : 'Unavailable'} />
+								) : (null)}
+							</CardActions>
+					</CardContainer>
 				</Card>
+				</>
 			);
 		}
 	}
@@ -253,6 +312,7 @@ const mapStateToProps = state => {
 	return {
 		// state items
 		user: state.authReducer.user || {},
+		availableProperties: state.partnerReducer.availableProperties,
 	};
 };
 
@@ -263,6 +323,8 @@ export default withRouter(
 			// actions
 			changeCleaner,
 			deleteProperty,
+			addAvailability,
+			deleteAvailability,
 		}
 	)(withStyles(styles)(PropertyPreview))
 );

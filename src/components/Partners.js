@@ -181,6 +181,7 @@ class Partners extends React.Component {
 						<AddIcon />
 					</Fab>
 				</TopBar>
+				<br></br>
 
 				{this.props.partners ? (
 					this.props.partners.map(partner => {

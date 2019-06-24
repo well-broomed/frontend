@@ -1,12 +1,19 @@
 import {
     INVITES_FETCHED,
     INVITE_SENT,
+    AVAILABILITY_ADDED,
+    AVAILABILITY_REMOVED,
+    
+    AVAILABLE_PROPERTIES_FETCHED,
+
     ERROR,
 } from '../actions';
 
 const initialState = {
     refreshInvites: false,
-	invites: null,
+    refreshAvailable: false,
+    invites: null,
+    availableProperties: null,
 };
 
 const partnerReducer = (state = initialState, action) => {
@@ -22,6 +29,25 @@ const partnerReducer = (state = initialState, action) => {
                 ...state,
                 invites: action.payload,
                 refreshInvites: false,
+            }
+        
+        case AVAILABILITY_ADDED:
+            return {
+                ...state,
+                refreshAvailable: true,
+            }
+
+        case AVAILABILITY_REMOVED:
+            return {
+                ...state,
+                refreshAvailable: true,
+            }
+
+        case AVAILABLE_PROPERTIES_FETCHED:
+            return {
+                ...state,
+                availableProperties: action.payload,
+                refreshAvailable: false,
             }
 		
 		default:

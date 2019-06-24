@@ -30,7 +30,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
 // Actions
-import { getUserProperties } from '../actions';
+import { getUserProperties, getAvailableProperties } from '../actions/index';
 import PropertyPreview from './PropertyPreview';
 
 const TopBar = styled.div`
@@ -72,6 +72,12 @@ class Properties extends React.Component {
 		if (prevProps.refreshProperties !== this.props.refreshProperties) {
 			this.props.getUserProperties();
 		}
+
+		if(prevProps.user !== this.props.user){
+			if(this.props.user.role !== 'manager'){
+				this.props.getAvailableProperties();
+			}
+		}
 	}
 
 	constructor(props) {
@@ -100,9 +106,18 @@ class Properties extends React.Component {
 		const role = (this.props.user && this.props.user.role) || null;
 		const { user, properties } = this.props;
 
+		// Collect assigned Assistant Properties if user is an assistant
+		let asstProperties = [];
+		if(role !== 'manager' && this.props.properties){
+			if(this.props.user){
+				asstProperties = this.props.properties.filter(property => property.cleaner_id === this.props.user.user_id);
+			}
+		}
+
 		if (role === 'manager')
 			return (
 				<div>
+					{/** Manager View */}
 					<TopBar>
 						<Typography variant="h2">Properties</Typography>{' '}
 						<Fab
@@ -126,7 +141,7 @@ class Properties extends React.Component {
 						</DialogContent>
 					</Dialog>
 
-					{this.props.properties && user.user_id ? (
+					{this.props.properties ? (
 						properties.map(property => {
 							return (
 								<PropertyPreview
@@ -145,33 +160,45 @@ class Properties extends React.Component {
 		else
 			return (
 				<div>
+					{/** Assistant View */}
 					<TopBar>
 						<Typography variant="h2">Properties</Typography>{' '}
 					</TopBar>
-					<Typography variant="h5"> Your Default Properties </Typography>
-					{properties && user.user_id ? (
-						properties
-							.filter(({ cleaner_id }) => cleaner_id === user.user_id)
-							.map(property => {
-								return (
-									<PropertyPreview
-										property={property}
-										key={property.property_id}
-									/>
-								);
-							})
-					) : (
-						<Typography variant="overline">
-							You have not been assigned as the default partner for any
-							properties.
-						</Typography>
-					)}
+					<Typography variant="h5"> Assigned Properties</Typography>
 
-					<Typography variant="h5">Properties You're Available For </Typography>
-					{properties && user.user_id ? (
-						properties
-							.filter(({ available }) => available)
+					{/** Assigned Properties */}
+					{this.props.properties ? (
+
+						<>
+						{asstProperties.length > 0 ? (
+							<>
+							{asstProperties
+								.map(property => {
+									return (
+										<PropertyPreview property = {property} key = {property.property_id} assigned = {true}/>
+									)
+								})}
+							</>
+
+						) : (
+							
+							<Typography variant="overline">
+							You have not been assigned as the default partner for any
+							properties.
+							</Typography>
+						)}
+						</>
+					) : null }
+
+					<Typography variant="h5"> Potential Properties </Typography>
+					<Typography variant = 'subtitle'>Mark yourself available to be assigned for shifts.</Typography>
+					<br></br>
+					{/** Available Properties */}
+					{/** These are all properties from all managers */}
+					{this.props.properties ? (
+						this.props.properties
 							.map(property => {
+								console.log('MAP PROP', property)
 								return (
 									<PropertyPreview
 										property={property}
@@ -181,8 +208,7 @@ class Properties extends React.Component {
 							})
 					) : (
 						<Typography variant="overline">
-							You have not been assigned as the default partner for any
-							properties.
+							There are no properties available to you.
 						</Typography>
 					)}
 				</div>
@@ -196,6 +222,8 @@ const mapStateToProps = state => {
 		properties: state.propertyReducer.properties,
 		refreshProperties: state.propertyReducer.refreshProperties,
 		userChecked: state.authReducer.userChecked,
+		availableProperties: state.partnerReducer.availableProperties,
+		refreshAvailable: state.partnerReducer.refreshAvailable,
 	};
 };
 export default withRouter(
@@ -204,6 +232,7 @@ export default withRouter(
 		{
 			// actions
 			getUserProperties,
+			getAvailableProperties,
 		}
 	)(withStyles(styles)(Properties))
 );
