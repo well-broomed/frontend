@@ -201,6 +201,7 @@ class PropertyPreview extends React.Component {
 		if (role === 'manager') {
 			return (
 				<div>
+					
 					{/** Delete Modal **/}
 					<Dialog open={this.state.deleteModal} onClose={this.toggleDelete}>
 						<DialogContent>
@@ -283,6 +284,8 @@ class PropertyPreview extends React.Component {
 			);
 		} else {
 			return (
+				<>
+				<br></br>
 				<Card>
 					<CardContainer>
 							<Link to={`/properties/${property.property_id}`}>
@@ -297,6 +300,7 @@ class PropertyPreview extends React.Component {
 							</CardActions>
 					</CardContainer>
 				</Card>
+				</>
 			);
 		}
 	}
