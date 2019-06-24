@@ -175,7 +175,7 @@ class Properties extends React.Component {
 							{asstProperties
 								.map(property => {
 									return (
-										<PropertyPreview property = {property} key = {property.property_id} />
+										<PropertyPreview property = {property} key = {property.property_id} assigned = {true}/>
 									)
 								})}
 							</>

@@ -296,7 +296,9 @@ class PropertyPreview extends React.Component {
 							</Link>
 
 							<CardActions>
+								{!this.props.assigned ? (
 								<FormControlLabel control = {<Switch checked = {this.state.available} onChange = {this.handleSwitch('available')} value = 'available' />} label = {this.state.available ? 'Available' : 'Unavailable'} />
+								) : (null)}
 							</CardActions>
 					</CardContainer>
 				</Card>
