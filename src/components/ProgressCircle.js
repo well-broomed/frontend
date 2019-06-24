@@ -45,11 +45,11 @@ const useStyles = makeStyles(theme => ({
 		[theme.breakpoints.down(600)]: {
 			fontSize: '.8rem',
 			lineHeight: 1.1,
-			margin: '-5px 0 3px',
+			margin: '-3px 0 3px',
 		},
 	},
 	cleanerName: {
-		margin: '-4px 0 14px',
+		margin: '-3px 0 14px',
 	},
 	blank: { fontSize: '3rem', color: '#b3b3b3' },
 }));
@@ -195,20 +195,13 @@ const GuestLink = styled(Link)`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	max-width: 180px;
 	text-decoration: none;
 `;
 
 const Dates = styled.div`
 	display: flex;
 	flex-direction: column;
-
-	@media (max-width: 700px) {
-		margin: -10px 4px 0;
-	}
-
-	@media (max-width: 600px) {
-		margin: -24px 4px 0;
-	}
 `;
 
 const Blank = styled.div`
