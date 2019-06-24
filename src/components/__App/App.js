@@ -30,14 +30,15 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 //Styles
 const ComponentContainer = styled.div`
-	width: 80%;
-	margin: 0 auto;
-	margin-top: 80px;
+	width: 100%;
+	max-width: 940px;
+	padding: 0 20px;
+	margin: 80px auto 0;
 `;
 
 class App extends Component {
 	componentDidMount() {
-		if(!this.props.userChecked){
+		if (!this.props.userChecked) {
 			this.props.checkIfUserExists(
 				localStorage.getItem('accountType') || localStorage.getItem('role')
 			);

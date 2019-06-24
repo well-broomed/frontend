@@ -13,18 +13,19 @@ import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles(theme => ({
 	progressBarReports: {
 		display: 'flex',
-		width: '75%'
+		width: '75%',
 	},
 	singleProgress: {
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center',
+		maxWidth: '180px',
 		width: '33%',
-		margin: '10px 0'
+		margin: '10px 0',
 	},
 	cleanerName: {
-		margin: '6px 0 0'
-	}
+		margin: '6px 0 0',
+	},
 }));
 
 const ProgressCircle = props => {
@@ -42,7 +43,7 @@ const ProgressCircle = props => {
 					text={`${partner.completion}%`}
 					styles={buildStyles({
 						pathColor: color,
-						textColor: color
+						textColor: color,
 					})}
 				/>
 			</div>

@@ -38,7 +38,7 @@ const styles = {
 		width: '50%',
 		display: 'flex',
 		margin: '0 auto 10px',
-		height: '200px',
+		height: '160px',
 	},
 	appbar: {
 		marginTop: '20px',

@@ -55,7 +55,7 @@ const useStyles = makeStyles(theme => ({
 		backgroundColor: theme.palette.background.paper,
 	},
 	propertyName: {
-		[theme.breakpoints.down(810)]: {
+		[theme.breakpoints.down(600)]: {
 			fontSize: 38,
 		},
 	},
@@ -442,7 +442,7 @@ const TitleContainer = styled.div`
 const PropertyContainer = styled.div`
 	display: flex;
 
-	@media (max-width: 960px) {
+	@media (max-width: 820px) {
 		flex-direction: column;
 	}
 `;
@@ -450,7 +450,7 @@ const PropertyContainer = styled.div`
 const BeforeAndDuringColumn = styled.div`
 	width: 50%;
 
-	@media (max-width: 960px) {
+	@media (max-width: 820px) {
 		width: 100%;
 	}
 `;
@@ -458,7 +458,7 @@ const BeforeAndDuringColumn = styled.div`
 const AfterColumn = styled.div`
 	width: 50%;
 
-	@media (max-width: 960px) {
+	@media (max-width: 820px) {
 		width: 100%;
 	}
 `;

@@ -68,7 +68,7 @@ const Intro = styled.div`
 	align-items: center;
 
 	h3 {
-		margin: 20px 0px;
+		margin: 20px 0px 16px;
 	}
 
 	h5 {

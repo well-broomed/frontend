@@ -35,18 +35,12 @@ const useStyles = makeStyles(theme => ({
 	},
 	dates: {
 		fontWeight: 500,
-		margin: '4px 0 0',
-	},
-	deadline: {
-		fontWeight: 500,
-		margin: '-7px 0 0',
-		[theme.breakpoints.down(810)]: {
-			lineHeight: 1.1,
-			margin: '-5px 0 3px',
+		[theme.breakpoints.down(600)]: {
+			fontSize: '.9rem',
 		},
 	},
 	cleanerName: {
-		margin: '-4px 0 14px',
+		margin: '-7px 0 18px',
 	},
 	blank: { fontSize: '3rem', color: '#b3b3b3' },
 }));
@@ -104,15 +98,6 @@ const PastCircle = props => {
 							guest.checkout
 						).format('MMM DD')}`}
 					</Typography>
-
-					<Typography
-						variant="subtitle1"
-						className={classes.deadline}
-						align="center"
-						style={{ color }}
-					>
-						{`${moment(guest.checkout).format('h:mma')} checkout`}
-					</Typography>
 				</Dates>
 			</GuestLink>
 
@@ -134,6 +119,7 @@ const GuestLink = styled(Link)`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	max-width: 180px;
 	color: inherit;
 	text-decoration: none;
 `;
@@ -141,8 +127,4 @@ const GuestLink = styled(Link)`
 const Dates = styled.div`
 	display: flex;
 	flex-direction: column;
-
-	@media (max-width: 580px) {
-		margin: -24px 4px 0;
-	}
 `;
