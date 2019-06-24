@@ -31,12 +31,12 @@ import DescriptionOutlined from '@material-ui/icons/DescriptionOutlined';
 
 const useStyles = makeStyles(theme => ({
 	guestName: {
-		[theme.breakpoints.down(960)]: {
+		[theme.breakpoints.down(870)]: {
 			fontSize: 38,
 		},
 	},
 	completion: {
-		[theme.breakpoints.down(960)]: {
+		[theme.breakpoints.down(870)]: {
 			alignSelf: 'flex-end',
 			fontSize: 80,
 		},
@@ -356,7 +356,7 @@ const TopBar = styled.div`
 	align-items: flex-end;
 	padding: 10px 0 20px;
 
-	@media (max-width: 960px) {
+	@media (max-width: 870px) {
 		flex-direction: column;
 		align-items: flex-start;
 		max-width: 400px;
@@ -368,7 +368,7 @@ const LeftStuff = styled.div`
 	display: flex;
 	align-items: flex-end;
 
-	@media (max-width: 960px) {
+	@media (max-width: 870px) {
 		margin: 0 0 10px;
 	}
 `;
@@ -390,7 +390,7 @@ const GuestContainer = styled.div`
 	display: flex;
 	max-width: 900px;
 
-	@media (max-width: 960px) {
+	@media (max-width: 870px) {
 		flex-direction: column-reverse;
 	}
 `;
@@ -398,7 +398,7 @@ const GuestContainer = styled.div`
 const Checklists = styled.div`
 	width: 50%;
 
-	@media (max-width: 960px) {
+	@media (max-width: 870px) {
 		width: 100%;
 	}
 `;
@@ -410,7 +410,7 @@ const GuestInfo = styled.div`
 	padding: 2rem 0 0;
 	margin: 0 0 0 auto;
 
-	@media (max-width: 960px) {
+	@media (max-width: 870px) {
 		flex-direction: column-reverse;
 		padding: 0;
 		margin: 0 0 16px;
