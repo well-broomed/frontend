@@ -164,7 +164,7 @@ class Properties extends React.Component {
 					<TopBar>
 						<Typography variant="h2">Properties</Typography>{' '}
 					</TopBar>
-					<Typography variant="h5"> Your Assigned Properties</Typography>
+					<Typography variant="h5"> Assigned Properties</Typography>
 
 					{/** Assigned Properties */}
 					{this.props.properties ? (
@@ -190,8 +190,9 @@ class Properties extends React.Component {
 						</>
 					) : null }
 
-					<Typography variant="h5"> Available Properties </Typography>
-
+					<Typography variant="h5"> Potential Properties </Typography>
+					<Typography variant = 'subtitle'>Mark yourself available to be assigned for shifts.</Typography>
+					<br></br>
 					{/** Available Properties */}
 					{/** These are all properties from all managers */}
 					{this.props.properties ? (

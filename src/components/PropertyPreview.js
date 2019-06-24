@@ -87,11 +87,24 @@ const styles = {
 
 class PropertyPreview extends React.Component {
 	// check this property's availability status against the availabilities in state
+
+
 	componentDidMount(){
 
 		this.setState({
 			cleaner_id: this.props.property.cleaner_id || '',
 		});
+
+		if(this.props.availableProperties){
+			let currentProperty = this.props.property.property_id;
+
+			let searchResult = this.props.availableProperties.find(property => property.property_id === currentProperty);
+			if(searchResult || searchResult !== undefined){
+				this.setState({
+					available: true,
+				})
+			}
+		}
 	}
 
 	componentDidUpdate(prevProps){
@@ -280,7 +293,7 @@ class PropertyPreview extends React.Component {
 							</Link>
 
 							<CardActions>
-								<FormControlLabel control = {<Switch checked = {this.state.available} onChange = {this.handleSwitch('available')} value = 'available' />} label = 'Available' />
+								<FormControlLabel control = {<Switch checked = {this.state.available} onChange = {this.handleSwitch('available')} value = 'available' />} label = {this.state.available ? 'Available' : 'Unavailable'} />
 							</CardActions>
 					</CardContainer>
 				</Card>
