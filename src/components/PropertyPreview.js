@@ -234,15 +234,15 @@ class PropertyPreview extends React.Component {
 			);
 		} else {
 			return (
-				<Card className={classes.card} key={property.id}>
-					<Link to={`/properties/${property.property_id}`}>
-						<CardHeader
-							title={property.property_name}
-							subheader={property.address}
-						/>
-					</Link>
-
-					<CardContent />
+				<Card>
+					<CardContainer>
+							<Link to={`/properties/${property.property_id}`}>
+								<CardText>
+									<Typography variant="h4">{property.property_name}</Typography>
+									<Typography variant="h5">{property.address}</Typography>
+								</CardText>
+							</Link>
+					</CardContainer>
 				</Card>
 			);
 		}
