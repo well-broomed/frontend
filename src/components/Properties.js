@@ -30,7 +30,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
 // Actions
-import { getUserProperties } from '../actions';
+import { getUserProperties, getAvailableProperties } from '../actions/index';
 import PropertyPreview from './PropertyPreview';
 
 const TopBar = styled.div`
@@ -71,6 +71,12 @@ class Properties extends React.Component {
 		// refreshProperties will be set to true once the user is checked
 		if (prevProps.refreshProperties !== this.props.refreshProperties) {
 			this.props.getUserProperties();
+		}
+
+		if(prevProps.user !== this.props.user){
+			if(this.props.user.role !== 'manager'){
+				this.props.getAvailableProperties();
+			}
 		}
 	}
 
@@ -215,6 +221,8 @@ const mapStateToProps = state => {
 		properties: state.propertyReducer.properties,
 		refreshProperties: state.propertyReducer.refreshProperties,
 		userChecked: state.authReducer.userChecked,
+		availableProperties: state.partnerReducer.availableProperties,
+		refreshAvailable: state.partnerReducer.refreshAvailable,
 	};
 };
 export default withRouter(
@@ -223,6 +231,7 @@ export default withRouter(
 		{
 			// actions
 			getUserProperties,
+			getAvailableProperties,
 		}
 	)(withStyles(styles)(Properties))
 );
