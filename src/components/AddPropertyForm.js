@@ -38,6 +38,7 @@ class AddPropertyForm extends React.Component {
 			addModal: false,
 			property_name: '',
 			address: '',
+			uploaded: '',
 			image: null,
 			cleaner_id: null,
 			guest_guide: null,
@@ -52,7 +53,7 @@ class AddPropertyForm extends React.Component {
 	};
 
 	handleImage = ({ target }) => {
-		this.setState({image: target.files[0]});
+		this.setState({image: target.files[0], uploaded: target.files[0].name});
 		console.log(target.files)
 		
     };
@@ -130,9 +131,9 @@ class AddPropertyForm extends React.Component {
 						onChange={this.handleInput('assistant_guide')}
 					/>
 					<Button variant="contained" component="label">
-						Upload File
+					{this.state.uploaded ? `File Uploaded: ${this.state.uploaded}` : 'Upload Image'} 
 						<input
-							value={'' || this.state.uploaded}
+							value={undefined}
 							accept="image/*"
 							onChange={this.handleImage} 
 							type="file" 
