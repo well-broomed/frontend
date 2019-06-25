@@ -14,7 +14,7 @@ import Button from '@material-ui/core/Button';
 
 import Typography from '@material-ui/core/Typography';
 
-const styles = {
+const styles = theme => ({
 	container: {
 		display: 'flex',
 		flexFlow: 'column nowrap',
@@ -24,11 +24,27 @@ const styles = {
 	formField: {
 		margin: '10px 0px'
 	},
-	formButton: {
-		margin: '10px 0px',
-		minHeight: '60px'
+	[theme.breakpoints.down('sm')]: {
+		formButton: {
+			margin: '25px 0 0 0',
+			minHeight: '60px'
+		},
+		imageButton: {
+		margin: '25px 0 0 0',
+		}
+	},
+	[theme.breakpoints.up('md')]: {
+		formButton: {
+			width: '35%',
+			margin: '25px auto 0',
+		},
+		imageButton: {
+			width: '35%',
+			margin: '25px auto 0',
+		}
+		
 	}
-};
+});
 
 class AddPropertyForm extends React.Component {
 	constructor(props) {
@@ -130,14 +146,22 @@ class AddPropertyForm extends React.Component {
 						value={this.state.assistant_guide}
 						onChange={this.handleInput('assistant_guide')}
 					/>
-					<Button variant="contained" component="label">
-					{this.state.uploaded ? `File Uploaded: ${this.state.uploaded}` : 'Upload Image'} 
+					
+					<Button
+						variant="contained"
+						component="label"
+						className={classes.imageButton}
+					>
+						{this.state.uploaded
+							? `File Uploaded: ${this.state.uploaded}`
+							: 'Upload Image'}
 						<input
 							value={undefined}
 							accept="image/*"
-							onChange={this.handleImage} 
-							type="file" 
-							style={{ display: 'none' }} />
+							onChange={this.handleImage}
+							type="file"
+							style={{ display: 'none' }}
+						/>
 					</Button>
 					<Button
 						className={classes.formButton}
@@ -147,6 +171,7 @@ class AddPropertyForm extends React.Component {
 					>
 						Add Property
 					</Button>
+	
 				</form>
 			</div>
 		);
