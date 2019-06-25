@@ -52,21 +52,14 @@ class AddPropertyForm extends React.Component {
 	};
 
 	handleImage = ({ target }) => {
-        const fileReader = new FileReader();
-
-        fileReader.readAsDataURL(target.files[0]);
-        fileReader.onload = (e) => {
-            this.setState({
-                image: toString(e.target.result)
-            });
-		};
+		this.setState({image: target.files[0]});
+		console.log(target.files)
 		
-		console.log(target.files[0]);
     };
 
 	handleSubmit = event => {
 		event.preventDefault();
-
+		console.log(this.state);
 		if(this.state.property_name === ''){
 			window.alert('Property must have a name.')
 		} else if(this.state.address === ''){
@@ -75,13 +68,22 @@ class AddPropertyForm extends React.Component {
 			const property = {
 				property_name: this.state.property_name,
 				address: this.state.address,
-				img_url: this.state.img_url,
+				image: this.state.image,
 				cleaner_id: this.state.cleaner_id,
 				guest_guide: this.state.guest_guide,
 				assistant_guide: this.state.assistant_guide
 			};
+
+			const propertyForm = new FormData();
+			propertyForm.append("property_name", this.state.property_name);
+			propertyForm.append("address", this.state.address);
+			propertyForm.append("File", this.state.image, this.state.image.name);
+			propertyForm.append("cleaner_id", this.state.cleaner_id);
+			propertyForm.append("guest_guide", this.state.guest_guide);
+			propertyForm.append("assistant_guide", this.state.assistant_guide);
+			
 	
-			this.props.addProperty(property);
+			this.props.addProperty(propertyForm);
 			this.props.close();
 		}
 	};
@@ -130,7 +132,7 @@ class AddPropertyForm extends React.Component {
 					<Button variant="contained" component="label">
 						Upload File
 						<input
-							value={''}
+							value={'' || this.state.uploaded}
 							accept="image/*"
 							onChange={this.handleImage} 
 							type="file" 
