@@ -83,6 +83,11 @@ const AccountFeatures = styled.div`
 	align-items: center;
 	padding: 20px;
 
+	@media (max-width: 800px){
+		flex-flow: column nowrap;
+		padding: 0px 20px;
+	}
+
 	button{
 		font-size: 1.5rem;
 		min-width: 70%;
@@ -91,7 +96,7 @@ const AccountFeatures = styled.div`
 
 	ul{
 			width: 70%;
-			padding: 20px;
+			padding: 0px 20px;
 		}
 
 	.left{
@@ -101,7 +106,10 @@ const AccountFeatures = styled.div`
 		justify-content: center;
 		align-items: center;
 
-		
+		@media (max-width: 800px){
+			width: 100%;
+			margin-bottom: 20px;
+		}
 		
 	}
 
@@ -111,6 +119,11 @@ const AccountFeatures = styled.div`
 		flex-flow: column nowrap;
 		justify-content: center;
 		align-items: center;
+
+		@media (max-width: 800px){
+			width: 100%;
+			margin-bottom: 20px;
+		}
 	}
 	`;
 
