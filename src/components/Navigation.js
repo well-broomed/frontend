@@ -14,6 +14,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 // import DialogContent from '@material-ui/core/DialogContent';
 // import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import Slide from '@material-ui/core/Slide';
 
 // Side Drawer
@@ -38,6 +39,8 @@ import { connect } from 'react-redux';
 
 import Auth from './Auth';
 // import lock from './Lock';
+
+import styled from 'styled-components';
 
 const auth = new Auth();
 
@@ -71,6 +74,45 @@ const styles = {
 		background: '#3d3d3d',
 	},
 };
+
+const AccountFeatures = styled.div`
+	width: 100%;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	align-items: center;
+	padding: 20px;
+
+	button{
+		font-size: 1.5rem;
+		min-width: 70%;
+		margin: 0 auto;
+	}
+
+	ul{
+			width: 70%;
+			padding: 20px;
+		}
+
+	.left{
+		width: 45%;
+		display: flex;
+		flex-flow: column nowrap;
+		justify-content: center;
+		align-items: center;
+
+		
+		
+	}
+
+	.right{
+		width: 45%;
+		display: flex;
+		flex-flow: column nowrap;
+		justify-content: center;
+		align-items: center;
+	}
+	`;
 
 const Transition = React.forwardRef((props, ref) => (
 	<Slide direction="up" {...props} ref={ref} />
@@ -174,26 +216,59 @@ class Navigation extends React.Component {
 					open={this.state.loginModal}
 					TransitionComponent={Transition}
 					onClose={this.toggleModal}
+					fullWidth = {true}
+					maxWidth = {'xl'}	
 				>
-					<DialogTitle>Please select your account type.</DialogTitle>
+					<DialogTitle align = 'center'>Please select your account type.</DialogTitle>
 
-					<DialogActions>
-						<Button
+					<DialogContent>
+					<AccountFeatures>
+						<div className = 'left'>
+						
+						<Typography variant = 'h6' align = 'center'>
+						I want to:
+						</Typography>
+
+							<ul>
+								<li>Manage cleaning checklists</li>
+								<li>Assign cleaning shifts</li>
+								<li>Monitor turnover status</li>
+								<li>Make life a little easier</li>
+							</ul>
+						
+						<Button variant = 'contained' color = 'primary' align='center'
 							onClick={event => {
 								this.selectAccount(event, 'manager');
 							}}
 						>
-							<div>I am a Property Manager</div>
+							<div>I am a Manager</div>
 						</Button>
+						</div>
 
-						<Button
+						<div className = 'right'>
+							<Typography variant = 'h6'>
+								I want to:
+							</Typography>
+							
+							<ul>
+								<li>Pick up cleaning shifts</li>
+								<li>Be a lean, mean, cleaning machine</li>
+								<li>Rock out with my mop out</li>
+								<li>Earn some extra dough</li>
+							</ul>
+				
+						<Button variant = 'contained' color = 'primary' align = 'center'
 							onClick={event => {
 								this.selectAccount(event, 'assistant');
 							}}
 						>
 							<div>I am an Assistant</div>
 						</Button>
-					</DialogActions>
+
+						</div>
+
+					</AccountFeatures>
+					</DialogContent>
 				</Dialog>
 			</div>
 		);
@@ -266,7 +341,7 @@ class Navigation extends React.Component {
 						<Divider />
 						<br />
 						<div style={{ padding: '0px 10px' }}>
-							<Typography variant="subtitle">
+							<Typography variant="overline">
 								Please login to access the menu.
 							</Typography>
 						</div>
