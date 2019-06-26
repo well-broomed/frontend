@@ -31,6 +31,7 @@ import {
 	UPLOADING_IMAGE,
 	UPLOADED_IMAGE,
 	UPLOAD_IMAGE_ERROR,
+	CLEAR_IMAGE,
 	PROPERTY_UPDATED,
 } from '../actions';
 
@@ -223,6 +224,13 @@ const propertyReducer = (state = initialState, action) => {
 				...state,
 				uploading_image: undefined,
 				uploadingError: action.payload
+			}
+		case CLEAR_IMAGE:
+			return {
+				...state,
+				uploading_image: false,
+				uploadingError: null,
+				image_url: null
 			}
 
 		default:

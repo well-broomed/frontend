@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core';
 
-import { addProperty, uploadImage } from '../actions/propertyActions';
+import { addProperty, uploadImage, clearImage } from '../actions/propertyActions';
 
 // Form Components
 
@@ -60,6 +60,10 @@ class AddPropertyForm extends React.Component {
 			guest_guide: null,
 			assistant_guide: null
 		};
+	}
+
+	componentDidMount(){
+		this.props.clearImage();
 	}
 
 	handleInput = name => event => {
@@ -198,7 +202,8 @@ export default withRouter(
 		{
 			// actions
 			addProperty,
-			uploadImage
+			uploadImage,
+			clearImage
 		}
 	)(withStyles(styles)(AddPropertyForm))
 );

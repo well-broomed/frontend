@@ -5,12 +5,13 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core';
 
-import { updateProperty } from '../actions/propertyActions';
+import { updateProperty, uploadImage, clearImage } from '../actions/propertyActions';
 
 // Form Components
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Typography from '@material-ui/core/Typography';
 
@@ -66,9 +67,8 @@ class EditPropertyForm extends React.Component {
             property_name: this.props.property.property_name,
 			address: this.props.property.address,
 			img_url: this.props.property.img_url,
-			image: '',
-			uploaded: ''
-        })
+		})
+		this.props.clearImage();
     }
 
 	constructor(props) {
@@ -82,8 +82,7 @@ class EditPropertyForm extends React.Component {
 	}
 
 	handleImage = ({ target }) => {
-		this.setState({image: target.files[0], uploaded: target.files[0].name, imageSrc: window.URL.createObjectURL(target.files[0])});
-		console.log(target.files)
+		this.props.uploadImage(target.files[0]);
   };
 
 	handleInput = name => event => {
@@ -100,12 +99,14 @@ class EditPropertyForm extends React.Component {
 		} else if(this.state.address === ''){
 			window.alert('Property must have an address.')
 		} else {
-			const propertyForm = new FormData();
-			propertyForm.append("property_name", this.state.property_name);
-			propertyForm.append("address", this.state.address);
-			propertyForm.append("File", this.state.image, this.state.image.name);
+
+			const property = {
+				"property_name": this.state.property_name,
+				address: this.state.address,
+				img_url: this.props.img_url
+			}
             
-    		this.props.updateProperty(this.props.property.property_id, propertyForm);
+    		this.props.updateProperty(this.props.property.property_id, property);
 			this.props.close();
 		}
     };
@@ -142,9 +143,15 @@ class EditPropertyForm extends React.Component {
 					/>
 					<FormButtonRow>
 					<Button className={classes.formButton} component="label" variant = 'contained' color="default">
-						{this.state.uploaded
-							? `File Uploaded: ${this.state.uploaded}`
-							: 'Change Image'}
+					{this.props.image_url ? (
+							`Image Uploaded!`
+						) : this.props.uploadingError ? (
+							'Error Uploading'
+						) : this.props.uploading_image ? (
+							<CircularProgress className={classes.progress} />
+						) : (
+							'Upload Image'
+						)}
 						<input
 							value={undefined}
 							accept="image/*"
@@ -153,7 +160,7 @@ class EditPropertyForm extends React.Component {
 							style={{ display: 'none' }}
 						/>
 					</Button>
-					<PropertyImg src={this.state.uploaded ? this.state.imageSrc : this.props.property.img_url || "https://www.freeiconspng.com/uploads/no-image-icon-7.gif"}/>
+					<PropertyImg src={this.props.image_url ? this.props.image_url : this.props.property.img_url || "https://www.freeiconspng.com/uploads/no-image-icon-7.gif"}/>
 
 					
 					</FormButtonRow>
@@ -161,14 +168,23 @@ class EditPropertyForm extends React.Component {
                     <Button className = {classes.formButton} variant = 'outlined' onClick = {this.handleCancel}>
                         Cancel
                     </Button>
+					{this.props.uploading_image ?
 					<Button
 						className={classes.formButton}
 						variant="contained"
 						color="primary"
 						type="submit"
 					>
+						Please Wait
+					</Button> 
+					: 
+					<Button
+						className={classes.formButton}
+						variant="contained"
+						color="primary"
+					>
 						Submit Changes
-					</Button>
+					</Button> }
                     </FormButtonRow>
 
                     
@@ -181,6 +197,9 @@ class EditPropertyForm extends React.Component {
 const mapStateToProps = state => {
 	return {
 		// state items
+		uploading_image: state.propertyReducer.uploading_image,
+		image_url: state.propertyReducer.image_url,
+		uploadingError: state.propertyReducer.uploadingError
 	};
 };
 
@@ -189,7 +208,10 @@ export default withRouter(
 		mapStateToProps,
 		{
 			// actions
-			updateProperty
+			updateProperty,
+			uploadImage,
+			clearImage
+			
 		}
 	)(withStyles(styles)(EditPropertyForm))
 );
