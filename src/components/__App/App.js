@@ -9,6 +9,8 @@ import { checkIfUserExists, setUser } from '../../actions/index';
 import MomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 
+import {createMuiTheme} from '@material-ui/core';
+
 // Components
 import {
 	Home,
@@ -26,6 +28,7 @@ import {
 } from '../../components';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 // import Typography from '@material-ui/core/Typography';
 
 //Styles
@@ -35,6 +38,52 @@ const ComponentContainer = styled.div`
 	padding: 0 20px;
 	margin: 80px auto 0;
 `;
+
+const theme = createMuiTheme({
+	typography: {
+		fontFamily: [
+			"Noto Sans",
+			"Fjalla One",
+			"sans-serif",
+			"Roboto",
+			"Arial",
+			"-apple-system"
+		].join(','),
+		h1: {
+			fontFamily: 'Fjalla One'
+		},
+		h2: {
+			fontFamily: 'Fjalla One'
+		},
+		h3: {
+			fontFamily: 'Fjalla One'
+		},
+		h4: {
+			fontFamily: 'Noto Sans'
+		},
+		h5: {
+			fontFamily: 'Fjalla One'
+		},
+		h6: {
+			fontFamily: 'Noto Sans'
+		},
+		body1: {
+			fontFamily: 'Noto Sans'
+		},
+		body2: {
+			fontFamily: 'Noto Sans'
+		},
+		subtitle1: {
+			fontFamily: 'Noto Sans'
+		},
+		subtitle2: {
+			fontFamily: 'Noto Sans'
+		},
+		button: {
+			fontFamily: 'Fjalla One'
+		}
+	},
+})
 
 class App extends Component {
 	componentDidMount() {
@@ -48,6 +97,7 @@ class App extends Component {
 	render() {
 		return (
 			<div>
+				<MuiThemeProvider theme = {theme}>
 				<MuiPickersUtilsProvider utils={MomentUtils}>
 					<CssBaseline />
 					<Navigation />
@@ -68,6 +118,7 @@ class App extends Component {
 						</Switch>
 					</ComponentContainer>
 				</MuiPickersUtilsProvider>
+				</MuiThemeProvider>
 			</div>
 		);
 	}

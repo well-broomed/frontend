@@ -11,19 +11,21 @@ import styled from 'styled-components';
 
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import {Tabs, Tab, Paper} from '@material-ui/core';
 
 // Icons
 import ListAltTwoTone from '@material-ui/icons/ListAltTwoTone';
 import PersonAddTwoTone from '@material-ui/icons/PersonAddTwoTone';
 import TimelapseTwoTone from '@material-ui/icons/TimelapseTwoTone';
 import NotificationsActiveTwoTone from '@material-ui/icons/NotificationsActiveTwoTone';
+import FileCopyTwoTone from '@material-ui/icons/FileCopyTwoTone';
 
 import Auth from './Auth';
 const auth = new Auth();
 
 const FeatureGrid = styled.div`
 	display: flex;
-	flex-flow: row wrap;
+	flex-flow: column nowrap;
 	width: 100%;
 	padding: 10px;
 	background: white;
@@ -36,18 +38,23 @@ const FeatureGrid = styled.div`
 `;
 
 const Feature = styled.div`
-	width: 50%;
+	width: 100%;
 	display: flex;
 	flex-flow: row nowrap;
 	justify-content: center;
+	align-items: center;
 	margin: 20px 0px;
+	background: white;
+	padding: 20px 0px;
+	border-radius: 10px;
+	background: white;
 
 	.icon {
 		width: auto;
 		margin: 0px 10px;
 
 		svg {
-			font-size: 3rem;
+			font-size: 5rem;
 		}
 	}
 
@@ -66,15 +73,7 @@ const Intro = styled.div`
 	flex-flow: column nowrap;
 	justify-content: center;
 	align-items: center;
-
-	h3 {
-		margin: 20px 0px 16px;
-	}
-
-	h5 {
-		margin: 20px 0px;
-		width: 75%;
-	}
+	margin: 120px 0px 30px 0px;
 `;
 
 const InfoList = styled.div`
@@ -87,14 +86,16 @@ const CallToAction = styled.div`
 
 	button {
 		font-size: 1.5rem;
-		margin: 20px 0px;
+		margin: 40px 0px 20px 0px;
 	}
 `;
 
 class Home extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			
+		};
 	}
 
 	handleLogin = () => {
@@ -105,15 +106,27 @@ class Home extends React.Component {
 		return (
 			<div>
 				<Intro>
-					<Typography variant="h3">Welcome to WellBroomed!</Typography>
-					<Typography variant="h5">
-						WellBroomed helps managers of short-term rental properties keep
-						track of the various cleaning tasks that need to be completed
-						between guest check-ins.
+					<Typography variant="h2">Welcome to WellBroomed!</Typography>
+					<Typography variant="h6">
+						WellBroomed is a short-term rental property management application.
 					</Typography>
 				</Intro>
 
-				<Typography variant="h6">With WellBroomed, you can:</Typography>
+				<CallToAction>
+					<Typography variant="h5">
+						Ready to manage guest turnovers with ease?
+					</Typography>
+					<Button
+						size="large"
+						variant="contained"
+						color="primary"
+						onClick={this.handleLogin}
+					>
+						Let's do it!
+					</Button>
+				</CallToAction>
+
+				<Typography align = 'center' variant = 'h5'>Need some convincing? With WellBroomed, you can:</Typography>
 
 				<FeatureGrid>
 					<Feature>
@@ -121,8 +134,8 @@ class Home extends React.Component {
 							<ListAltTwoTone />
 						</div>
 						<div className="text">
-							<Typography variant="body1">
-								Create and manage cleaning checklists for your short-term rental
+							<Typography variant="h6">
+								Create cleaning checklists for your short-term rental
 								properties.
 							</Typography>
 						</div>
@@ -133,8 +146,19 @@ class Home extends React.Component {
 							<PersonAddTwoTone />
 						</div>
 						<div className="text">
-							<Typography variant="body1">
+							<Typography variant="h6">
 								Invite cleaning assistants and assign cleaning shifts.
+							</Typography>
+						</div>
+					</Feature>
+
+					<Feature>
+						<div className="icon">
+							<FileCopyTwoTone />
+						</div>
+						<div className="text">
+							<Typography variant="h6">
+								Generate cleaning checklists from a template automatically for each new guest.
 							</Typography>
 						</div>
 					</Feature>
@@ -144,8 +168,8 @@ class Home extends React.Component {
 							<TimelapseTwoTone />
 						</div>
 						<div className="text">
-							<Typography variant="body1">
-								Check the turnover progress of all your properties from one
+							<Typography variant="h6">
+								Monitor the checklist completion status of all your properties from one
 								place.
 							</Typography>
 						</div>
@@ -156,14 +180,14 @@ class Home extends React.Component {
 							<NotificationsActiveTwoTone />
 						</div>
 						<div className="text">
-							<Typography variant="body1">
-								Automatically notify guests when their property is ready.
+							<Typography variant="h6">
+								Automatically notify assistants when a new guest is added.
 							</Typography>
 						</div>
 					</Feature>
 				</FeatureGrid>
 
-				<InfoList>
+				{/* <InfoList>
 					<Typography variant="h6">How does it work?</Typography>
 
 					<ul>
@@ -184,11 +208,11 @@ class Home extends React.Component {
 							</li>
 						</Typography>
 					</ul>
-				</InfoList>
+				</InfoList> */}
 
 				<CallToAction>
 					<Typography variant="h5">
-						Ready to simplify your property management tasks?
+						Pretty cool, right?
 					</Typography>
 					<Button
 						size="large"
@@ -196,7 +220,7 @@ class Home extends React.Component {
 						color="primary"
 						onClick={this.handleLogin}
 					>
-						Sign Me Up!
+						That sounds awesome! Sign Me Up!
 					</Button>
 				</CallToAction>
 			</div>
