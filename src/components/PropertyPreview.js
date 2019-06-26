@@ -218,6 +218,7 @@ class PropertyPreview extends React.Component {
 						<CardMedia 
 							className={classes.image}
 							image={property.img_url || "https://www.freeiconspng.com/uploads/no-image-icon-7.gif"}
+							alt={property.property_name || 'Property Image'}
 						/>
 						<div>
 						<CardContainer>

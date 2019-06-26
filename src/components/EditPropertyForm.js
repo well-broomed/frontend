@@ -20,31 +20,54 @@ const FormButtonRow = styled.div`
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
-    `;
+	margin-top: 15px;
+	`;
+	
+const PropertyImg = styled.img`
+	width: 45%;
+	height: 95px;
+	background: lightgray;
+	object-fit: contain;
+	@media (min-width: 960px) {
 
-const styles = {
+	}
+`;
+
+const styles = theme => ({
 	container: {
 		display: 'flex',
 		flexFlow: 'column nowrap',
 		padding: '5%',
-		height: '50vh'
+		height: '70vh'
 	},
 	formField: {
 		margin: '10px 0px'
 	},
-	formButton: {
-        margin: '10px 0px',
-        minHeight: '60px',
-        width: '45%',
+	[theme.breakpoints.down('sm')]: {
+		formButton: {
+			margin: '10px 0px',
+			minHeight: '60px',
+			width: '45%'
+		}
+	},
+	[theme.breakpoints.up('md')]: {
+		formButton: {
+			margin: '10px 0px',
+			minHeight: '60px',
+			width: '45%'
+		}
 	}
-};
+});
 
 class EditPropertyForm extends React.Component {
     componentDidMount(){
         // assign the initial state for the property form
         this.setState({
             property_name: this.props.property.property_name,
-            address: this.props.property.address,
+			address: this.props.property.address,
+			img_url: this.props.property.img_url,
+			image: '',
+			uploaded: ''
         })
     }
 
@@ -57,6 +80,11 @@ class EditPropertyForm extends React.Component {
 			address: '',
 		};
 	}
+
+	handleImage = ({ target }) => {
+		this.setState({image: target.files[0], uploaded: target.files[0].name, imageSrc: window.URL.createObjectURL(target.files[0])});
+		console.log(target.files)
+  };
 
 	handleInput = name => event => {
 		this.setState({
@@ -72,12 +100,12 @@ class EditPropertyForm extends React.Component {
 		} else if(this.state.address === ''){
 			window.alert('Property must have an address.')
 		} else {
-			const property = {
-				property_name: this.state.property_name,
-				address: this.state.address,
-            };
+			const propertyForm = new FormData();
+			propertyForm.append("property_name", this.state.property_name);
+			propertyForm.append("address", this.state.address);
+			propertyForm.append("File", this.state.image, this.state.image.name);
             
-    		this.props.updateProperty(this.props.property.property_id, property);
+    		this.props.updateProperty(this.props.property.property_id, propertyForm);
 			this.props.close();
 		}
     };
@@ -112,6 +140,23 @@ class EditPropertyForm extends React.Component {
 						value={this.state.address}
 						onChange={this.handleInput('address')}
 					/>
+					<FormButtonRow>
+					<Button className={classes.formButton} component="label" variant = 'contained' color="default">
+						{this.state.uploaded
+							? `File Uploaded: ${this.state.uploaded}`
+							: 'Change Image'}
+						<input
+							value={undefined}
+							accept="image/*"
+							onChange={this.handleImage}
+							type="file"
+							style={{ display: 'none' }}
+						/>
+					</Button>
+					<PropertyImg src={this.state.uploaded ? this.state.imageSrc : this.props.property.img_url || "https://www.freeiconspng.com/uploads/no-image-icon-7.gif"}/>
+
+					
+					</FormButtonRow>
                     <FormButtonRow>
                     <Button className = {classes.formButton} variant = 'outlined' onClick = {this.handleCancel}>
                         Cancel

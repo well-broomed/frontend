@@ -19,7 +19,7 @@ const styles = theme => ({
 		display: 'flex',
 		flexFlow: 'column nowrap',
 		padding: '5%',
-		height: '80vh'
+		height: '65vh'
 	},
 	formField: {
 		margin: '10px 0px'
@@ -70,9 +70,7 @@ class AddPropertyForm extends React.Component {
 
 	handleImage = ({ target }) => {
 		this.setState({image: target.files[0], uploaded: target.files[0].name});
-		console.log(target.files)
-		
-    };
+  };
 
 	handleSubmit = event => {
 		event.preventDefault();
@@ -82,15 +80,7 @@ class AddPropertyForm extends React.Component {
 		} else if(this.state.address === ''){
 			window.alert('Property must have an address.')
 		} else {
-			const property = {
-				property_name: this.state.property_name,
-				address: this.state.address,
-				image: this.state.image,
-				cleaner_id: this.state.cleaner_id,
-				guest_guide: this.state.guest_guide,
-				assistant_guide: this.state.assistant_guide
-			};
-
+			
 			const propertyForm = new FormData();
 			propertyForm.append("property_name", this.state.property_name);
 			propertyForm.append("address", this.state.address);
