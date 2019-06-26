@@ -5,21 +5,23 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core';
 
-import { addProperty } from '../actions/propertyActions';
+import { addProperty, uploadImage } from '../actions/propertyActions';
 
 // Form Components
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Typography from '@material-ui/core/Typography';
+
 
 const styles = theme => ({
 	container: {
 		display: 'flex',
 		flexFlow: 'column nowrap',
 		padding: '5%',
-		height: '65vh'
+		height: '70vh'
 	},
 	formField: {
 		margin: '10px 0px'
@@ -54,8 +56,6 @@ class AddPropertyForm extends React.Component {
 			addModal: false,
 			property_name: '',
 			address: '',
-			uploaded: '',
-			image: null,
 			cleaner_id: null,
 			guest_guide: null,
 			assistant_guide: null
@@ -69,7 +69,7 @@ class AddPropertyForm extends React.Component {
 	};
 
 	handleImage = ({ target }) => {
-		this.setState({image: target.files[0], uploaded: target.files[0].name});
+		this.props.uploadImage(target.files[0]);
   };
 
 	handleSubmit = event => {
@@ -81,16 +81,16 @@ class AddPropertyForm extends React.Component {
 			window.alert('Property must have an address.')
 		} else {
 			
-			const propertyForm = new FormData();
-			propertyForm.append("property_name", this.state.property_name);
-			propertyForm.append("address", this.state.address);
-			propertyForm.append("File", this.state.image, this.state.image.name);
-			propertyForm.append("cleaner_id", this.state.cleaner_id);
-			propertyForm.append("guest_guide", this.state.guest_guide);
-			propertyForm.append("assistant_guide", this.state.assistant_guide);
-			
+			const property = {
+				"property_name" : this.state.property_name,
+				"address" : this.state.address,
+				"img_url": this.props.image_url,
+				"cleaner_id" : this.state.cleaner_id,
+				"guest_guide" : this.state.guest_guide,
+				"assistant_guide" : this.state.assistant_guide,
+			}
 	
-			this.props.addProperty(propertyForm);
+			this.props.addProperty(property);
 			this.props.close();
 		}
 	};
@@ -136,15 +136,21 @@ class AddPropertyForm extends React.Component {
 						value={this.state.assistant_guide}
 						onChange={this.handleInput('assistant_guide')}
 					/>
-					
+
 					<Button
 						variant="contained"
 						component="label"
 						className={classes.imageButton}
 					>
-						{this.state.uploaded
-							? `File Uploaded: ${this.state.uploaded}`
-							: 'Upload Image'}
+						{this.props.image_url ? (
+							`Image Uploaded!`
+						) : this.props.uploadingError ? (
+							'Error Uploading'
+						) : this.props.uploading_image ? (
+							<CircularProgress className={classes.progress} />
+						) : (
+							'Upload Image'
+						)}
 						<input
 							value={undefined}
 							accept="image/*"
@@ -153,15 +159,24 @@ class AddPropertyForm extends React.Component {
 							style={{ display: 'none' }}
 						/>
 					</Button>
-					<Button
-						className={classes.formButton}
-						variant="contained"
-						color="primary"
-						type="submit"
-					>
-						Add Property
-					</Button>
-	
+					{this.props.uploading_image ? (
+						<Button
+							className={classes.formButton}
+							variant="contained"
+							color="primary"
+						>
+							Please Wait
+						</Button>
+					) : (
+						<Button
+							className={classes.formButton}
+							variant="contained"
+							color="primary"
+							type="submit"
+						>
+							Add Property
+						</Button>
+					)}
 				</form>
 			</div>
 		);
@@ -171,6 +186,9 @@ class AddPropertyForm extends React.Component {
 const mapStateToProps = state => {
 	return {
 		// state items
+		uploading_image: state.propertyReducer.uploading_image,
+		image_url: state.propertyReducer.image_url,
+		uploadingError: state.propertyReducer.uploadingError
 	};
 };
 
@@ -179,7 +197,8 @@ export default withRouter(
 		mapStateToProps,
 		{
 			// actions
-			addProperty
+			addProperty,
+			uploadImage
 		}
 	)(withStyles(styles)(AddPropertyForm))
 );

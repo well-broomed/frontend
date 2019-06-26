@@ -144,6 +144,10 @@ class Account extends React.Component {
 
             changes.email = this.state.email;
             this.props.updateUserProfile(user_id, changes);
+        } else if(event.target.name === 'image'){
+            const changesForm = new FormData();
+            changesForm.append("File", event.target.files[0], event.target.files[0].name)
+            this.props.updateUserProfile(user_id, changesForm);
         }
     }
 
@@ -164,6 +168,22 @@ class Account extends React.Component {
                          title = 'Profile Picture'/>
                      </CardActionArea>
                      <CardContent>
+                        <div>
+                        <Typography variant = 'overline'> Change Profile Picture </Typography>
+                        <input
+							value={undefined}
+							accept="image/*"
+                            id="icon-button-file"
+							onChange={e => {this.handleSubmit(e)}}
+                            name="image"
+							type="file"
+							style={{ display: 'none' }}
+						/>
+                        <label htmlFor="icon-button-file">
+                             <IconButton  component="span" name = 'profilepic'><EditTwoTone name = 'profilepic'/>
+                            </IconButton>
+                        </label>
+                            </div>
                         <Typography variant = 'overline'>Username</Typography>
                         {!this.state.usernameOpen ? (
                             <FlexRowNoWrap>
