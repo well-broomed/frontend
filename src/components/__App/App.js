@@ -59,7 +59,7 @@ const theme = createMuiTheme({
 			fontFamily: 'Fjalla One'
 		},
 		h4: {
-			fontFamily: 'Noto Sans'
+			fontFamily: 'Fjalla One'
 		},
 		h5: {
 			fontFamily: 'Fjalla One'

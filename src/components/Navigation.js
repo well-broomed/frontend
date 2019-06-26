@@ -109,6 +109,8 @@ const AccountFeatures = styled.div`
 		@media (max-width: 800px){
 			width: 100%;
 			margin-bottom: 20px;
+			padding-bottom: 30px;
+			border-bottom: 2px solid slategray;
 		}
 		
 	}
@@ -239,7 +241,7 @@ class Navigation extends React.Component {
 						<div className = 'left'>
 						
 						<Typography variant = 'h6' align = 'center'>
-						I want to:
+						You want to:
 						</Typography>
 
 							<ul>
@@ -260,13 +262,13 @@ class Navigation extends React.Component {
 
 						<div className = 'right'>
 							<Typography variant = 'h6'>
-								I want to:
+								You want to:
 							</Typography>
 							
 							<ul>
 								<li>Pick up cleaning shifts</li>
 								<li>Be a lean, mean, cleaning machine</li>
-								<li>Rock out with my mop out</li>
+								<li>Rock out with your mop out</li>
 								<li>Earn some extra dough</li>
 							</ul>
 				

@@ -29,7 +29,6 @@ const FeatureGrid = styled.div`
 	width: 100%;
 	padding: 10px;
 	background: white;
-
 	margin: 20px 0px;
 
 	@media (max-width: 800px) {
@@ -43,7 +42,7 @@ const Feature = styled.div`
 	flex-flow: row nowrap;
 	justify-content: center;
 	align-items: center;
-	margin: 20px 0px;
+	margin: 10px 0px;
 	background: white;
 	padding: 20px 0px;
 	border-radius: 10px;
@@ -74,10 +73,6 @@ const Intro = styled.div`
 	justify-content: center;
 	align-items: center;
 	margin: 120px 0px 30px 0px;
-`;
-
-const InfoList = styled.div`
-	margin: 20px 0px;
 `;
 
 const CallToAction = styled.div`
