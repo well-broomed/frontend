@@ -11,6 +11,7 @@ import Input from '@material-ui/core/Input';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import Typography from '@material-ui/core/Typography';
 import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
 import CardHeader from '@material-ui/core/CardHeader';
 
 // Dialog Modals
@@ -70,6 +71,7 @@ const CardActions = styled.div`
 
 const styles = {
 	card: {
+		display: 'flex',
 		maxWidth: '600px',
 		margin: '12px 0 20px 0',
 	},
@@ -84,7 +86,13 @@ const styles = {
 		display: 'flex',
 		justifyContent: 'flex-end',
 	},
-	button: { width: '196px' },
+	button: { 
+		width: '196px' 
+	},
+	image: {
+		backgroundSize: 'contain',
+		width:'25%'
+	}
 };
 
 class PropertyPreview extends React.Component {
@@ -203,8 +211,15 @@ class PropertyPreview extends React.Component {
 					</Dialog>
 
 					{/** Property Card */}
-
+					
+						
+					
 					<Card className={classes.card} key={property.id}>
+						<CardMedia 
+							className={classes.image}
+							image={property.img_url || "https://www.freeiconspng.com/uploads/no-image-icon-7.gif"}
+						/>
+						<div>
 						<CardContainer>
 							<Link to={`/properties/${property.property_id}`}>
 								<CardText>
@@ -218,6 +233,7 @@ class PropertyPreview extends React.Component {
 								<DeleteForeverTwoTone onClick={this.toggleDelete} />
 							</CardActions>
 						</CardContainer>
+						
 						<CardFooter>
 							<FormControl className={classes.formControl}>
 								<InputLabel shrink htmlFor="cleaner-native-label-placeholder">
@@ -242,8 +258,10 @@ class PropertyPreview extends React.Component {
 								</NativeSelect>
 							</FormControl>
 						</CardFooter>
+						</div>
 					</Card>
-				</div>
+					</div>
+	
 			);
 		} else {
 			return (
