@@ -3,6 +3,7 @@ import {
 	USER_UPDATED,
 	UPDATING_USER,
 	SET_USER,
+	INVITE_FETCHED,
 } from '../actions';
 
 const initialState = {
@@ -10,6 +11,7 @@ const initialState = {
 	userChecked: false,
 	user: null,
 	currentUser: null,
+	inviteInfo: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -29,6 +31,11 @@ const authReducer = (state = initialState, action) => {
 				...state,
 				userChecked: false,
 			};
+		case INVITE_FETCHED:
+				return {
+					...state,
+					inviteInfo: action.payload,
+				}
 
 		case USER_UPDATED:
 			return {

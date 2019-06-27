@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { checkIfUserExists } from '../actions/index';
+import { checkIfUserExists, inviteLogin } from '../actions/index';
 
 import Auth from './Auth';
 
@@ -14,17 +14,34 @@ const auth = new Auth();
 
 class Callback extends React.Component {
 	async componentDidMount() {
-		await auth.handleAuthentication().then(status => {
-			console.log('callback role', localStorage.getItem('accountType'));
-			this.props.checkIfUserExists(localStorage.getItem('accountType'));
-		});
+
+		// handle invitation logins
+		if(localStorage.getItem('inviteCode')){
+			await auth.handleAuthentication().then(status => {
+				
+				// the jwt is in localstorage, so complete the login flow
+				let role = localStorage.getItem('role');
+				let inviteCode = localStorage.getItem('inviteCode');
+
+				this.props.inviteLogin(role, inviteCode);
+
+				// remove the invite code from localstorage
+				localStorage.removeItem('inviteCode');
+			})
+		} else {
+			await auth.handleAuthentication().then(status => {
+				console.log('callback role', localStorage.getItem('accountType'));
+				this.props.checkIfUserExists(localStorage.getItem('accountType'));
+			});
+		}
+		
 	}
 
 	// @TODO callback redirect cant be properly resolved until backend is deployed
 	componentDidUpdate() {
 		if (this.props.userChecked === true) {
 			localStorage.removeItem('accountType');
-			this.props.history.replace('/reports');
+			this.props.history.replace('/properties');
 		}
 	}
 
@@ -48,6 +65,7 @@ export default withRouter(
 		{
 			// actions
 			checkIfUserExists,
+			inviteLogin
 		}
 	)(Callback)
 );

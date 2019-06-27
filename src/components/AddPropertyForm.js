@@ -7,11 +7,15 @@ import { withStyles } from '@material-ui/core';
 
 import { addProperty, uploadImage, clearImage } from '../actions/propertyActions';
 
+import styled from 'styled-components';
+
 // Form Components
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Tooltip from '@material-ui/core/Tooltip';
+import HelpTwoTone from '@material-ui/icons/HelpTwoTone';
 
 import Typography from '@material-ui/core/Typography';
 
@@ -48,6 +52,13 @@ const styles = theme => ({
 	}
 });
 
+const TopRow = styled.div`
+
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	`;
+
 class AddPropertyForm extends React.Component {
 	constructor(props) {
 		super(props);
@@ -57,8 +68,8 @@ class AddPropertyForm extends React.Component {
 			property_name: '',
 			address: '',
 			cleaner_id: null,
-			guest_guide: null,
-			assistant_guide: null
+			guest_guide: '',
+			assistant_guide: ''
 		};
 	}
 
@@ -109,7 +120,13 @@ class AddPropertyForm extends React.Component {
 					noValidate
 					autoComplete="off"
 				>
+					<TopRow>
 					<Typography variant="h4">Add a New Property</Typography>
+					<Tooltip 
+					title = 'Guest Guide and Assistant Guide URLs will link to documents that outline guest and assistant guidelines, respectively.'>
+						<HelpTwoTone />
+					</Tooltip>
+					</TopRow>
 
 					<TextField
 						className={classes.formField}
@@ -125,18 +142,20 @@ class AddPropertyForm extends React.Component {
 						value={this.state.address}
 						onChange={this.handleInput('address')}
 					/>
+					
+					<TextField
+						className={classes.formField}
+						id="standard-dense"
+						label="Guest Guide URL (Optional)"
+						value={this.state.guest_guide}
+						onChange={this.handleInput('guest_guide')}
+					/>
+					
 
 					<TextField
 						className={classes.formField}
 						id="standard-dense"
-						label="Guest Guide URL"
-						value={this.state.guest_guide}
-						onChange={this.handleInput('guest_guide')}
-					/>
-					<TextField
-						className={classes.formField}
-						id="standard-dense"
-						label="Assistant Guide URL"
+						label="Assistant Guide URL (Optional)"
 						value={this.state.assistant_guide}
 						onChange={this.handleInput('assistant_guide')}
 					/>

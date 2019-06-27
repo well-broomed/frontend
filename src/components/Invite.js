@@ -1,75 +1,138 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import { Typography } from '@material-ui/core';
+
+// Material UI
+import Typography from '@material-ui/core/Typography';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+
+import {checkInvite} from '../actions/index';
+
+import Button from '@material-ui/core/Button';
+
+import Auth from './Auth';
+
+import styled from 'styled-components';
+
+const TopBar = styled.div`
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: center;
+	margin-bottom: 20px;
+	text-align: center;
+	`;
+
+const CardContainer = styled.div`
+
+	width: 100%;
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+	align-items: center;
+
+	div{
+		width: 75%;
+		text-align: center;
+	}
+
+	div > div{
+		width: 100%;
+		text-align: center;
+	}
+	
+	.action-box{
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: center;
+	}
+
+	`;
+
+const auth = new Auth();
 
 class Invite extends Component {
+
+	componentDidMount(){
+		// parse and validate the invitation code
+		let inviteCode = this.props.history.location.search;
+		inviteCode = inviteCode.slice(1, inviteCode.length);
+		
+		this.props.checkInvite(inviteCode);
+		localStorage.setItem('inviteCode', inviteCode);
+	}
+
+	componentDidUpdate(prevProps){
+		if(prevProps.inviteInfo !== this.props.inviteInfo){
+			this.setState({
+				inviteInfo: this.props.inviteInfo
+			})
+		}
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = {
-			successful: false,
+			inviteInfo: null,
 		};
 	}
 
-	async componentDidMount() {
-		const backendUrl =
-			process.env.REACT_APP_BACKEND_URL || `http://localhost:5000`;
-		const inviteCode = this.props.match.params.invite_code;
-		let token = localStorage.getItem('jwt');
-		let userInfo = localStorage.getItem('userInfo');
-
-		let options = {
-			headers: {
-				Authorization: `Bearer ${token}`,
-				'user-info': userInfo,
-			},
-		};
-		const response = await axios.get(
-			`${backendUrl}/api/invites/accept/${inviteCode}`,
-			options
-		);
-		if (response) this.setState({ successful: true });
+	handleLogin = () => {
+		localStorage.setItem('role', 'assistant');
+		auth.login();
 	}
 
 	render() {
-		const loggedIn = localStorage.getItem('jwt');
+		console.log(this.state.inviteInfo, 'invite info');
 		return (
 			<div>
-				{loggedIn ? (
-					<div>
-						{this.state.successful ? (
-							<Typography variant="h6">
-								{' '}
-								Congratulations, your invitation has been processed
-								successfully! Click <Link to="/account">here </Link> to go to
-								your account page for more details{' '}
+			<TopBar>
+			<Typography variant = 'h2'>
+			Welcome to WellBroomed!
+			</Typography>
+			</TopBar>
+			{this.state.inviteInfo ? (
+				<div>
+					<CardContainer>
+					<Card>
+						<CardContent>
+							<Typography variant = 'h5'>
+								You have been invited by <strong>{this.state.inviteInfo.manager_profile.user_name}</strong> ({this.state.inviteInfo.manager_profile.email}) to join WellBroomed.
 							</Typography>
-						) : (
-							<Typography variant="h6">
-								{' '}
-								Unfortunately, your invitation was not successful. This may be
-								because you have already accepted an invitation from this user.{' '}
-								<br />
-								{/*<Link to="/account">Click here to go to your account page.</Link> Implement a current partners view in account page*/}
+
+							<Typography variant = 'body1'>
+								To accept your invitation, please click below and create an account with the email on your invitation ({this.state.inviteInfo.email}).
 							</Typography>
-						)}{' '}
-					</div>
-				) : (
-					<Typography variant="h6">
-						To process your invitation, you must be logged in. Please login or
-						create an account and then visit the invitation link given from your
-						email invitation.
-					</Typography>
-				)}
+						</CardContent>
+						
+						<CardActions>
+							<div className = 'action-box'>
+							<Button variant = 'contained' color = 'primary' onClick = {this.handleLogin}>Accept</Button>
+							</div>
+						</CardActions>
+					</Card>
+					</CardContainer>
+				
+				</div>
+			): (<div><h4>Loading invitation information...</h4></div>)}
+
 			</div>
 		);
 	}
 }
+
+
 function mapStateToProps(state) {
 	return {
 		user: state.authReducer.user,
+		inviteInfo: state.authReducer.inviteInfo,
 	};
 }
 
-export default connect(mapStateToProps)(Invite);
+export default connect(
+	mapStateToProps,
+	{
+		//actions
+		checkInvite,
+	}
+)(Invite);

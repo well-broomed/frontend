@@ -38,10 +38,10 @@ const styles = {
 		width: '50%',
 		display: 'flex',
 		margin: '0 auto 10px',
-		height: '200px',
+		height: '160px',
 	},
 	appbar: {
-		marginTop: '15px',
+		marginTop: '20px',
 	},
 	divider: {
 		margin: '15px 0',
@@ -185,16 +185,24 @@ class Reports extends React.Component {
 
 		return (
 			<div>
+				<div style = {{padding: '20px 0px'}}>
 				<Typography variant="h2">Reports</Typography>
+				</div>
 
 				{user.role && (
-					<AppBar position="static" color="default" className={classes.appbar}>
+					<AppBar
+						position="static"
+						// color="default"
+
+						className={classes.appbar}
+					>
 						<Tabs
 							value={this.state.tabValue}
 							onChange={this.handleTabChange}
-							indicatorColor="primary"
-							textColor="primary"
-							centered
+							variant="fullWidth"
+							// indicatorColor="primary"
+							// textColor="primary"
+							// centered
 						>
 							<Tab label="Current" />
 							<Tab label="Past" />

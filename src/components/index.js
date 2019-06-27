@@ -19,3 +19,4 @@ export { default as Auth } from './Auth';
 export { default as Navigation } from './Navigation';
 export { default as Redirect } from './Redirect';
 export { default as Invite } from './Invite';
+export { default as Footer } from './Footer';

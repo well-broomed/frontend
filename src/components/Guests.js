@@ -28,6 +28,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
+// DateTime handling with moment.js
+import moment from 'moment';
+
 const styles = {
 	card: {
 		minWidth: 275,
@@ -44,6 +47,8 @@ const TopBar = styled.div`
 	flex-flow: row nowrap;
 	justify-content: space-between;
 	align-items: center;
+	padding: 20px 0px;
+	margin-bottom: 20px;
 `;
 
 // const TabContainer = styled.div`
@@ -105,6 +110,16 @@ class Guests extends React.Component {
 
 	render() {
 		const { classes } = this.props;
+		let currentTime = moment().format();
+		let upcomingGuests = [];
+		let currentGuests = [];
+		let previousGuests = [];
+
+		if(this.props.guests){
+			upcomingGuests = this.props.guests.filter(guest => moment(guest.checkin).format() > currentTime);
+			previousGuests = this.props.guests.filter(guest => moment(guest.checkout).format() < currentTime);
+			currentGuests = this.props.guests.filter(guest => ((moment(guest.checkin).format() < currentTime) && (moment(guest.checkout).format() > currentTime)));
+		}
 
 		return (
 			<div>
@@ -140,31 +155,70 @@ class Guests extends React.Component {
 						<AppBar position="static">
 							<Tabs value={this.state.tab} variant="fullWidth">
 								<Tab label="Upcoming" value={0} onClick={this.handleTab(0)} />
-								<Tab label="Incomplete" value={1} onClick={this.handleTab(1)} />
-								<Tab label="Complete" value={2} onClick={this.handleTab(2)} />
+								<Tab label="Current" value={1} onClick={this.handleTab(1)} />
+								<Tab label="Previous" value={2} onClick={this.handleTab(2)} />
 							</Tabs>
 						</AppBar>
+						<br></br>
+					
+						{/** Upcoming Guests **/}
+						{this.state.tab === 0 ? (
+								<>
+								{upcomingGuests.length > 0 ? (
+									upcomingGuests.map(guest => {
+										return (
+											<GuestPreview guest = {guest} tab = {this.state.tab} key = {guest.guest_id} fetching = {this.props.gettingPropertyCleaners} />
+										)
+									})
+								) : (
+									<Typography variant = 'overline'>
+										You have no upcoming guests.
+									</Typography>
+			
+								)}
+								</>
+							) : (
+								null
+								)}
 
-						{this.props.guests ? (
-							<div>
-								{this.props.guests.map(guest => {
-									return (
-										<GuestPreview
-											guest={guest}
-											tab={this.state.tab}
-											key={guest.guest_id}
-											fetching={this.props.gettingPropertyCleaners}
-										/>
-									);
-								})}
-							</div>
-						) : null}
-						{/* 
-                        {this.state.tab === 0 && <TabContainer>Upcoming</TabContainer>}
+							{/** Current Guests **/}
+							{this.state.tab === 1 ? (
+								<>
+								{currentGuests.length > 0 ? (
+									currentGuests.map(guest => {
+										return (
+											<GuestPreview guest = {guest} tab = {this.state.tab} key = {guest.guest_id} fetching = {this.props.gettingPropertyCleaners} />
+										)
+									})
+								) : (
+									<Typography variant = 'overline'>
+										You have no current guests.
+									</Typography>
+			
+								)}
+								</>
+							) : (
+								null
+								)}
 
-                        {this.state.tab === 1 && <TabContainer>Incomplete</TabContainer>}
-
-                        {this.state.tab === 2 && <TabContainer>Complete</TabContainer>} */}
+							{/** Previous Guests **/}
+							{this.state.tab === 2 ? (
+								<>
+								{previousGuests.length > 0 ? (
+									previousGuests.map(guest => {
+										return (
+											<GuestPreview guest = {guest} tab = {this.state.tab} key = {guest.guest_id} fetching = {this.props.gettingPropertyCleaners} />
+										)
+									})
+								) : (
+									<Typography variant = 'overline'>
+										You have no previous guests.
+									</Typography>
+								)}
+								</>
+							) : (
+								null
+								)}
 					</div>
 				) : null}
 			</div>

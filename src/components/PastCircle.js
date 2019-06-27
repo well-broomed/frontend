@@ -33,12 +33,14 @@ const useStyles = makeStyles(theme => ({
 		fontWeight: 500,
 		margin: '0 0 -5px',
 	},
-	deadline: {
+	dates: {
 		fontWeight: 500,
-		// margin: '6px 0 0',
+		[theme.breakpoints.down(600)]: {
+			fontSize: '.9rem',
+		},
 	},
 	cleanerName: {
-		margin: '-4px 0 14px',
+		margin: '-7px 0 18px',
 	},
 	blank: { fontSize: '3rem', color: '#b3b3b3' },
 }));
@@ -85,22 +87,18 @@ const PastCircle = props => {
 					/>
 				</div>
 
-				<Typography
-					variant="h6"
-					className={classes.propertyName}
-					align="center"
-				>
-					{guest.property_name}
-				</Typography>
-
-				<Typography
-					variant="subtitle1"
-					className={classes.deadline}
-					align="center"
-					style={{ color }}
-				>
-					{moment(guest.checkout).format('MMM DD h:mma')}
-				</Typography>
+				<Dates>
+					<Typography
+						variant="subtitle1"
+						className={classes.dates}
+						align="center"
+						style={{ color }}
+					>
+						{`${moment(guest.checkin).format('MMM DD')} - ${moment(
+							guest.checkout
+						).format('MMM DD')}`}
+					</Typography>
+				</Dates>
 			</GuestLink>
 
 			{/* todo: make this a link to the partner page */}
@@ -121,6 +119,12 @@ const GuestLink = styled(Link)`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	max-width: 180px;
 	color: inherit;
 	text-decoration: none;
+`;
+
+const Dates = styled.div`
+	display: flex;
+	flex-direction: column;
 `;

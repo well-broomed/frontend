@@ -91,8 +91,11 @@ export const getUserProperties = () => {
 
 		fetchUrl
 			.then(res => {
-				// localStorage.setItem('userId', res.data.profile.id);
-				dispatch({ type: PROPERTIES_FETCHED, payload: res.data.properties });
+				if(res.data.properties.length === 0){
+					dispatch({ type: PROPERTIES_FETCHED, payload: null });
+				} else {
+					dispatch({ type: PROPERTIES_FETCHED, payload: res.data.properties });
+				}
 			})
 			.catch(err => {
 				console.log(err);
@@ -182,8 +185,6 @@ export const updateProperty = (property_id, property) => {
 
 		endpoint
 			.then(res => {
-				console.log('update property res', res.data);
-
 				dispatch({ type: PROPERTY_UPDATED, payload: res.data });
 			})
 			.catch(err => {
@@ -225,7 +226,11 @@ export const getPartners = () => {
 
 		endpoint
 			.then(res => {
-				dispatch({ type: PARTNERS_FETCHED, payload: res.data.partners });
+				if(res.data.partners.length === 0){
+					dispatch({ type: PARTNERS_FETCHED, payload: null });
+				} else {
+					dispatch({ type: PARTNERS_FETCHED, payload: res.data.partners });
+				}
 			})
 			.catch(err => {
 				console.log(err);

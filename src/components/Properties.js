@@ -30,7 +30,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
 // Actions
-import { getUserProperties } from '../actions';
+import { getUserProperties, getAvailableProperties } from '../actions/index';
 import PropertyPreview from './PropertyPreview';
 
 const TopBar = styled.div`
@@ -39,11 +39,17 @@ const TopBar = styled.div`
 	flex-flow: row nowrap;
 	justify-content: space-between;
 	align-items: center;
-	margin: 0 0 20px;
+	padding: 20px 0px;
 `;
 
 const styles = {
-	title: { padding: '10px 0 0' },
+	card: {
+		maxWidth: 600,
+		margin: '20px auto',
+	},
+	media: {
+		objectFit: 'cover',
+	},
 	addIcon: {
 		fontSize: '5rem',
 		cursor: 'pointer',
@@ -59,13 +65,19 @@ class Properties extends React.Component {
 		if (!localStorage.getItem('jwt')) {
 			this.props.history.replace('/');
 		}
-
 		this.props.getUserProperties();
 	}
 
 	componentDidUpdate(prevProps) {
+		// refreshProperties will be set to true once the user is checked
 		if (prevProps.refreshProperties !== this.props.refreshProperties) {
 			this.props.getUserProperties();
+		}
+
+		if(prevProps.user !== this.props.user){
+			if(this.props.user.role !== 'manager'){
+				this.props.getAvailableProperties();
+			}
 		}
 	}
 
@@ -95,11 +107,18 @@ class Properties extends React.Component {
 		const role = (this.props.user && this.props.user.role) || null;
 		const { user, properties } = this.props;
 
-		if (!(properties && user.user_id)) {
-			return null;
-		} else if (role === 'manager')
+		// Collect assigned Assistant Properties if user is an assistant
+		let asstProperties = [];
+		if(role !== 'manager' && this.props.properties){
+			if(user){
+				asstProperties = this.props.properties.filter(property => property.cleaner_id === user.user_id);
+			}
+		}
+
+		if (role === 'manager')
 			return (
 				<div>
+					{/** Manager View */}
 					<TopBar>
 						<Typography variant="h2">Properties</Typography>{' '}
 						<Fab
@@ -123,7 +142,7 @@ class Properties extends React.Component {
 						</DialogContent>
 					</Dialog>
 
-					{properties.length ? (
+					{this.props.properties ? (
 						properties.map(property => {
 							return (
 								<PropertyPreview
@@ -139,94 +158,82 @@ class Properties extends React.Component {
 					)}
 				</div>
 			);
-		else {
-			const defaultProperties = properties.filter(
-				({ cleaner_id }) => cleaner_id === user.user_id
-			);
-
-			const availableProperties = properties.filter(
-				({ cleaner_id, available }) => cleaner_id !== user.user_id && available
-			);
-
-			const otherProperties = properties.filter(
-				({ cleaner_id, available }) => cleaner_id !== user.user_id && !available
-			);
-
+		else
 			return (
 				<div>
+					{/** Assistant View */}
 					<TopBar>
 						<Typography variant="h2">Properties</Typography>{' '}
 					</TopBar>
-					{defaultProperties.length ? (
-						<React.Fragment>
-							<Typography variant="h5" className={classes.title}>
-								Your Default Properties
-							</Typography>
-							{properties
-								.filter(({ cleaner_id }) => cleaner_id === user.user_id)
+					<Typography variant="h5"> Assigned Properties</Typography>
+
+					{/** Assigned Properties */}
+					{this.props.properties ? (
+
+						<>
+						{asstProperties.length > 0 ? (
+							<>
+							{asstProperties
 								.map(property => {
 									return (
-										<PropertyPreview
-											property={property}
-											key={property.property_id}
-										/>
-									);
+										<PropertyPreview property = {property} key = {property.property_id} assigned = {true}/>
+									)
 								})}
-						</React.Fragment>
-					) : null}
+							</>
 
-					<Typography variant="h5" className={classes.title}>
-						Properties You're Available For
-					</Typography>
-					{availableProperties.length ? (
-						availableProperties.map(property => {
-							return (
-								<PropertyPreview
-									property={property}
-									key={property.property_id}
-								/>
-							);
-						})
+						) : (
+							
+							<Typography variant="overline">
+							You have not been assigned as the default partner for any
+							properties.
+							</Typography>
+						)}
+						</>
+					) : null }
+
+					<Typography variant="h5"> Potential Properties </Typography>
+					<Typography variant = 'overline'>Mark yourself available to be assigned for shifts.</Typography>
+					<br></br>
+					{/** Available Properties */}
+					{/** These are all properties from all managers */}
+					{this.props.properties ? (
+						this.props.properties
+							.map(property => {
+								console.log('MAP PROP', property)
+								return (
+									<PropertyPreview
+										property={property}
+										key={property.property_id}
+									/>
+								);
+							})
 					) : (
 						<Typography variant="overline">
-							You have not made yourself available to any properties.
+							There are no properties available to you.
 						</Typography>
 					)}
-
-					{otherProperties.length ? (
-						<React.Fragment>
-							<Typography variant="h5" className={classes.title}>
-								Other Properties
-							</Typography>
-							{otherProperties.map(property => (
-								<PropertyPreview
-									property={property}
-									key={property.property_id}
-								/>
-							))}
-						</React.Fragment>
-					) : null}
 				</div>
 			);
-		}
 	}
 }
-
 const mapStateToProps = state => {
 	return {
 		// state items
 		user: state.authReducer.user,
 		properties: state.propertyReducer.properties,
 		refreshProperties: state.propertyReducer.refreshProperties,
+		userChecked: state.authReducer.userChecked,
+		availableProperties: state.partnerReducer.availableProperties,
+		refreshAvailable: state.partnerReducer.refreshAvailable,
 	};
 };
-
 export default withRouter(
 	connect(
 		mapStateToProps,
 		{
 			// actions
 			getUserProperties,
+			getAvailableProperties,
 		}
 	)(withStyles(styles)(Properties))
 );
