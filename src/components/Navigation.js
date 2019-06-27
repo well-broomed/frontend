@@ -70,7 +70,7 @@ const styles = {
 	},
 	logoutBtn: {
 		background: '#b71c1c',
-		color: 'white',
+		color: '#f5f5f3',
 	},
 	loginModal: {
 		background: '#3d3d3d',
@@ -148,11 +148,11 @@ const NavLinks = styled.div`
 		a{
 		padding: 22px;
 		text-align: center;
-		color: #fafafa;
+		color: #f5f5f3;
 		text-decoration: none;
 
 		:hover{
-			background: #fafafa;
+			background: #f5f5f3;
 			color: #3f51b5;
 			font-weight: 800;
 
