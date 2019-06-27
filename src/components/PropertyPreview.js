@@ -13,6 +13,7 @@ import NativeSelect from '@material-ui/core/NativeSelect';
 import Typography from '@material-ui/core/Typography';
 // import CardContent from '@material-ui/core/CardContent';
 // import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
 import Switch from '@material-ui/core/Switch';
 
 
@@ -73,6 +74,7 @@ const CardActions = styled.div`
 
 const styles = {
 	card: {
+		display: 'flex',
 		maxWidth: '100%',
 		margin: '20px auto',
 	},
@@ -82,7 +84,34 @@ const styles = {
 	formControl: {
 		margin: '20px',
 		minWidth: 120,
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
 	},
+	available: {
+		display: 'flex',
+		justifyContent: 'flex-end',
+	},
+	button: { 
+		width: '196px' 
+	},
+	image: {
+		backgroundSize: 'contain',
+		width:'25%'
+	},
+	propertyName:{
+		fontWeight:300
+	},
+	address: {
+		fontWeight:200
+	},
+	infoContainer: {
+		width: '75%'
+	},
+	deleteButton:{
+		color: 'darkred'
+	}
+
 };
 
 class PropertyPreview extends React.Component {
@@ -240,26 +269,32 @@ class PropertyPreview extends React.Component {
 					</Dialog>
 
 					{/** Property Card */}
-
+					
+						
+					
 					<Card className={classes.card} key={property.id}>
+						<CardMedia 
+							className={classes.image}
+							image={property.img_url || "https://www.freeiconspng.com/uploads/no-image-icon-7.gif"}
+							alt={property.property_name || 'Property Image'}
+						/>
+						<div className={classes.infoContainer}>
 						<CardContainer>
 							<Link to={`/properties/${property.property_id}`}>
 								<CardText>
-									<Typography variant="h3">{property.property_name}</Typography>
-									<Typography variant="h4">{property.address}</Typography>
+									<Typography variant="h4" className={classes.propertyName}>{property.property_name}</Typography>
+									<Typography variant="h5" className={classes.address}>{property.address}</Typography>
 								</CardText>
 							</Link>
 
 							<CardActions>
 								<EditTwoTone onClick={this.toggleEdit} />
-								<DeleteForeverTwoTone onClick={this.toggleDelete} />
+								<DeleteForeverTwoTone className={classes.deleteButton} onClick={this.toggleDelete} />
 							</CardActions>
 						</CardContainer>
+						
 						<CardFooter>
 							<FormControl className={classes.formControl}>
-								<InputLabel shrink htmlFor="cleaner-native-label-placeholder">
-									Default Cleaner
-								</InputLabel>
 								<NativeSelect
 									value={this.state.cleaner_id}
 									onChange={this.handleSelect}
@@ -277,10 +312,13 @@ class PropertyPreview extends React.Component {
 										</option>
 									))}
 								</NativeSelect>
+								Default Cleaner
 							</FormControl>
 						</CardFooter>
+						</div>
 					</Card>
-				</div>
+					</div>
+	
 			);
 		} else {
 			return (

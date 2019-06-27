@@ -54,6 +54,12 @@ export const DELETING_TASK = 'DELETING_TASK';
 export const DELETED_TASK = 'DELETED_TASK';
 export const DELETE_TASK_ERROR = 'DELETE_TASK_ERROR';
 
+//uploadImage
+export const UPLOADING_IMAGE = 'UPLOADING_IMAGE'
+export const UPLOADED_IMAGE = 'UPLOADED_IMAGE'
+export const UPLOAD_IMAGE_ERROR = 'UPLOAD_IMAGE_ERROR';
+export const CLEAR_IMAGE = 'CLEAR_IMAGE';
+
 function setHeaders() {
 	const token = localStorage.getItem('jwt');
 	const userInfo = localStorage.getItem('userInfo');
@@ -124,7 +130,7 @@ export const addProperty = property => {
 		property,
 		options
 	);
-
+	
 	return dispatch => {
 		dispatch({ type: ADDING_PROPERTY });
 
@@ -140,6 +146,7 @@ export const addProperty = property => {
 			});
 	};
 };
+
 
 export const deleteProperty = property_id => {
 	let options = setHeaders();
@@ -162,6 +169,7 @@ export const deleteProperty = property_id => {
 			});
 	};
 };
+
 
 export const updateProperty = (property_id, property) => {
 	let options = setHeaders();
@@ -381,4 +389,45 @@ export const deleteTask = task_id => {
 				dispatch({ type: DELETE_TASK_ERROR, payload: error });
 			});
 	};
+};
+
+export const uploadImage = file => {
+	let options = setHeaders();
+
+	const formData = new FormData();
+	// check for presence of file before appending
+	if(file){
+		formData.append("File", file, file.name);
+	} else {
+		return dispatch => {
+			dispatch({type: ERROR})
+		}
+	}
+	
+
+	const endpoint = axios.post(
+		`${backendUrl}/api/properties/imageupload`,
+		formData,
+		options
+	);
+
+	return dispatch => {
+		dispatch({type: UPLOADING_IMAGE});
+		endpoint
+			.then(res => {
+				console.log('image return', res.data)
+				
+				dispatch({type: UPLOADED_IMAGE, payload: res.data})
+			})
+			.catch(err => {
+				dispatch({type: UPLOAD_IMAGE_ERROR})
+			})
+	}
+
+};
+
+export const clearImage = () => {
+	return dispatch => {
+		dispatch({type: CLEAR_IMAGE});
+	}
 };
