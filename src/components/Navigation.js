@@ -37,6 +37,8 @@ import InsertChartTwoTone from '@material-ui/icons/InsertChartTwoTone';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { resetApp } from '../actions';
+
 import Auth from './Auth';
 // import lock from './Lock';
 
@@ -83,52 +85,50 @@ const AccountFeatures = styled.div`
 	align-items: center;
 	padding: 20px;
 
-	@media (max-width: 800px){
+	@media (max-width: 800px) {
 		flex-flow: column nowrap;
 		padding: 0px 20px;
 	}
 
-	button{
+	button {
 		font-size: 1.5rem;
 		min-width: 70%;
 		margin: 0 auto;
 	}
 
-	ul{
-			width: 70%;
-			padding: 0px 20px;
-			
-		}
+	ul {
+		width: 70%;
+		padding: 0px 20px;
+	}
 
-	.left{
+	.left {
 		width: 45%;
 		display: flex;
 		flex-flow: column nowrap;
 		justify-content: center;
 		align-items: center;
 
-		@media (max-width: 800px){
+		@media (max-width: 800px) {
 			width: 100%;
 			margin-bottom: 20px;
 			padding-bottom: 30px;
 			border-bottom: 2px solid slategray;
 		}
-		
 	}
 
-	.right{
+	.right {
 		width: 45%;
 		display: flex;
 		flex-flow: column nowrap;
 		justify-content: center;
 		align-items: center;
 
-		@media (max-width: 800px){
+		@media (max-width: 800px) {
 			width: 100%;
 			margin-bottom: 20px;
 		}
 	}
-	`;
+`;
 
 const Transition = React.forwardRef((props, ref) => (
 	<Slide direction="up" {...props} ref={ref} />
@@ -204,6 +204,7 @@ class Navigation extends React.Component {
 		event.preventDefault();
 
 		auth.logout();
+		resetApp();
 
 		window.location = `https://${
 			process.env.REACT_APP_AUTH0_DOMAIN
@@ -232,59 +233,60 @@ class Navigation extends React.Component {
 					open={this.state.loginModal}
 					TransitionComponent={Transition}
 					onClose={this.toggleModal}
-					fullWidth = {true}
-					maxWidth = {'xl'}	
+					fullWidth={true}
+					maxWidth={'xl'}
 				>
-					<DialogTitle align = 'center'>
-						<Typography variant = 'h4'>What kind of user are you?</Typography>
+					<DialogTitle align="center">
+						<Typography variant="h4">What kind of user are you?</Typography>
 					</DialogTitle>
 
 					<DialogContent>
-					<AccountFeatures>
-						<div className = 'left'>
-						
-						<Typography variant = 'h6' align = 'center'>
-						You want to:
-						</Typography>
-							<ul>
-								<li>Manage cleaning checklists</li>
-								<li>Assign cleaning shifts</li>
-								<li>Monitor turnover status</li>
-								<li>Make life a little easier</li>
-							</ul>
-						
-						<Button variant = 'contained' color = 'primary' align='center'
-							onClick={event => {
-								this.selectAccount(event, 'manager');
-							}}
-						>
-							<div>I am a Manager</div>
-						</Button>
-						</div>
+						<AccountFeatures>
+							<div className="left">
+								<Typography variant="h6" align="center">
+									You want to:
+								</Typography>
+								<ul>
+									<li>Manage cleaning checklists</li>
+									<li>Assign cleaning shifts</li>
+									<li>Monitor turnover status</li>
+									<li>Make life a little easier</li>
+								</ul>
 
-						<div className = 'right'>
-							<Typography variant = 'h6'>
-								You want to:
-							</Typography>
-							
-							<ul>
-								<li>Pick up cleaning shifts</li>
-								<li>Be a lean, mean, cleaning machine</li>
-								<li>Rock out with your mop out</li>
-								<li>Earn some extra dough</li>
-							</ul>
-				
-						<Button variant = 'contained' color = 'primary' align = 'center'
-							onClick={event => {
-								this.selectAccount(event, 'assistant');
-							}}
-						>
-							<div>I am an Assistant</div>
-						</Button>
+								<Button
+									variant="contained"
+									color="primary"
+									align="center"
+									onClick={event => {
+										this.selectAccount(event, 'manager');
+									}}
+								>
+									<div>I am a Manager</div>
+								</Button>
+							</div>
 
-						</div>
+							<div className="right">
+								<Typography variant="h6">You want to:</Typography>
 
-					</AccountFeatures>
+								<ul>
+									<li>Pick up cleaning shifts</li>
+									<li>Be a lean, mean, cleaning machine</li>
+									<li>Rock out with your mop out</li>
+									<li>Earn some extra dough</li>
+								</ul>
+
+								<Button
+									variant="contained"
+									color="primary"
+									align="center"
+									onClick={event => {
+										this.selectAccount(event, 'assistant');
+									}}
+								>
+									<div>I am an Assistant</div>
+								</Button>
+							</div>
+						</AccountFeatures>
 					</DialogContent>
 				</Dialog>
 			</div>
@@ -437,6 +439,7 @@ export default withRouter(
 		mapStateToProps,
 		{
 			// actions
+			resetApp,
 		}
 	)(withStyles(styles)(Navigation))
 );
