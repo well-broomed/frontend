@@ -11,6 +11,7 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 
 import {createMuiTheme} from '@material-ui/core';
 
+
 // Components
 import {
 	Home,
@@ -25,6 +26,7 @@ import {
 	Navigation,
 	Redirect,
 	Invite,
+	Footer,
 } from '../../components';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -37,6 +39,7 @@ const ComponentContainer = styled.div`
 	max-width: 940px;
 	padding: 0 20px;
 	margin: 80px auto 0;
+	min-height: 85vh;
 `;
 
 const theme = createMuiTheme({
@@ -83,7 +86,7 @@ const theme = createMuiTheme({
 			fontFamily: 'Fjalla One'
 		}
 	},
-})
+});
 
 class App extends Component {
 	componentDidMount() {
@@ -117,6 +120,7 @@ class App extends Component {
 							<Route path="/invite" component={Invite} />
 						</Switch>
 					</ComponentContainer>
+					<Footer />
 				</MuiPickersUtilsProvider>
 				</MuiThemeProvider>
 			</div>
