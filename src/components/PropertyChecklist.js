@@ -255,7 +255,7 @@ const PropertyChecklist = props => {
 									<UpdateTaskIcon
 										style={{
 											paddingLeft: '0',
-											margin: 'auto 6px auto -5px',
+											margin: 'auto 5px auto -5px',
 										}}
 										onClick={() => setUpdatingTask(null)}
 									>
@@ -342,7 +342,7 @@ const PropertyChecklist = props => {
 					<UpdateTaskIcon
 						style={{
 							paddingLeft: '0',
-							margin: 'auto 6px auto -5px',
+							margin: 'auto 5px auto -5px',
 						}}
 						onClick={() => setAddingTask(false)}
 					>
@@ -374,7 +374,7 @@ const EditIconWrapper = styled.div`
 	width: 22px;
 	height: 22px;
 	color: #757575;
-	margin: 3px 4px 5px 0;
+	margin: 3px 12px 5px 0;
 
 	/* ${ListItemWrapper}:hover & {
 		color: inherit;
@@ -389,7 +389,7 @@ const DeleteIconWrapper = styled.div`
 	width: 24px;
 	height: 24px;
 	color: #757575;
-	margin: 4px 0;
+	margin: 4px -2px 4px 0;
 
 	&:hover {
 		color: inherit;
@@ -402,7 +402,7 @@ const UpdateTaskIcon = styled.div`
 	color: #757575;
 	cursor: pointer;
 	padding: 8px;
-	margin: auto 0;
+	margin: auto 8px auto 0;
 
 	&:hover {
 		color: inherit;

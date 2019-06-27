@@ -399,7 +399,7 @@ const Property = props => {
 									<UpdateTaskIcon
 										style={{
 											paddingLeft: '0',
-											margin: 'auto 6px auto -5px',
+											margin: 'auto 5px auto -5px',
 										}}
 										onClick={() => {
 											setNewDeadline(null);
@@ -502,7 +502,7 @@ const UpdateTaskIcon = styled.div`
 	color: #757575;
 	cursor: pointer;
 	padding: 8px;
-	margin: auto 0;
+	margin: auto 8px auto 0;
 
 	&:hover {
 		color: inherit;
