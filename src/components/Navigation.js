@@ -64,7 +64,7 @@ const styles = {
 	},
 	loginBtn: {
 		background: '#81e4e4',
-		color: 'black',
+		fontWeight: 800,
 	},
 	logoutBtn: {
 		background: '#b71c1c',
