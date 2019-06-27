@@ -79,6 +79,19 @@ const CardActions = styled.div`
 	}
 `;
 
+const DeleteButtons = styled.div`
+	width: 100%;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+
+	button{
+		width: 45%;
+		padding: 10px 0px;
+	}
+
+	`;
+
 const styles = {
 	card: {
 		display: 'flex',
@@ -239,13 +252,14 @@ class PropertyPreview extends React.Component {
 				<div>
 					
 					{/** Delete Modal **/}
-					<Dialog open={this.state.deleteModal} onClose={this.toggleDelete}>
+					<Dialog open={this.state.deleteModal} onClose={this.toggleDelete} fullWidth = {false} maxWidth = 'xl'>
 						<DialogContent>
 							<Typography variant="h6">
 								Are you sure you want to delete {property.property_name}?
 							</Typography>
 						</DialogContent>
 						<DialogActions>
+							<DeleteButtons>
 							<Button
 								onClick={this.toggleDelete}
 								variant="outlined"
@@ -260,6 +274,7 @@ class PropertyPreview extends React.Component {
 							>
 								Delete
 							</Button>
+							</DeleteButtons>
 						</DialogActions>
 					</Dialog>
 

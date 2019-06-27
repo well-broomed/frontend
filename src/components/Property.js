@@ -431,7 +431,6 @@ const TopBar = styled.div`
 const PropertyImg = styled.img`
 	width: 160px;
 	height: 160px;
-	background: lightgray;
 	object-fit: contain;
 `;
 
@@ -439,7 +438,7 @@ const TitleContainer = styled.div`
 	display: flex;
 	height: 160px;
 	flex-direction: column;
-	justify-content: center;
+	justify-content: flex-start;
 	margin: 0 0 0 16px;
 `;
 
