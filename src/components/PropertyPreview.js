@@ -346,7 +346,12 @@ class PropertyPreview extends React.Component {
 			return (
 				<>
 				<br></br>
-				<Card>
+				<Card className = {classes.card}>
+				<CardMedia 
+							className={classes.image}
+							image={property.img_url || noImage}
+							alt={property.property_name || 'Property Image'}
+						/>
 					<CardContainer>
 							<Link to={`/properties/${property.property_id}`}>
 								<CardText>

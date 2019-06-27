@@ -165,7 +165,7 @@ class Properties extends React.Component {
 					<TopBar>
 						<Typography variant="h2">Properties</Typography>{' '}
 					</TopBar>
-					<Typography variant="h5"> Assigned Properties</Typography>
+					<Typography variant="h4">ASSIGNED PROPERTIES</Typography>
 
 					{/** Assigned Properties */}
 					{this.props.properties ? (
@@ -182,24 +182,33 @@ class Properties extends React.Component {
 							</>
 
 						) : (
-							
+							<div style = {{margin: '20px 0px'}}>
 							<Typography variant="overline">
 							You have not been assigned as the default partner for any
 							properties.
 							</Typography>
+							</div>
 						)}
 						</>
-					) : null }
-
-					<Typography variant="h5"> Potential Properties </Typography>
-					<Typography variant = 'overline'>Mark yourself available to be assigned for shifts.</Typography>
-					<br></br>
+					) : (
+						<div style = {{margin: '20px 0px'}}>
+						<Typography variant="overline">
+							There are no properties available to you.
+						</Typography>
+						</div>
+					) }
+					<div style = {{margin: '40px 0px 0px 0px'}}>
+					<Typography variant="h4">POTENTIAL PROPERTIES</Typography>
+					</div>
+					
 					{/** Available Properties */}
 					{/** These are all properties from all managers */}
+					<Typography variant = 'overline'>Mark yourself available to be assigned for shifts.</Typography>
+					<br></br>
+
 					{this.props.properties ? (
 						this.props.properties
 							.map(property => {
-								console.log('MAP PROP', property)
 								return (
 									<PropertyPreview
 										property={property}
