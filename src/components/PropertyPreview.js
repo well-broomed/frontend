@@ -53,7 +53,7 @@ const CardText = styled.div`
 	transition: color 0.1s ease-in-out;
 	:hover{
 			color: #3f51b5;
-			transition: color 0.2s ease-in-out;
+			transition: color 0.01s ease-in-out;
 		}
 	`;
 
@@ -245,8 +245,8 @@ class PropertyPreview extends React.Component {
 						<CardContainer>
 							<Link to={`/properties/${property.property_id}`}>
 								<CardText>
-									<Typography variant="h4">{property.property_name}</Typography>
-									<Typography variant="h5">{property.address}</Typography>
+									<Typography variant="h3">{property.property_name}</Typography>
+									<Typography variant="h4">{property.address}</Typography>
 								</CardText>
 							</Link>
 
