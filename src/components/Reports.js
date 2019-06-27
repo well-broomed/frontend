@@ -185,8 +185,8 @@ class Reports extends React.Component {
 
 		return (
 			<div>
-				<div style = {{padding: '20px 0px'}}>
-				<Typography variant="h2">Reports</Typography>
+				<div style={{ padding: '20px 0px' }}>
+					<Typography variant="h2">Reports</Typography>
 				</div>
 
 				{user.role && (
@@ -206,7 +206,7 @@ class Reports extends React.Component {
 						>
 							<Tab label="Current" />
 							<Tab label="Past" />
-							{manager && <Tab label="By Partner" />}
+							{manager && <Tab label="Partners" />}
 						</Tabs>
 					</AppBar>
 				)}
@@ -284,7 +284,7 @@ class Reports extends React.Component {
 							</div>
 						</Typography>
 
-						{manager && (
+						{manager ? (
 							<Typography component="div" dir={this.props.theme.direction}>
 								<div className={classes.progresses}>
 									{partnerReports.map(partner => (
@@ -295,6 +295,8 @@ class Reports extends React.Component {
 									))}
 								</div>
 							</Typography>
+						) : (
+							<React.Fragment />
 						)}
 					</SwipeableViews>
 				)}
