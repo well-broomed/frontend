@@ -72,7 +72,7 @@ const styles = {
 		width: '100%',
 	},
 	invitationsTitle: {
-		margin: '20px 0',
+		margin: '40px 0',
 	},
 };
 
