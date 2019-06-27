@@ -87,6 +87,7 @@ const DeleteButtons = styled.div`
 	display: flex;
 	flex-flow: row nowrap;
 	justify-content: space-between;
+	padding: 20px 20px;
 
 	button{
 		width: 45%;
@@ -255,11 +256,13 @@ class PropertyPreview extends React.Component {
 				<div>
 					
 					{/** Delete Modal **/}
-					<Dialog open={this.state.deleteModal} onClose={this.toggleDelete} fullWidth = {false} maxWidth = 'xl'>
+					<Dialog open={this.state.deleteModal} onClose={this.toggleDelete} fullWidth = {true} maxWidth = {'md'}>
 						<DialogContent>
-							<Typography variant="h6">
+							<div style = {{padding: '20px'}}>
+							<Typography variant="h6" align = 'center'>
 								Are you sure you want to delete {property.property_name}?
 							</Typography>
+							</div>
 						</DialogContent>
 						<DialogActions>
 							<DeleteButtons>
@@ -286,7 +289,7 @@ class PropertyPreview extends React.Component {
 						open={this.state.editModal}
 						onClose={this.toggleEdit}
 						fullWidth={true}
-						maxWidth="xl"
+						maxWidth="md"
 					>
 						<DialogContent>
 							<EditPropertyForm close={this.toggleEdit} property={property} />
@@ -346,7 +349,12 @@ class PropertyPreview extends React.Component {
 			return (
 				<>
 				<br></br>
-				<Card>
+				<Card className = {classes.card}>
+				<CardMedia 
+							className={classes.image}
+							image={property.img_url || noImage}
+							alt={property.property_name || 'Property Image'}
+						/>
 					<CardContainer>
 							<Link to={`/properties/${property.property_id}`}>
 								<CardText>

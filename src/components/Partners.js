@@ -215,7 +215,7 @@ class Partners extends React.Component {
 				<Dialog
 					open={this.state.emailModal}
 					onClose={this.toggleEmail}
-					maxWidth="xl"
+					maxWidth="md"
 					fullWidth={true}
 				>
 					{!this.state.formSent ? (
