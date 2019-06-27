@@ -63,7 +63,7 @@ const styles = {
 		margin: '60px 0px',
 	},
 	loginBtn: {
-		background: '#64ffda',
+		background: '#81e4e4',
 		color: 'black',
 	},
 	logoutBtn: {
