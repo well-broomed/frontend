@@ -38,12 +38,15 @@ import parse from 'autosuggest-highlight/parse';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 
+import CheckIcon from '@material-ui/icons/Check';
+import ClearIcon from '@material-ui/icons/Clear';
+
 import { makeStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
 	root: {
 		width: '100%',
-		maxWidth: 360,
+		maxWidth: 408,
 		backgroundColor: theme.palette.background.paper,
 	},
 });
@@ -51,7 +54,7 @@ const styles = theme => ({
 const useStyles = makeStyles(theme => ({
 	root: {
 		width: '100%',
-		maxWidth: 360,
+		maxWidth: 408,
 		backgroundColor: theme.palette.background.paper,
 	},
 	propertyName: {
@@ -207,14 +210,10 @@ const Property = props => {
 
 		props.addTask(props.property.property_id, newTask, deadline);
 
-		setNewTask('');
-
 		// at the moment, errors eat your input with no feedback
 	};
 
-	const handleUpdate = (event, task_id, text, deadline) => {
-		event.preventDefault();
-
+	const handleUpdate = (task_id, text, deadline) => {
 		props.updateTask(task_id, text, deadline);
 	};
 
@@ -343,6 +342,9 @@ const Property = props => {
 								onChange={option => {
 									setNewDeadline(option);
 									setNewTask('');
+
+									setAddingTask(null);
+									setUpdatingTask(null);
 								}}
 							/>
 							{newDeadline && (
@@ -350,37 +352,61 @@ const Property = props => {
 									className={classes.root}
 									onSubmit={event => {
 										handleSubmit(event, newTask, newDeadline.value);
-										setAddingTask(parseInt(newDeadline.value));
 										setNewDeadline(null);
 									}}
 								>
 									{/* onChange is kinda choppy here compared to the other lists. Not sure why. */}
-									<Autosuggest
-										{...autosuggestProps}
-										inputProps={{
-											classes,
-											placeholder: 'Add a task',
-											value: newTask,
-											onChange: handleChange,
-											autoFocus: true,
-											onBlur: () => newTask || setNewDeadline(null),
-											onKeyDown: e => {
-												if (e.key === 'Escape') setNewDeadline(null);
-											},
+									<AutosuggestContainer>
+										<Autosuggest
+											{...autosuggestProps}
+											inputProps={{
+												classes,
+												placeholder: 'Add a task',
+												value: newTask,
+												onChange: handleChange,
+												autoFocus: true,
+												onKeyDown: e => {
+													if (e.key === 'Escape') setNewDeadline(null);
+												},
+											}}
+											theme={{
+												container: classes.container,
+												suggestionsContainerOpen:
+													classes.suggestionsContainerOpen,
+												suggestionsList: classes.suggestionsList,
+												suggestion: classes.suggestion,
+											}}
+											renderSuggestionsContainer={options => (
+												<Paper {...options.containerProps} square>
+													{options.children}
+												</Paper>
+											)}
+										/>
+									</AutosuggestContainer>
+									<UpdateTaskIcon
+										onClick={event => {
+											event.preventDefault();
+
+											if (newTask.replace(/\s/g, '').length) {
+												handleSubmit(event, newTask, newDeadline.value);
+												setNewTask('');
+											}
 										}}
-										theme={{
-											container: classes.container,
-											suggestionsContainerOpen:
-												classes.suggestionsContainerOpen,
-											suggestionsList: classes.suggestionsList,
-											suggestion: classes.suggestion,
+									>
+										<CheckIcon />
+									</UpdateTaskIcon>
+
+									<UpdateTaskIcon
+										style={{
+											paddingLeft: '0',
+											margin: 'auto 6px auto -5px',
 										}}
-										renderSuggestionsContainer={options => (
-											<Paper {...options.containerProps} square>
-												{options.children}
-											</Paper>
-										)}
-									/>
+										onClick={() => {
+											setNewDeadline(null);
+										}}
+									>
+										<ClearIcon />
+									</UpdateTaskIcon>
 								</NewTaskForm>
 							)}
 						</React.Fragment>
@@ -442,7 +468,7 @@ const TitleContainer = styled.div`
 const PropertyContainer = styled.div`
 	display: flex;
 
-	@media (max-width: 820px) {
+	@media (max-width: 890px) {
 		flex-direction: column;
 	}
 `;
@@ -450,7 +476,7 @@ const PropertyContainer = styled.div`
 const BeforeAndDuringColumn = styled.div`
 	width: 50%;
 
-	@media (max-width: 820px) {
+	@media (max-width: 890px) {
 		width: 100%;
 	}
 `;
@@ -458,12 +484,31 @@ const BeforeAndDuringColumn = styled.div`
 const AfterColumn = styled.div`
 	width: 50%;
 
-	@media (max-width: 820px) {
+	@media (max-width: 890px) {
 		width: 100%;
 	}
 `;
 
 const NewTaskForm = styled.form`
-	padding: 16px 70px 14px 16px;
+	display: flex;
+
+	padding: 16px 0 14px 16px;
 	margin: 0 0 8px;
+`;
+
+const UpdateTaskIcon = styled.div`
+	width: 40px;
+	height: 40px;
+	color: #757575;
+	cursor: pointer;
+	padding: 8px;
+	margin: auto 0;
+
+	&:hover {
+		color: inherit;
+	}
+`;
+
+const AutosuggestContainer = styled.div`
+	width: 100%;
 `;

@@ -20,11 +20,12 @@ import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
-import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import AddCircle from '@material-ui/icons/AddCircle';
+import CheckIcon from '@material-ui/icons/Check';
+import ClearIcon from '@material-ui/icons/Clear';
+import AddIcon from '@material-ui/icons/Add';
 
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -195,47 +196,72 @@ const PropertyChecklist = props => {
 					{taskList.map(({ task_id, text }) => (
 						<ListItemWrapper key={task_id}>
 							{updatingTask === task_id ? (
-								<UpdateTaskForm
-									className={classes.root}
-									onSubmit={event => {
-										event.preventDefault();
+								<UpdateTask>
+									<UpdateTaskForm
+										className={classes.root}
+										onSubmit={event => {
+											event.preventDefault();
 
-										if (updatedTask.replace(/\s/g, '').length) {
-											handleUpdate(event, task_id, updatedTask, deadline);
+											if (updatedTask.replace(/\s/g, '').length) {
+												handleUpdate(task_id, updatedTask, deadline);
 
-											setUpdatingTask(null);
-										}
+												setUpdatingTask(null);
+											}
 
-										setUpdatedTask('');
-									}}
-								>
-									<Autosuggest
-										{...autosuggestProps}
-										inputProps={{
-											classes,
-											placeholder: 'Update task',
-											value: updatedTask,
-											onChange: handleUpdatedChange,
-											autoFocus: true,
-											onBlur: () => setUpdatingTask(null),
-											onKeyDown: e => {
-												if (e.key === 'Escape') setUpdatingTask(null);
-											},
+											setUpdatedTask('');
 										}}
-										theme={{
-											container: classes.container,
-											suggestionsContainerOpen:
-												classes.suggestionsContainerOpen,
-											suggestionsList: classes.suggestionsList,
-											suggestion: classes.suggestion,
+									>
+										<Autosuggest
+											{...autosuggestProps}
+											inputProps={{
+												classes,
+												placeholder: 'Update task',
+												value: updatedTask,
+												onChange: handleUpdatedChange,
+												autoFocus: true,
+												onKeyDown: e => {
+													if (e.key === 'Escape') setUpdatingTask(null);
+												},
+											}}
+											theme={{
+												container: classes.container,
+												suggestionsContainerOpen:
+													classes.suggestionsContainerOpen,
+												suggestionsList: classes.suggestionsList,
+												suggestion: classes.suggestion,
+											}}
+											renderSuggestionsContainer={options => (
+												<Paper {...options.containerProps} square>
+													{options.children}
+												</Paper>
+											)}
+										/>
+									</UpdateTaskForm>
+
+									<UpdateTaskIcon
+										onClick={() => {
+											if (updatedTask.replace(/\s/g, '').length) {
+												handleUpdate(task_id, updatedTask, deadline);
+
+												setUpdatingTask(null);
+											}
+
+											setUpdatedTask('');
 										}}
-										renderSuggestionsContainer={options => (
-											<Paper {...options.containerProps} square>
-												{options.children}
-											</Paper>
-										)}
-									/>
-								</UpdateTaskForm>
+									>
+										<CheckIcon />
+									</UpdateTaskIcon>
+
+									<UpdateTaskIcon
+										style={{
+											paddingLeft: '0',
+											margin: 'auto 6px auto -5px',
+										}}
+										onClick={() => setUpdatingTask(null)}
+									>
+										<ClearIcon />
+									</UpdateTaskIcon>
+								</UpdateTask>
 							) : (
 								<ListItem
 									role={undefined}
@@ -243,18 +269,19 @@ const PropertyChecklist = props => {
 									onClick={() => {
 										setUpdatedTask(text);
 										setUpdatingTask(task_id);
+
+										setAddingTask(null);
 									}}
 								>
 									<ListItemText primary={text} />
-									<SecondaryActionWrapper>
-										<ListItemSecondaryAction
-											onClick={event => handleDelete(event, task_id)}
-										>
-											<IconButton aria-label="Delete">
-												<DeleteIcon />
-											</IconButton>
-										</ListItemSecondaryAction>
-									</SecondaryActionWrapper>
+									<EditIconWrapper>
+										<EditIcon />
+									</EditIconWrapper>
+									<DeleteIconWrapper
+										onClick={event => handleDelete(event, task_id)}
+									>
+										<DeleteIcon />
+									</DeleteIconWrapper>
 								</ListItem>
 							)}
 						</ListItemWrapper>
@@ -273,42 +300,67 @@ const PropertyChecklist = props => {
 						}
 					}}
 				>
-					<Autosuggest
-						{...autosuggestProps}
-						inputProps={{
-							classes,
-							placeholder: 'Add a task',
-							value: newTask,
-							onChange: handleChange,
-							autoFocus: true,
-							onBlur: () => newTask || setAddingTask(false),
-							onKeyDown: e => {
-								if (e.key === 'Escape') setAddingTask(false);
-							},
+					<AutosuggestContainer>
+						<Autosuggest
+							{...autosuggestProps}
+							inputProps={{
+								classes,
+								placeholder: 'Add a task',
+								value: newTask,
+								onChange: handleChange,
+								autoFocus: true,
+								onKeyDown: e => {
+									if (e.key === 'Escape') setAddingTask(false);
+								},
+							}}
+							theme={{
+								container: classes.container,
+								suggestionsContainerOpen: classes.suggestionsContainerOpen,
+								suggestionsList: classes.suggestionsList,
+								suggestion: classes.suggestion,
+							}}
+							renderSuggestionsContainer={options => (
+								<Paper {...options.containerProps} square>
+									{options.children}
+								</Paper>
+							)}
+						/>
+					</AutosuggestContainer>
+					<UpdateTaskIcon
+						onClick={event => {
+							event.preventDefault();
+
+							if (newTask.replace(/\s/g, '').length) {
+								handleSubmit(event, newTask, deadline);
+								setNewTask('');
+							}
 						}}
-						theme={{
-							container: classes.container,
-							suggestionsContainerOpen: classes.suggestionsContainerOpen,
-							suggestionsList: classes.suggestionsList,
-							suggestion: classes.suggestion,
+					>
+						<CheckIcon />
+					</UpdateTaskIcon>
+
+					<UpdateTaskIcon
+						style={{
+							paddingLeft: '0',
+							margin: 'auto 6px auto -5px',
 						}}
-						renderSuggestionsContainer={options => (
-							<Paper {...options.containerProps} square>
-								{options.children}
-							</Paper>
-						)}
-					/>
+						onClick={() => setAddingTask(false)}
+					>
+						<ClearIcon />
+					</UpdateTaskIcon>
 				</NewTaskForm>
 			) : (
-				<IconButton
-					aria-label="AddCircle"
+				<NewTask
 					onClick={() => {
+						setUpdatingTask(null);
+
 						setAddingTask(deadline);
 						setNewTask('');
 					}}
 				>
-					<AddCircle className={classes.icon} style={{ fontSize: 30 }} />
-				</IconButton>
+					<Typography>Add a task</Typography>
+					<AddIcon style={{ fontSize: '32px', margin: '-3px 0 0' }} />
+				</NewTask>
 			)}
 		</React.Fragment>
 	);
@@ -318,19 +370,78 @@ export default PropertyChecklist;
 
 const ListItemWrapper = styled.div``;
 
-const SecondaryActionWrapper = styled.div`
-	display: none;
+const EditIconWrapper = styled.div`
+	width: 22px;
+	height: 22px;
+	color: #757575;
+	margin: 3px 4px 5px 0;
 
-	${ListItemWrapper}:hover & {
-		display: block;
+	/* ${ListItemWrapper}:hover & {
+		color: inherit;
+	} */
+
+	&:hover {
+		color: inherit;
+	}
+`;
+
+const DeleteIconWrapper = styled.div`
+	width: 24px;
+	height: 24px;
+	color: #757575;
+	margin: 4px 0;
+
+	&:hover {
+		color: inherit;
+	}
+`;
+
+const UpdateTaskIcon = styled.div`
+	width: 40px;
+	height: 40px;
+	color: #757575;
+	cursor: pointer;
+	padding: 8px;
+	margin: auto 0;
+
+	&:hover {
+		color: inherit;
+	}
+`;
+
+const UpdateTask = styled.div`
+	display: flex;
+`;
+
+const UpdateTaskForm = styled.form`
+	padding: 8px 0 8px 16px;
+`;
+
+const NewTask = styled.div`
+	display: flex;
+	justify-content: space-between;
+
+	max-width: 408px;
+	height: 46px;
+	color: #757575;
+	background: white;
+	padding: 4px 12px 0 16px;
+	margin: 0 0 16px;
+
+	cursor: pointer;
+
+	&:hover {
+		color: inherit;
 	}
 `;
 
 const NewTaskForm = styled.form`
-	padding: 0 70px 14px 16px;
-	margin: 0 0 8px;
+	display: flex;
+
+	padding: 0 0 8px 16px;
+	margin: 0 0 14px;
 `;
 
-const UpdateTaskForm = styled.form`
-	padding: 8px 70px 8px 16px;
+const AutosuggestContainer = styled.div`
+	width: 100%;
 `;
