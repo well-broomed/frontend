@@ -5,10 +5,20 @@ import guestReducer from './guestReducer';
 import reportsReducer from './reportsReducer';
 import partnerReducer from './partnerReducer';
 
-export default combineReducers({
+const allReducers = combineReducers({
 	authReducer,
 	propertyReducer,
 	guestReducer,
 	reportsReducer,
 	partnerReducer,
 });
+
+const rootReducer = (state, action) => {
+	if (action.type === 'RESET_APP') {
+		state = undefined;
+	}
+
+	return allReducers(state, action);
+};
+
+export default rootReducer;

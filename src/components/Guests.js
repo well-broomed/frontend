@@ -117,23 +117,35 @@ class Guests extends React.Component {
 		let currentGuests = [];
 		let previousGuests = [];
 
-		if(this.props.guests){
-			upcomingGuests = this.props.guests.filter(guest => moment(guest.checkin).format() > currentTime);
-			previousGuests = this.props.guests.filter(guest => moment(guest.checkout).format() < currentTime);
-			currentGuests = this.props.guests.filter(guest => ((moment(guest.checkin).format() < currentTime) && (moment(guest.checkout).format() > currentTime)));
+		if (this.props.guests) {
+			upcomingGuests = this.props.guests.filter(
+				guest => moment(guest.checkin).format() > currentTime
+			);
+			previousGuests = this.props.guests.filter(
+				guest => moment(guest.checkout).format() < currentTime
+			);
+			currentGuests = this.props.guests.filter(
+				guest =>
+					moment(guest.checkin).format() < currentTime &&
+					moment(guest.checkout).format() > currentTime
+			);
 		}
+
+		const manager = this.props.user && this.props.user.role === 'manager';
 
 		return (
 			<div>
 				<TopBar>
 					<Typography variant="h2">Guests</Typography>
-					<Fab
-						color="primary"
-						className={classes.addIcon}
-						onClick={this.handleModalOpen}
-					>
-						<AddIcon />
-					</Fab>
+					{manager && (
+						<Fab
+							color="primary"
+							className={classes.addIcon}
+							onClick={this.handleModalOpen}
+						>
+							<AddIcon />
+						</Fab>
+					)}
 				</TopBar>
 
 				{/** Add Guest Modal */}
@@ -161,66 +173,73 @@ class Guests extends React.Component {
 								<Tab label="Previous" value={2} onClick={this.handleTab(2)} />
 							</Tabs>
 						</AppBar>
-						<br></br>
-					
+						<br />
+
 						{/** Upcoming Guests **/}
 						{this.state.tab === 0 ? (
-								<>
+							<>
 								{upcomingGuests.length > 0 ? (
 									upcomingGuests.map(guest => {
 										return (
-											<GuestPreview guest = {guest} tab = {this.state.tab} key = {guest.guest_id} fetching = {this.props.gettingPropertyCleaners} />
-										)
+											<GuestPreview
+												guest={guest}
+												tab={this.state.tab}
+												key={guest.guest_id}
+												fetching={this.props.gettingPropertyCleaners}
+											/>
+										);
 									})
 								) : (
-									<Typography variant = 'overline'>
+									<Typography variant="overline">
 										You have no upcoming guests.
 									</Typography>
-			
 								)}
-								</>
-							) : (
-								null
-								)}
+							</>
+						) : null}
 
-							{/** Current Guests **/}
-							{this.state.tab === 1 ? (
-								<>
+						{/** Current Guests **/}
+						{this.state.tab === 1 ? (
+							<>
 								{currentGuests.length > 0 ? (
 									currentGuests.map(guest => {
 										return (
-											<GuestPreview guest = {guest} tab = {this.state.tab} key = {guest.guest_id} fetching = {this.props.gettingPropertyCleaners} />
-										)
+											<GuestPreview
+												guest={guest}
+												tab={this.state.tab}
+												key={guest.guest_id}
+												fetching={this.props.gettingPropertyCleaners}
+											/>
+										);
 									})
 								) : (
-									<Typography variant = 'overline'>
+									<Typography variant="overline">
 										You have no current guests.
 									</Typography>
-			
 								)}
-								</>
-							) : (
-								null
-								)}
+							</>
+						) : null}
 
-							{/** Previous Guests **/}
-							{this.state.tab === 2 ? (
-								<>
+						{/** Previous Guests **/}
+						{this.state.tab === 2 ? (
+							<>
 								{previousGuests.length > 0 ? (
 									previousGuests.map(guest => {
 										return (
-											<GuestPreview guest = {guest} tab = {this.state.tab} key = {guest.guest_id} fetching = {this.props.gettingPropertyCleaners} />
-										)
+											<GuestPreview
+												guest={guest}
+												tab={this.state.tab}
+												key={guest.guest_id}
+												fetching={this.props.gettingPropertyCleaners}
+											/>
+										);
 									})
 								) : (
-									<Typography variant = 'overline'>
+									<Typography variant="overline">
 										You have no previous guests.
 									</Typography>
 								)}
-								</>
-							) : (
-								null
-								)}
+							</>
+						) : null}
 					</div>
 				) : null}
 			</div>
@@ -231,6 +250,8 @@ class Guests extends React.Component {
 const mapStateToProps = state => {
 	return {
 		// state items
+		user: state.authReducer.user,
+
 		guests: state.guestReducer.guests,
 		cleaners: state.propertyReducer.cleaners,
 		propertyCleaners: state.propertyReducer.propertyCleaners,

@@ -64,21 +64,27 @@ export const inviteLogin = (role, inviteCode) => {
 		role: role,
 	};
 
-	const endpoint = axios.post(`${backendUrl}/api/users/login/${inviteCode}`, body, options);
+	const endpoint = axios.post(
+		`${backendUrl}/api/users/login/${inviteCode}`,
+		body,
+		options
+	);
 
 	return dispatch => {
-		dispatch({type: CHECKING_USER});
+		dispatch({ type: CHECKING_USER });
 
-		endpoint.then(res => {
-			console.log('invite login res', res.data);
+		endpoint
+			.then(res => {
+				console.log('invite login res', res.data);
 
-			dispatch({type: USER_CHECKED, payload: res.data})
-		}).catch(err => {
-			console.log(err);
-			dispatch({type: ERROR})
-		})
-	}
-}
+				dispatch({ type: USER_CHECKED, payload: res.data });
+			})
+			.catch(err => {
+				console.log(err);
+				dispatch({ type: ERROR });
+			});
+	};
+};
 
 export const updateUserProfile = (user_id, changes) => {
 	let token = localStorage.getItem('jwt');
@@ -138,7 +144,7 @@ export const updateUserPicture = (user_id, changes) => {
 				dispatch({ type: ERROR });
 			});
 	};
-}
+};
 
 export const setUser = user => {
 	return dispatch => {
@@ -147,19 +153,25 @@ export const setUser = user => {
 };
 
 export const checkInvite = inviteCode => {
-
 	const endpoint = axios.get(`${backendUrl}/api/invites/info/${inviteCode}`);
 
 	return dispatch => {
-		dispatch({type: FETCHING_INVITE});
+		dispatch({ type: FETCHING_INVITE });
 
-		endpoint.then(res => {
-			console.log('invite fetch', res.data);
-			dispatch({type: INVITE_FETCHED, payload: res.data.inviteInfo});
-		}).catch(err => {
-			console.log(err);
-			dispatch({type: ERROR})
-		})
-	}
-	
-}
+		endpoint
+			.then(res => {
+				console.log('invite fetch', res.data);
+				dispatch({ type: INVITE_FETCHED, payload: res.data.inviteInfo });
+			})
+			.catch(err => {
+				console.log(err);
+				dispatch({ type: ERROR });
+			});
+	};
+};
+
+export const resetApp = () => {
+	return dispatch => {
+		dispatch({ type: 'RESET_APP' });
+	};
+};
