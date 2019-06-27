@@ -242,7 +242,7 @@ const Guest = props => {
 											: '--/--'}
 									</Typography>
 									<Typography variant="h6" className={classes.time}>
-										{guest.checkout && moment(guest.checkout).format('h:mma')}
+										{guest.checkout && moment(guest.checkin).format('h:mma')}
 									</Typography>
 								</DateColumn>
 
