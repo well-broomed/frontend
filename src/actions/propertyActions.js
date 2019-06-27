@@ -395,7 +395,15 @@ export const uploadImage = file => {
 	let options = setHeaders();
 
 	const formData = new FormData();
-	formData.append("File", file, file.name);
+	// check for presence of file before appending
+	if(file){
+		formData.append("File", file, file.name);
+	} else {
+		return dispatch => {
+			dispatch({type: ERROR})
+		}
+	}
+	
 
 	const endpoint = axios.post(
 		`${backendUrl}/api/properties/imageupload`,
