@@ -189,9 +189,9 @@ class Home extends React.Component {
 					fullWidth = {true}
 					maxWidth = {'xl'}	
 				>
-					<DialogTitle align = 'center'>
-						<Typography variant = 'h4'>What kind of user are you?</Typography>
-					</DialogTitle>
+					<div style = {{margin: '40px 0px 0px 0px'}}>
+					<Typography variant = 'h4' align = 'center'>What kind of user are you?</Typography>
+					</div>
 
 					<DialogContent>
 					<AccountFeatures>
