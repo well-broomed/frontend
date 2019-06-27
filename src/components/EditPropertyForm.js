@@ -99,11 +99,14 @@ class EditPropertyForm extends React.Component {
 		} else if(this.state.address === ''){
 			window.alert('Property must have an address.')
 		} else {
-
 			const property = {
 				"property_name": this.state.property_name,
 				address: this.state.address,
-				img_url: this.props.img_url
+			}
+
+			// only send an image change if present in state
+			if(this.props.image_url){
+				property.img_url = this.props.image_url
 			}
             
     		this.props.updateProperty(this.props.property.property_id, property);
@@ -173,7 +176,6 @@ class EditPropertyForm extends React.Component {
 						className={classes.formButton}
 						variant="contained"
 						color="primary"
-						type="submit"
 					>
 						Please Wait
 					</Button> 
@@ -182,6 +184,7 @@ class EditPropertyForm extends React.Component {
 						className={classes.formButton}
 						variant="contained"
 						color="primary"
+						type="submit"
 					>
 						Submit Changes
 					</Button> }
