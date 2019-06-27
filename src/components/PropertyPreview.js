@@ -269,9 +269,6 @@ class PropertyPreview extends React.Component {
 					</Dialog>
 
 					{/** Property Card */}
-					
-						
-					
 					<Card className={classes.card} key={property.id}>
 						<CardMedia 
 							className={classes.image}
