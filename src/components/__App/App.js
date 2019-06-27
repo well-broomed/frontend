@@ -86,6 +86,11 @@ const theme = createMuiTheme({
 			fontFamily: 'Noto Sans'
 		}
 	},
+	palette: {
+		background: {
+			default: '#f5f5f3'
+		}
+	}
 });
 
 class App extends Component {
