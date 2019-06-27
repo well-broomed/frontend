@@ -81,6 +81,9 @@ const styles = {
 	formControl: {
 		margin: '20px',
 		minWidth: 120,
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
 	},
 	available: {
 		display: 'flex',
@@ -98,6 +101,9 @@ const styles = {
 	},
 	address: {
 		fontWeight:200
+	},
+	infoContainer: {
+		width: '75%'
 	}
 
 };
@@ -227,7 +233,7 @@ class PropertyPreview extends React.Component {
 							image={property.img_url || "https://www.freeiconspng.com/uploads/no-image-icon-7.gif"}
 							alt={property.property_name || 'Property Image'}
 						/>
-						<div>
+						<div className={classes.infoContainer}>
 						<CardContainer>
 							<Link to={`/properties/${property.property_id}`}>
 								<CardText>
@@ -244,9 +250,6 @@ class PropertyPreview extends React.Component {
 						
 						<CardFooter>
 							<FormControl className={classes.formControl}>
-								<InputLabel shrink htmlFor="cleaner-native-label-placeholder">
-									Default Cleaner
-								</InputLabel>
 								<NativeSelect
 									value={this.state.cleaner_id}
 									onChange={this.handleSelect}
@@ -264,6 +267,7 @@ class PropertyPreview extends React.Component {
 										</option>
 									))}
 								</NativeSelect>
+								Default Cleaner
 							</FormControl>
 						</CardFooter>
 						</div>
