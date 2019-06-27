@@ -58,7 +58,14 @@ const CardText = styled.div`
 		}
 	`;
 
-const CardFooter = styled.div``;
+const CardFooter = styled.div`
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: flex-end;
+	justify-content: center;
+	padding: 0px 20px 20px 20px;
+	text-align: center;
+	`;
 
 const CardActions = styled.div`
 	width: auto;
@@ -82,7 +89,7 @@ const styles = {
 		objectFit: 'cover',
 	},
 	formControl: {
-		margin: '20px',
+		margin: '0px',
 		minWidth: 120,
 		display: 'flex',
 		flexDirection: 'row',
@@ -97,7 +104,7 @@ const styles = {
 	},
 	image: {
 		backgroundSize: 'contain',
-		width:'25%'
+		width:'25%',
 	},
 	propertyName:{
 		fontWeight:300
@@ -291,6 +298,7 @@ class PropertyPreview extends React.Component {
 						</CardContainer>
 						
 						<CardFooter>
+						<Typography variant = 'overline'>Default Cleaner</Typography>
 							<FormControl className={classes.formControl}>
 								<NativeSelect
 									value={this.state.cleaner_id}
@@ -309,7 +317,6 @@ class PropertyPreview extends React.Component {
 										</option>
 									))}
 								</NativeSelect>
-								Default Cleaner
 							</FormControl>
 						</CardFooter>
 						</div>
