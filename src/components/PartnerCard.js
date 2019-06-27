@@ -28,9 +28,7 @@ import Dialog from '@material-ui/core/Dialog';
 import { withStyles } from '@material-ui/core';
 
 const styles = {
-	card: {
-		
-	},
+	card: {},
 	img: {
 		width: 40,
 	},
@@ -111,57 +109,43 @@ class PartnerCard extends React.Component {
 
 	render() {
 		const { classes, partner, defaultProperties } = this.props;
-		// These conditionals are necessary to prevent mapping undefined values (e.g. []) that will crash the application
-		let defaultPropertyList = [];
-		if (partner.defaultProperties) {
-			if (partner.defaultProperties.length > 0) {
-				defaultPropertyList = partner.defaultProperties
-					.map(property => ({
-						...property,
-						property_name: property.property_name + ' - click to unassign',
-					}))
-					.concat(
-						partner.defaultProperties
-							.filter(
-								({ property_id }) =>
-									!partner.defaultProperties.find(
-										property => property.property_id === property_id
-									)
-							)
-							.map(property => ({
-								...property,
-								property_name:
-									property.property_name +
-									(property.cleaner_name
-										? ` - currently assigned to ${property.cleaner_name}`
-										: ''),
-							}))
-					);
-			}
-		}
 
-		// These conditionals are necessary to prevent mapping undefined values (e.g. []) that will crash the application
-		let availablePropertyList = [];
-		if (partner.availableProperties && defaultProperties) {
-			if (
-				partner.availableProperties.length > 0 &&
-				defaultProperties.length > 0
-			) {
-				availablePropertyList = partner.availableProperties
+		const defaultPropertyList = partner.defaultProperties
+			.map(property => ({
+				...property,
+				property_name: property.property_name + ' - click to unassign',
+			}))
+			.concat(
+				defaultProperties
+					.filter(
+						({ property_id }) =>
+							!partner.defaultProperties.find(
+								property => property.property_id === property_id
+							)
+					)
 					.map(property => ({
 						...property,
-						property_name: property.property_name + ' - click to unassign',
+						property_name:
+							property.property_name +
+							(property.cleaner_name
+								? ` - currently assigned to ${property.cleaner_name}`
+								: ''),
 					}))
-					.concat(
-						partner.defaultProperties.filter(
-							({ property_id }) =>
-								!partner.availableProperties.find(
-									property => property.property_id === property_id
-								)
+			);
+
+		const availablePropertyList = partner.availableProperties
+			.map(property => ({
+				...property,
+				property_name: property.property_name + ' - click to unassign',
+			}))
+			.concat(
+				defaultProperties.filter(
+					({ property_id }) =>
+						!partner.availableProperties.find(
+							property => property.property_id === property_id
 						)
-					);
-			}
-		}
+				)
+			);
 
 		return (
 			<div>
@@ -286,29 +270,23 @@ class PartnerCard extends React.Component {
 								partner.cleaner_name
 							}'s Available Properties`}</DialogTitle>
 							<List>
-								{availablePropertyList.length > 0 ? (
-									<>
-										{availablePropertyList.map(property => (
-											<ListItem
-												button
-												selected={
-													partner.availableProperties.find(
-														({ property_id }) =>
-															property_id === property.property_id
-													)
-														? true
-														: false
-												}
-												onClick={() =>
-													this.handleAvailableDialogClose(property)
-												}
-												key={property.property_id}
-											>
-												<ListItemText primary={property.property_name} />
-											</ListItem>
-										))}
-									</>
-								) : null}
+								{availablePropertyList.map(property => (
+									<ListItem
+										button
+										selected={
+											partner.availableProperties.find(
+												({ property_id }) =>
+													property_id === property.property_id
+											)
+												? true
+												: false
+										}
+										onClick={() => this.handleAvailableDialogClose(property)}
+										key={property.property_id}
+									>
+										<ListItemText primary={property.property_name} />
+									</ListItem>
+								))}
 							</List>
 						</Dialog>
 					</Paper>
@@ -321,8 +299,6 @@ class PartnerCard extends React.Component {
 const mapStateToProps = state => {
 	return {
 		// state items
-		properties: state.propertyReducer.properties,
-		partners: state.propertyReducer.partners,
 	};
 };
 
