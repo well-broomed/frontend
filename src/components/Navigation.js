@@ -63,8 +63,8 @@ const styles = {
 		margin: '60px 0px',
 	},
 	loginBtn: {
-		background: '#1b5e20',
-		color: 'white',
+		background: '#64ffda',
+		color: 'black',
 	},
 	logoutBtn: {
 		background: '#b71c1c',
@@ -145,16 +145,15 @@ const NavLinks = styled.div`
 		
 
 		a{
-		padding: 23px;
+		padding: 22px;
 		text-align: center;
-		color: white;
+		color: #fafafa;
 		text-decoration: none;
-	
-		
 
 		:hover{
-			background: white;
-			color: blue;
+			background: #fafafa;
+			color: #3f51b5;
+			font-weight: 800;
 
 		}
 	}
