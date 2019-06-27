@@ -17,6 +17,8 @@ import Typography from '@material-ui/core/Typography';
 
 import styled from 'styled-components';
 
+import noImage from '../images/no-image.gif';
+
 const FormButtonRow = styled.div`
     display: flex;
     flex-flow: row nowrap;
@@ -164,7 +166,7 @@ class EditPropertyForm extends React.Component {
 							style={{ display: 'none' }}
 						/>
 					</Button>
-					<PropertyImg src={this.props.image_url ? this.props.image_url : this.props.property.img_url || "https://www.freeiconspng.com/uploads/no-image-icon-7.gif"}/>
+					<PropertyImg src={this.props.image_url ? this.props.image_url : this.props.property.img_url || noImage}/>
 
 					
 					</FormButtonRow>

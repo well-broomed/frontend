@@ -10,6 +10,8 @@ import PropTypes from 'prop-types';
 // Components
 import { PropertyChecklist } from '../components';
 
+import noImage from '../images/no-image.gif';
+
 // Actions
 import {
 	getProperty,
@@ -267,7 +269,7 @@ const Property = props => {
 					// Change this to a file!
 					src={
 						props.property.img_url ||
-						'https://images.freeimages.com/images/small-previews/7ea/house-1-1225482.jpg'
+						noImage
 					}
 					alt={props.property.property_name || 'Property Image'}
 				/>
@@ -428,14 +430,16 @@ const TopBar = styled.div`
 
 const PropertyImg = styled.img`
 	width: 160px;
-	height: 120px;
+	height: 160px;
 	background: lightgray;
-	object-fit: cover;
+	object-fit: contain;
 `;
 
 const TitleContainer = styled.div`
 	display: flex;
+	height: 160px;
 	flex-direction: column;
+	justify-content: center;
 	margin: 0 0 0 16px;
 `;
 
