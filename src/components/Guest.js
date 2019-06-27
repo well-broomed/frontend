@@ -31,6 +31,14 @@ import DescriptionOutlined from '@material-ui/icons/DescriptionOutlined';
 
 import noImage from '../images/no-image-2.jpg';
 
+const TitleContainer = styled.div`
+	display: flex;
+	height: 160px;
+	flex-direction: column;
+	justify-content: flex-start;
+	margin: 0 0 0 16px;
+`;
+
 const useStyles = makeStyles(theme => ({
 	guestName: {
 		[theme.breakpoints.down(870)]: {
@@ -368,7 +376,7 @@ const TopBar = styled.div`
 
 const LeftStuff = styled.div`
 	display: flex;
-	align-items: flex-end;
+	align-items: flex-start;
 
 	@media (max-width: 870px) {
 		margin: 0 0 10px;
@@ -380,12 +388,6 @@ const PropertyImg = styled.img`
 	height: 160px;
 	background: lightgray;
 	object-fit: cover;
-`;
-
-const TitleContainer = styled.div`
-	display: flex;
-	flex-direction: column;
-	margin: 0 0 0 16px;
 `;
 
 const GuestContainer = styled.div`

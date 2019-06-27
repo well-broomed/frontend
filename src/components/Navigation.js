@@ -95,8 +95,8 @@ const AccountFeatures = styled.div`
 	}
 
 	ul{
-			width: 70%;
-			padding: 0px 20px;
+			width: 100%;
+			padding: 0px 0px 0px 20px;
 			
 		}
 
