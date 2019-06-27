@@ -114,7 +114,7 @@ class PartnerCard extends React.Component {
 		// These conditionals are necessary to prevent mapping undefined values (e.g. []) that will crash the application
 		let defaultPropertyList = [];
 		if (partner.defaultProperties) {
-			if (partner.defaultProperties.length >= 0) {
+			if (partner.defaultProperties.length > 0) {
 				defaultPropertyList = partner.defaultProperties
 					.map(property => ({
 						...property,
