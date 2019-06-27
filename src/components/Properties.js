@@ -110,8 +110,8 @@ class Properties extends React.Component {
 		// Collect assigned Assistant Properties if user is an assistant
 		let asstProperties = [];
 		if(role !== 'manager' && this.props.properties){
-			if(this.props.user){
-				asstProperties = this.props.properties.filter(property => property.cleaner_id === this.props.user.user_id);
+			if(user){
+				asstProperties = this.props.properties.filter(property => property.cleaner_id === user.user_id);
 			}
 		}
 

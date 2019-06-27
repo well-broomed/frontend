@@ -4,8 +4,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 // Router
 import { withRouter } from 'react-router-dom';
-// Axios
-import axios from 'axios';
 
 import moment from 'moment';
 //Material-UI

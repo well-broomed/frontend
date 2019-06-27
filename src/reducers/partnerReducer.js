@@ -49,6 +49,11 @@ const partnerReducer = (state = initialState, action) => {
                 availableProperties: action.payload,
                 refreshAvailable: false,
             }
+
+        case ERROR:
+            return {
+                ...state,
+            }
 		
 		default:
 			return state;

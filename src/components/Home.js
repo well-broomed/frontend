@@ -11,7 +11,7 @@ import styled from 'styled-components';
 
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import {Dialog, DialogTitle, DialogContent, Slide} from '@material-ui/core';
+import {Dialog, DialogContent, Slide} from '@material-ui/core';
 
 // Icons
 import ListAltTwoTone from '@material-ui/icons/ListAltTwoTone';
