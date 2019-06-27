@@ -185,7 +185,9 @@ class Reports extends React.Component {
 
 		return (
 			<div>
+				<div style = {{padding: '20px 0px'}}>
 				<Typography variant="h2">Reports</Typography>
+				</div>
 
 				{user.role && (
 					<AppBar

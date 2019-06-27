@@ -41,7 +41,7 @@ const FlexColNoWrap = styled.div`
 const styles = {
     card: {
         maxWidth: 400,
-        marginTop: 40,
+        marginTop: 20,
     },
     media: {
         height: 200,
@@ -151,7 +151,9 @@ class Account extends React.Component {
         const {classes} = this.props;
         return (
             <div>
+                <div style = {{padding: '20px 0px'}}>
                 <Typography variant = 'h2'>Account</Typography>
+                </div>
                 {(this.props.userChecked && this.props.user) ? (
                     <div>
                         {this.props.user.auth_provider === 'auth0' ? (

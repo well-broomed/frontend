@@ -39,6 +39,7 @@ const TopBar = styled.div`
 	flex-flow: row nowrap;
 	justify-content: space-between;
 	align-items: center;
+	padding: 20px 0px;
 `;
 
 const styles = {
