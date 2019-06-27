@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 // Components
 import { PropertyChecklist } from '../components';
 
-import noImage from '../images/no-image.gif';
+import noImage from '../images/no-image-2.jpg';
 
 // Actions
 import {

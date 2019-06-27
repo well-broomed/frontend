@@ -29,6 +29,8 @@ import Link from '@material-ui/core/Link';
 
 import DescriptionOutlined from '@material-ui/icons/DescriptionOutlined';
 
+import noImage from '../images/no-image-2.jpg';
+
 const useStyles = makeStyles(theme => ({
 	guestName: {
 		[theme.breakpoints.down(870)]: {
@@ -160,7 +162,7 @@ const Guest = props => {
 						// Change this to a file!
 						src={
 							guest.img_url ||
-							'https://images.freeimages.com/images/small-previews/7ea/house-1-1225482.jpg'
+							noImage
 						}
 						alt={guest.property_name || 'Property Image'}
 					/>
@@ -375,7 +377,7 @@ const LeftStuff = styled.div`
 
 const PropertyImg = styled.img`
 	width: 160px;
-	height: 120px;
+	height: 160px;
 	background: lightgray;
 	object-fit: cover;
 `;

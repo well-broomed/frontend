@@ -38,7 +38,7 @@ import { connect } from 'react-redux';
 import { changeCleaner, deleteProperty, addAvailability, deleteAvailability, } from '../actions/index';
 
 // Images
-import noImage from '../images/no-image.gif';
+import noImage from '../images/no-image-2.jpg';
 
 const CardContainer = styled.div`
 	width: 100%;
