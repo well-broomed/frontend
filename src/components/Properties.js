@@ -192,7 +192,7 @@ class Properties extends React.Component {
 					) : null }
 
 					<Typography variant="h5"> Potential Properties </Typography>
-					<Typography variant = 'subtitle'>Mark yourself available to be assigned for shifts.</Typography>
+					<Typography variant = 'overline'>Mark yourself available to be assigned for shifts.</Typography>
 					<br></br>
 					{/** Available Properties */}
 					{/** These are all properties from all managers */}
