@@ -37,6 +37,9 @@ import { connect } from 'react-redux';
 // Actions
 import { changeCleaner, deleteProperty, addAvailability, deleteAvailability, } from '../actions/index';
 
+// Images
+import noImage from '../images/no-image.gif';
+
 const CardContainer = styled.div`
 	width: 100%;
 	display: flex;
@@ -294,7 +297,7 @@ class PropertyPreview extends React.Component {
 					<Card className={classes.card} key={property.id}>
 						<CardMedia 
 							className={classes.image}
-							image={property.img_url || "https://www.freeiconspng.com/uploads/no-image-icon-7.gif"}
+							image={property.img_url || noImage}
 							alt={property.property_name || 'Property Image'}
 						/>
 						<div className={classes.infoContainer}>
