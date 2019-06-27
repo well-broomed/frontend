@@ -104,6 +104,9 @@ const styles = {
 	},
 	infoContainer: {
 		width: '75%'
+	},
+	deleteButton:{
+		color: 'darkred'
 	}
 
 };
@@ -244,7 +247,7 @@ class PropertyPreview extends React.Component {
 
 							<CardActions>
 								<EditTwoTone onClick={this.toggleEdit} />
-								<DeleteForeverTwoTone onClick={this.toggleDelete} />
+								<DeleteForeverTwoTone className={classes.deleteButton} onClick={this.toggleDelete} />
 							</CardActions>
 						</CardContainer>
 						
