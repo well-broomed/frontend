@@ -1,22 +1,22 @@
 // React
 import React from 'react';
 // Redux
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 // Router
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import AddPropertyForm from './AddPropertyForm';
 
 // Styled Components
 import styled from 'styled-components';
 
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
+// import Card from '@material-ui/core/Card';
+// import CardHeader from '@material-ui/core/CardHeader';
+// import CardMedia from '@material-ui/core/CardMedia';
+// import CardContent from '@material-ui/core/CardContent';
 
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+// import Menu from '@material-ui/core/Menu';
+// import MenuItem from '@material-ui/core/MenuItem';
 import { withStyles } from '@material-ui/core';
 
 import Dialog from '@material-ui/core/Dialog';
@@ -30,132 +30,210 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
 // Actions
-import {getUserProperties, getCleaners} from '../actions';
+import { getUserProperties, getAvailableProperties } from '../actions/index';
 import PropertyPreview from './PropertyPreview';
 
 const TopBar = styled.div`
-    width: 100%;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-    align-items: center;
-
-    `;
-
+	width: 100%;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	align-items: center;
+	padding: 20px 0px;
+`;
 
 const styles = {
-    card: {
-        maxWidth: 600,
-        margin: '20px auto',
-    },
-    media: {
-        objectFit: 'cover'
-    },
-    addIcon: {
-        fontSize: '5rem',
-        cursor: 'pointer',
-    },
-}
+	card: {
+		maxWidth: 600,
+		margin: '20px auto',
+	},
+	media: {
+		objectFit: 'cover',
+	},
+	addIcon: {
+		fontSize: '5rem',
+		cursor: 'pointer',
+	},
+};
 
-function Transition(props){
-    return <Slide direction = 'down' {...props} />;
-}
+const Transition = React.forwardRef((props, ref) => (
+	<Slide direction="up" {...props} ref={ref} />
+));
 
 class Properties extends React.Component {
+	componentDidMount() {
+		if (!localStorage.getItem('jwt')) {
+			this.props.history.replace('/');
+		}
+		this.props.getUserProperties();
+	}
 
-    componentDidMount(){
-        this.props.getUserProperties();
-        this.props.getCleaners();
-    }
+	componentDidUpdate(prevProps) {
+		// refreshProperties will be set to true once the user is checked
+		if (prevProps.refreshProperties !== this.props.refreshProperties) {
+			this.props.getUserProperties();
+		}
 
-    componentDidUpdate(){
-        if(this.props.refreshProperties){
-            this.props.getUserProperties();
-        }
-    }
+		if(prevProps.user !== this.props.user){
+			if(this.props.user.role !== 'manager'){
+				this.props.getAvailableProperties();
+			}
+		}
+	}
 
-    constructor(props){
-        super(props);
-        this.state = {
-            anchorEl: null,
-            addModal: false,
-        };
+	constructor(props) {
+		super(props);
+		this.state = {
+			addModal: false,
+		};
+	}
 
-    }
+	handleModalOpen = () => {
+		this.setState({
+			addModal: true,
+		});
+	};
 
-    handleMenuClick = event => {
-        this.setState({
-            anchorEl: event.currentTarget,
-        })
-    }
+	handleModalClose = () => {
+		this.setState({
+			addModal: false,
+		});
+	};
 
-    handleClose = () => {
-        this.setState({
-            anchorEl: null,
-        })
-    }
+	render() {
+		// const { anchorEl } = this.state;
+		// const open = Boolean(anchorEl);
+		const { classes } = this.props;
+		const role = (this.props.user && this.props.user.role) || null;
+		const { user, properties } = this.props;
 
-    handleModalOpen = () => {
-        this.setState({
-            addModal: true,
-        })
-    }
+		// Collect assigned Assistant Properties if user is an assistant
+		let asstProperties = [];
+		if(role !== 'manager' && this.props.properties){
+			if(user){
+				asstProperties = this.props.properties.filter(property => property.cleaner_id === user.user_id);
+			}
+		}
 
-    handleModalClose = () => {
-        this.setState({
-            addModal: false,
-        })
-    }
+		if (role === 'manager')
+			return (
+				<div>
+					{/** Manager View */}
+					<TopBar>
+						<Typography variant="h2">Properties</Typography>{' '}
+						<Fab
+							color="primary"
+							className={classes.addIcon}
+							onClick={this.handleModalOpen}
+						>
+							<AddIcon />
+						</Fab>
+					</TopBar>
 
+					<Dialog
+						open={this.state.addModal}
+						TransitionComponent={Transition}
+						onClose={this.handleModalClose}
+						fullWidth={true}
+						maxWidth={'xl'}
+					>
+						<DialogContent>
+							<AddPropertyForm close={this.handleModalClose} />
+						</DialogContent>
+					</Dialog>
 
+					{this.props.properties ? (
+						properties.map(property => {
+							return (
+								<PropertyPreview
+									property={property}
+									key={property.property_id}
+								/>
+							);
+						})
+					) : (
+						<Typography variant="overline">
+							No properties have been added yet.
+						</Typography>
+					)}
+				</div>
+			);
+		else
+			return (
+				<div>
+					{/** Assistant View */}
+					<TopBar>
+						<Typography variant="h2">Properties</Typography>{' '}
+					</TopBar>
+					<Typography variant="h5"> Assigned Properties</Typography>
 
-    render(){
-        const {anchorEl} = this.state;
-        const open = Boolean(anchorEl);
-        const {classes} = this.props;
+					{/** Assigned Properties */}
+					{this.props.properties ? (
 
+						<>
+						{asstProperties.length > 0 ? (
+							<>
+							{asstProperties
+								.map(property => {
+									return (
+										<PropertyPreview property = {property} key = {property.property_id} assigned = {true}/>
+									)
+								})}
+							</>
 
-        return (
-            <div>
-                <TopBar>
-                <Typography variant = 'h2'>Properties</Typography> <Fab color = 'primary' className = {classes.addIcon} onClick = {this.handleModalOpen}><AddIcon/></Fab>
-                </TopBar>
+						) : (
+							
+							<Typography variant="overline">
+							You have not been assigned as the default partner for any
+							properties.
+							</Typography>
+						)}
+						</>
+					) : null }
 
-                <Dialog open={this.state.addModal} TransitionComponent={Transition} keepMounted onClose={this.handleModalClose}>
-                <DialogContent>
-                <AddPropertyForm close = {this.handleModalClose}></AddPropertyForm>
-                </DialogContent>
-                
-                </Dialog>
-
-                {this.props.properties ? this.props.properties.map(property => {
-                    return (
-                        <PropertyPreview property = {property} key = {property.property_id} />
-                    )
-                })
-            
-            : (<Typography variant = 'overline'>No properties have been added yet.</Typography>)}
-
-
-            </div>
-        )
-    }
+					<Typography variant="h5"> Potential Properties </Typography>
+					<Typography variant = 'overline'>Mark yourself available to be assigned for shifts.</Typography>
+					<br></br>
+					{/** Available Properties */}
+					{/** These are all properties from all managers */}
+					{this.props.properties ? (
+						this.props.properties
+							.map(property => {
+								console.log('MAP PROP', property)
+								return (
+									<PropertyPreview
+										property={property}
+										key={property.property_id}
+									/>
+								);
+							})
+					) : (
+						<Typography variant="overline">
+							There are no properties available to you.
+						</Typography>
+					)}
+				</div>
+			);
+	}
 }
-
-
 const mapStateToProps = state => {
-    return {
-        // state items
-        properties: state.propertyReducer.properties,
-        refreshProperties: state.propertyReducer.refreshProperties,
-        cleaners: state.propertyReducer.cleaners,
-        userInfo: state.authReducer.userInfo,
-    }
-}
-
-export default withRouter(connect(mapStateToProps, {
-    // actions
-    getUserProperties,
-    getCleaners,
-    
-})(withStyles(styles)(Properties)));
+	return {
+		// state items
+		user: state.authReducer.user,
+		properties: state.propertyReducer.properties,
+		refreshProperties: state.propertyReducer.refreshProperties,
+		userChecked: state.authReducer.userChecked,
+		availableProperties: state.partnerReducer.availableProperties,
+		refreshAvailable: state.partnerReducer.refreshAvailable,
+	};
+};
+export default withRouter(
+	connect(
+		mapStateToProps,
+		{
+			// actions
+			getUserProperties,
+			getAvailableProperties,
+		}
+	)(withStyles(styles)(Properties))
+);

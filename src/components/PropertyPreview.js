@@ -1,139 +1,390 @@
 import React from 'react';
 
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
+// Components
+import EditPropertyForm from './EditPropertyForm';
 
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+// Cards
+import Card from '@material-ui/core/Card';
 import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
-import Select from '@material-ui/core/Select';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import Typography from '@material-ui/core/Typography';
+// import CardContent from '@material-ui/core/CardContent';
+// import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
+import Switch from '@material-ui/core/Switch';
+
+
+// Dialog Modals
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+
+import Button from '@material-ui/core/Button';
+
+// Icons
+import DeleteForeverTwoTone from '@material-ui/icons/DeleteForeverTwoTone';
+import EditTwoTone from '@material-ui/icons/EditTwoTone';
+
+// Dependencies
+import styled from 'styled-components';
 import { withStyles } from '@material-ui/core';
+import { withRouter, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-import {withRouter} from 'react-router-dom';
-import {connect} from 'react-redux';
+// Actions
+import { changeCleaner, deleteProperty, addAvailability, deleteAvailability, } from '../actions/index';
 
-import {changeCleaner} from '../actions/propertyActions';
+// Images
+import noImage from '../images/no-image-2.jpg';
+
+const CardContainer = styled.div`
+	width: 100%;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	padding: 20px;
+	a {
+		color: black;
+		text-decoration: none;
+		width: 100%;
+	}
+`;
+
+const CardText = styled.div`
+	transition: color 0.1s ease-in-out;
+	:hover{
+			color: #3f51b5;
+			transition: color 0.01s ease-in-out;
+		}
+	`;
+
+const CardFooter = styled.div`
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: flex-end;
+	justify-content: center;
+	padding: 0px 20px 20px 20px;
+	text-align: center;
+	`;
+
+const CardActions = styled.div`
+	width: auto;
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: flex-start;
+	justify-content: flex-end;
+	svg {
+		cursor: pointer;
+		font-size: 3rem;
+	}
+`;
+
+const DeleteButtons = styled.div`
+	width: 100%;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+
+	button{
+		width: 45%;
+		padding: 10px 0px;
+	}
+
+	`;
 
 const styles = {
-    card: {
-        maxWidth: 600,
-        margin: '20px auto',
-    },
-    media: {
-        objectFit: 'cover'
-    },
-    formControl: {
-        margin: '20px',
-        minWidth: 120,
-    },
-}
+	card: {
+		display: 'flex',
+		maxWidth: '100%',
+		margin: '20px auto',
+	},
+	media: {
+		objectFit: 'cover',
+	},
+	formControl: {
+		margin: '0px',
+		minWidth: 120,
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+	available: {
+		display: 'flex',
+		justifyContent: 'flex-end',
+	},
+	button: { 
+		width: '196px' 
+	},
+	image: {
+		backgroundSize: 'cover',
+		width:'25%',
+	},
+	propertyName:{
+		fontWeight:300
+	},
+	address: {
+		fontWeight:200
+	},
+	infoContainer: {
+		width: '75%'
+	},
+	deleteButton:{
+		color: 'darkred'
+	}
+
+};
 
 class PropertyPreview extends React.Component {
-
-    componentDidUpdate(oldProps){
-        if((this.props.cleaners !== oldProps.cleaners) || this.props.refreshCleaners){
-            let defaultCleaner;
-
-            if(this.props.property.cleaner_id === null){
-                defaultCleaner = this.props.cleaners.map(cleaner => {
-                    if(cleaner.user_id === this.props.property.manager_id){
-                        return cleaner;
-                    }
-                })
-            } else {
-                defaultCleaner = this.props.cleaners.map(cleaner => {
-                    if(cleaner.user_id === this.props.property.cleaner_id){
-                        return cleaner;
-                    }
-                })
-            }
-
-            this.setState({
-                cleaner: defaultCleaner
-            })
-
-        }
-    }
-
-    constructor(props){
-        super(props);
-
-        this.state = {
-            // state
-            cleaner: null,
-        }
-    }
-
-    handleSelect = event => {
-        this.setState({
-            cleaner: event.target.value
-        })
-
-        console.log(event.target.value.id);
-
-        this.props.changeCleaner(this.props.property.id, event.target.value.id)
-    }
+	// check this property's availability status against the availabilities in state
 
 
-    render(){
-        const {classes} = this.props;
-        return(
-            <div>
-                <Card className = {classes.card} key = {this.props.property.id}>
-                        <CardHeader title = {this.props.property.property_name} subheader = {this.props.property.address}>
-                        </CardHeader>
+	componentDidMount(){
 
-                        <CardContent>
-                        <Typography variant = 'overline'>Select Cleaner</Typography>
+		this.setState({
+			cleaner_id: this.props.property.cleaner_id || '',
+		});
 
-                        <FormControl className={classes.formControl}>
-                        <InputLabel shrink htmlFor='cleaner-native-label-placeholder'>
-                        Assigned Cleaner
-                        </InputLabel>
-                        {this.state.cleaner ? (
-                            <NativeSelect 
-                            value = {this.state.cleaner.user_name} // placholder == assigned cleaner's name
-                            onChange = {this.handleSelect}
-                            input = {<Input name = 'cleaner' id = 'cleaner-native-label-placeolder' />}
-                            >
+		if(this.props.availableProperties){
+			let currentProperty = this.props.property.property_id;
 
-                            {this.props.cleaners ? this.props.cleaners.map(cleaner => {
-                                return <option value  = {cleaner} key = {cleaner.user_id}>{cleaner.user_name}</option>
-                            }) : null}
-    
-    
-                            </NativeSelect>
+			let searchResult = this.props.availableProperties.find(property => property.property_id === currentProperty);
+			if(searchResult || searchResult !== undefined){
+				this.setState({
+					available: true,
+				})
+			}
+		}
+	}
 
-                        ) : null}
-                        
-                        
-                        </FormControl>
+	componentDidUpdate(prevProps){
+		if(prevProps.availableProperties !== this.props.availableProperties){
+			let currentProperty = this.props.property.property_id;
 
+			let searchResult = this.props.availableProperties.find(property => property.property_id === currentProperty);
+			if(searchResult || searchResult !== undefined){
+				this.setState({
+					available: true,
+				})
+			}
+		}
+	}
 
-                        </CardContent>
-                        </Card>
+	constructor(props) {
+		super(props);
 
-            </div>
-        )
-    }
+		this.state = {
+			// state
+			cleaner_id: '',
+			deleteModal: false,
+			editModal: false,
+			available: false, // default to false until avail can be checked
+		};
+	}
+
+	handleSelect = event => {
+		this.setState({
+			cleaner_id: event.target.value,
+		});
+
+		this.props.changeCleaner(
+			this.props.property.property_id,
+			event.target.value || null
+		);
+	};
+
+	toggleDelete = () => {
+		this.setState({
+			deleteModal: !this.state.deleteModal,
+		});
+	};
+
+	handleDelete = () => {
+		this.props.deleteProperty(this.props.property.property_id);
+
+		this.toggleDelete();
+	};
+
+	toggleEdit = () => {
+		this.setState({
+			editModal: !this.state.editModal,
+		});
+	};
+
+	handleSwitch = name => event => {
+
+		// parse the change to be made
+		if(!this.state.available === true){
+			this.setState({
+				[name]: true,
+			})
+			this.props.addAvailability(this.props.user.user_id, this.props.property.property_id);
+		} else {
+			this.setState({
+				[name]: false,
+			})
+			this.props.deleteAvailability(this.props.user.user_id, this.props.property.property_id);
+		}
+
+	}
+
+	render() {
+		const { classes, user, property } = this.props;
+		const role = user.role;
+
+		const availableCleaners = property.availableCleaners;
+
+		// Just in case someone's set as default without also being available. Shouldn't happen but it's not explicitly disallowed on the backend (yet)
+		if (
+			property.cleaner_id &&
+			availableCleaners &&
+			!availableCleaners.find(
+				({ cleaner_id }) => cleaner_id === parseInt(property.cleaner_id)
+			)
+		) {
+			availableCleaners.push({
+				cleaner_id: property.cleaner_id,
+				cleaner_name: property.cleaner_name,
+			});
+		}
+
+		if (role === 'manager') {
+			return (
+				<div>
+					
+					{/** Delete Modal **/}
+					<Dialog open={this.state.deleteModal} onClose={this.toggleDelete} fullWidth = {false} maxWidth = 'xl'>
+						<DialogContent>
+							<Typography variant="h6">
+								Are you sure you want to delete {property.property_name}?
+							</Typography>
+						</DialogContent>
+						<DialogActions>
+							<DeleteButtons>
+							<Button
+								onClick={this.toggleDelete}
+								variant="outlined"
+								color="primary"
+							>
+								Cancel
+							</Button>
+							<Button
+								onClick={this.handleDelete}
+								variant="contained"
+								color="secondary"
+							>
+								Delete
+							</Button>
+							</DeleteButtons>
+						</DialogActions>
+					</Dialog>
+
+					{/** Edit Modal **/}
+					<Dialog
+						open={this.state.editModal}
+						onClose={this.toggleEdit}
+						fullWidth={true}
+						maxWidth="xl"
+					>
+						<DialogContent>
+							<EditPropertyForm close={this.toggleEdit} property={property} />
+						</DialogContent>
+					</Dialog>
+
+					{/** Property Card */}
+					<Card className={classes.card} key={property.id}>
+						<CardMedia 
+							className={classes.image}
+							image={property.img_url || noImage}
+							alt={property.property_name || 'Property Image'}
+						/>
+						<div className={classes.infoContainer}>
+						<CardContainer>
+							<Link to={`/properties/${property.property_id}`}>
+								<CardText>
+									<Typography variant="h4" className={classes.propertyName}>{property.property_name}</Typography>
+									<Typography variant="h5" className={classes.address}>{property.address}</Typography>
+								</CardText>
+							</Link>
+
+							<CardActions>
+								<EditTwoTone onClick={this.toggleEdit} />
+								<DeleteForeverTwoTone className={classes.deleteButton} onClick={this.toggleDelete} />
+							</CardActions>
+						</CardContainer>
+						
+						<CardFooter>
+						<Typography variant = 'overline'>Default Cleaner</Typography>
+							<FormControl className={classes.formControl}>
+								<NativeSelect
+									value={this.state.cleaner_id}
+									onChange={this.handleSelect}
+									input={
+										<Input
+											name="cleaner"
+											id="cleaner-native-label-placeholder"
+										/>
+									}
+								>
+									<option value="">Unassigned</option>
+									{availableCleaners.map(cleaner => (
+										<option value={cleaner.cleaner_id} key={cleaner.cleaner_id}>
+											{cleaner.cleaner_name}
+										</option>
+									))}
+								</NativeSelect>
+							</FormControl>
+						</CardFooter>
+						</div>
+					</Card>
+					</div>
+	
+			);
+		} else {
+			return (
+				<>
+				<br></br>
+				<Card>
+					<CardContainer>
+							<Link to={`/properties/${property.property_id}`}>
+								<CardText>
+									<Typography variant="h4">{property.property_name}</Typography>
+									<Typography variant="h5">{property.address}</Typography>
+								</CardText>
+							</Link>
+
+							<CardActions>
+								{!this.props.assigned ? (
+								<FormControlLabel control = {<Switch checked = {this.state.available} onChange = {this.handleSwitch('available')} value = 'available' />} label = {this.state.available ? 'Available' : 'Unavailable'} />
+								) : (null)}
+							</CardActions>
+					</CardContainer>
+				</Card>
+				</>
+			);
+		}
+	}
 }
-
 
 const mapStateToProps = state => {
-    return {
-        // state items
-        cleaners: state.propertyReducer.cleaners,
-    }
-}
+	return {
+		// state items
+		user: state.authReducer.user || {},
+		availableProperties: state.partnerReducer.availableProperties,
+	};
+};
 
-export default withRouter(connect(mapStateToProps, {
-    // actions
-    changeCleaner,
-    
-})(withStyles(styles)(PropertyPreview)));
+export default withRouter(
+	connect(
+		mapStateToProps,
+		{
+			// actions
+			changeCleaner,
+			deleteProperty,
+			addAvailability,
+			deleteAvailability,
+		}
+	)(withStyles(styles)(PropertyPreview))
+);
