@@ -92,7 +92,14 @@ const styles = {
 	image: {
 		backgroundSize: 'contain',
 		width:'25%'
+	},
+	propertyName:{
+		fontWeight:300
+	},
+	address: {
+		fontWeight:200
 	}
+
 };
 
 class PropertyPreview extends React.Component {
@@ -224,8 +231,8 @@ class PropertyPreview extends React.Component {
 						<CardContainer>
 							<Link to={`/properties/${property.property_id}`}>
 								<CardText>
-									<Typography variant="h4">{property.property_name}</Typography>
-									<Typography variant="h5">{property.address}</Typography>
+									<Typography variant="h4" className={classes.propertyName}>{property.property_name}</Typography>
+									<Typography variant="h5" className={classes.address}>{property.address}</Typography>
 								</CardText>
 							</Link>
 
