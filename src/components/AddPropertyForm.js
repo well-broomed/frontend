@@ -19,6 +19,38 @@ import HelpTwoTone from '@material-ui/icons/HelpTwoTone';
 
 import Typography from '@material-ui/core/Typography';
 
+const FormButtons = styled.div`
+	width: 100%;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0px;
+
+	@media (max-width: 800px){
+		flex-flow: column nowrap;
+	}
+
+	button{
+		font-size: 1.5rem;
+		padding: 10px;
+		width: 45%;
+		@media (max-width: 800px){
+			width: 100%;
+		}
+	}
+
+	label{
+		font-size: 1.5rem;
+		padding: 10px;
+		width: 45%;
+		@media (max-width: 800px){
+			width: 100%;
+		}
+	}
+
+	`;
+
 
 const styles = theme => ({
 	container: {
@@ -42,11 +74,13 @@ const styles = theme => ({
 	[theme.breakpoints.up('md')]: {
 		formButton: {
 			width: '35%',
-			margin: '25px auto 0',
+			margin: '25px 0 0 0',
+			
 		},
 		imageButton: {
 			width: '35%',
-			margin: '25px auto 0',
+			margin: '25px 0 0 0'
+			
 		}
 		
 	}
@@ -161,6 +195,7 @@ class AddPropertyForm extends React.Component {
 						onChange={this.handleInput('assistant_guide')}
 					/>
 
+					<FormButtons>
 					<Button
 						variant="contained"
 						component="label"
@@ -201,6 +236,7 @@ class AddPropertyForm extends React.Component {
 							Add Property
 						</Button>
 					)}
+					</FormButtons>
 				</form>
 			</div>
 		);

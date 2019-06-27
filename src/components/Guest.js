@@ -29,6 +29,16 @@ import Link from '@material-ui/core/Link';
 
 import DescriptionOutlined from '@material-ui/icons/DescriptionOutlined';
 
+import noImage from '../images/no-image-2.jpg';
+
+const TitleContainer = styled.div`
+	display: flex;
+	height: 160px;
+	flex-direction: column;
+	justify-content: flex-start;
+	margin: 0 0 0 16px;
+`;
+
 const useStyles = makeStyles(theme => ({
 	guestName: {
 		[theme.breakpoints.down(870)]: {
@@ -160,7 +170,7 @@ const Guest = props => {
 						// Change this to a file!
 						src={
 							guest.img_url ||
-							'https://images.freeimages.com/images/small-previews/7ea/house-1-1225482.jpg'
+							noImage
 						}
 						alt={guest.property_name || 'Property Image'}
 					/>
@@ -242,7 +252,7 @@ const Guest = props => {
 											: '--/--'}
 									</Typography>
 									<Typography variant="h6" className={classes.time}>
-										{guest.checkout && moment(guest.checkin).format('h:mma')}
+										{guest.checkin && moment(guest.checkin).format('h:mma')}
 									</Typography>
 								</DateColumn>
 
@@ -366,7 +376,7 @@ const TopBar = styled.div`
 
 const LeftStuff = styled.div`
 	display: flex;
-	align-items: flex-end;
+	align-items: flex-start;
 
 	@media (max-width: 870px) {
 		margin: 0 0 10px;
@@ -375,15 +385,9 @@ const LeftStuff = styled.div`
 
 const PropertyImg = styled.img`
 	width: 160px;
-	height: 120px;
+	height: 160px;
 	background: lightgray;
 	object-fit: cover;
-`;
-
-const TitleContainer = styled.div`
-	display: flex;
-	flex-direction: column;
-	margin: 0 0 0 16px;
 `;
 
 const GuestContainer = styled.div`

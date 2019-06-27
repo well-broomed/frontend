@@ -65,8 +65,8 @@ const styles = {
 		margin: '60px 0px',
 	},
 	loginBtn: {
-		background: '#1b5e20',
-		color: 'white',
+		background: '#81e4e4',
+		fontWeight: 800,
 	},
 	logoutBtn: {
 		background: '#b71c1c',
@@ -96,10 +96,11 @@ const AccountFeatures = styled.div`
 		margin: 0 auto;
 	}
 
-	ul {
-		width: 70%;
-		padding: 0px 20px;
-	}
+	ul{
+			width: 100%;
+			padding: 0px 0px 0px 20px;
+		}
+
 
 	.left {
 		width: 45%;
@@ -130,6 +131,44 @@ const AccountFeatures = styled.div`
 	}
 `;
 
+const NavLinks = styled.div`
+	width: 100%;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	align-items: center;
+	text-transform: uppercase;
+	
+	.links{
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: space-between;
+		
+
+		a{
+		padding: 22px;
+		text-align: center;
+		color: #fafafa;
+		text-decoration: none;
+
+		:hover{
+			background: #fafafa;
+			color: #3f51b5;
+			font-weight: 800;
+
+		}
+	}
+
+	.buttons{
+
+
+	}
+
+	}
+
+	
+	`;
+
 const Transition = React.forwardRef((props, ref) => (
 	<Slide direction="up" {...props} ref={ref} />
 ));
@@ -141,6 +180,14 @@ class Navigation extends React.Component {
 				isLoggedIn: true,
 			});
 		}
+
+		// monitor window size for nav render
+		this.handleResize();
+		window.addEventListener('resize', this.handleResize);
+	}
+
+	componentWillUnmount(){
+		window.removeEventListener('resize', this.handleResize);
 	}
 
 	constructor(props) {
@@ -155,6 +202,7 @@ class Navigation extends React.Component {
 			isLoggedIn: false,
 			loginModal: false,
 			accountType: null,
+			width: 0,
 		};
 
 		this.toggleDrawer = (side, open) => () => {
@@ -162,6 +210,12 @@ class Navigation extends React.Component {
 				[side]: open,
 			});
 		};
+	}
+
+	handleResize = () => {
+		this.setState({
+			width: window.innerWidth
+		})
 	}
 
 	toggleModal = event => {
@@ -373,7 +427,10 @@ class Navigation extends React.Component {
 			<div className={classes.root}>
 				<AppBar position="fixed" className={classes.appBar}>
 					<Toolbar>
-						<IconButton
+						{/** If width < 800, show hamburger and slide menu */}
+						{this.state.width < 800 ? (
+							<>
+							<IconButton
 							color="inherit"
 							aria-label="Menu"
 							onClick={this.toggleDrawer('left', !this.state.left)}
@@ -383,8 +440,35 @@ class Navigation extends React.Component {
 						<Typography variant="h6" color="inherit" className={classes.grow}>
 							{pathRoute}
 						</Typography>
+						</>
+						) : (null)}
+							
+						<NavLinks>
+						<div className = 'links'>
+						{/** If width > 800, show tab links in navbar */}
+						{this.state.width > 800 ? (
+							<>
+							{/** Only show home link if not logged in */}
+							
+							<Link to = '/'>Home</Link>
+							
+							{localStorage.getItem('jwt') ? (
+								<>
+								<Link to = '/properties'>Properties</Link>
+								<Link to = '/partners'>Partners</Link>
+								<Link to = '/guests'>Guests</Link>
+								<Link to = '/reports'>Reports</Link>
+								<Link to = '/account'>Account</Link>
+								</>
+							) : (null)}
+							
+							</>
+						) : (null)}
+						</div>
+						
 
 						{/* CONDITIONALLY RENDER LOGIN/LOGOUT BASED ON JWT PRESENCE */}
+						<div className = 'buttons'>
 						{!localStorage.getItem('jwt') ? (
 							<Button
 								variant="contained"
@@ -402,6 +486,8 @@ class Navigation extends React.Component {
 								Logout
 							</Button>
 						)}
+						</div>
+						</NavLinks>
 					</Toolbar>
 				</AppBar>
 

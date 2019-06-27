@@ -44,7 +44,7 @@ const styles = {
 		marginTop: '20px',
 	},
 	divider: {
-		margin: '15px 0',
+		margin: '20px 0',
 	},
 	reports: {
 		marginTop: '20px',
@@ -220,7 +220,7 @@ class Reports extends React.Component {
 					>
 						<Typography component="div" dir={this.props.theme.direction}>
 							<Typography
-								variant="h4"
+								variant="h3"
 								className={classes.overallHeader}
 								align="center"
 							>
@@ -232,12 +232,13 @@ class Reports extends React.Component {
 							</div>
 
 							<Divider className={classes.divider} />
-
+							<Typography variant = 'h3' align = 'center'>Properties</Typography>
+							<br></br>
 							<TimeHeaders>
-								{['Recent', 'Current', 'Upcoming'].map(title => (
+								{['RECENT', 'CURRENT', 'UPCOMING'].map(title => (
 									<Typography
 										key={title}
-										variant="h5"
+										variant="h6"
 										className={classes.singleProgress}
 										align="center"
 									>
@@ -260,7 +261,7 @@ class Reports extends React.Component {
 								<React.Fragment>
 									<Divider className={classes.divider} />
 
-									<Typography variant="h4" align="center">
+									<Typography variant="h3" align="center">
 										Partners
 									</Typography>
 

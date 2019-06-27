@@ -22,7 +22,7 @@ const ProgressRow = props => {
 		<PropertyRowContainer style={{ background: even ? 'inherit' : 'white' }}>
 			<PropertyLink to={`/properties/${propertyInfo.property_id}`}>
 				<PropertyName
-					variant="h6"
+					variant="h4"
 					// align="center"
 				>
 					{propertyInfo.property_name}

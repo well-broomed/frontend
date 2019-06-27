@@ -37,6 +37,9 @@ import { connect } from 'react-redux';
 // Actions
 import { changeCleaner, deleteProperty, addAvailability, deleteAvailability, } from '../actions/index';
 
+// Images
+import noImage from '../images/no-image-2.jpg';
+
 const CardContainer = styled.div`
 	width: 100%;
 	display: flex;
@@ -58,7 +61,14 @@ const CardText = styled.div`
 		}
 	`;
 
-const CardFooter = styled.div``;
+const CardFooter = styled.div`
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: flex-end;
+	justify-content: center;
+	padding: 0px 20px 20px 20px;
+	text-align: center;
+	`;
 
 const CardActions = styled.div`
 	width: auto;
@@ -72,6 +82,19 @@ const CardActions = styled.div`
 	}
 `;
 
+const DeleteButtons = styled.div`
+	width: 100%;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+
+	button{
+		width: 45%;
+		padding: 10px 0px;
+	}
+
+	`;
+
 const styles = {
 	card: {
 		display: 'flex',
@@ -82,7 +105,7 @@ const styles = {
 		objectFit: 'cover',
 	},
 	formControl: {
-		margin: '20px',
+		margin: '0px',
 		minWidth: 120,
 		display: 'flex',
 		flexDirection: 'row',
@@ -96,8 +119,8 @@ const styles = {
 		width: '196px' 
 	},
 	image: {
-		backgroundSize: 'contain',
-		width:'25%'
+		backgroundSize: 'cover',
+		width:'25%',
 	},
 	propertyName:{
 		fontWeight:300
@@ -232,13 +255,14 @@ class PropertyPreview extends React.Component {
 				<div>
 					
 					{/** Delete Modal **/}
-					<Dialog open={this.state.deleteModal} onClose={this.toggleDelete}>
+					<Dialog open={this.state.deleteModal} onClose={this.toggleDelete} fullWidth = {false} maxWidth = 'xl'>
 						<DialogContent>
 							<Typography variant="h6">
 								Are you sure you want to delete {property.property_name}?
 							</Typography>
 						</DialogContent>
 						<DialogActions>
+							<DeleteButtons>
 							<Button
 								onClick={this.toggleDelete}
 								variant="outlined"
@@ -253,6 +277,7 @@ class PropertyPreview extends React.Component {
 							>
 								Delete
 							</Button>
+							</DeleteButtons>
 						</DialogActions>
 					</Dialog>
 
@@ -269,13 +294,10 @@ class PropertyPreview extends React.Component {
 					</Dialog>
 
 					{/** Property Card */}
-					
-						
-					
 					<Card className={classes.card} key={property.id}>
 						<CardMedia 
 							className={classes.image}
-							image={property.img_url || "https://www.freeiconspng.com/uploads/no-image-icon-7.gif"}
+							image={property.img_url || noImage}
 							alt={property.property_name || 'Property Image'}
 						/>
 						<div className={classes.infoContainer}>
@@ -294,6 +316,7 @@ class PropertyPreview extends React.Component {
 						</CardContainer>
 						
 						<CardFooter>
+						<Typography variant = 'overline'>Default Cleaner</Typography>
 							<FormControl className={classes.formControl}>
 								<NativeSelect
 									value={this.state.cleaner_id}
@@ -312,7 +335,6 @@ class PropertyPreview extends React.Component {
 										</option>
 									))}
 								</NativeSelect>
-								Default Cleaner
 							</FormControl>
 						</CardFooter>
 						</div>
