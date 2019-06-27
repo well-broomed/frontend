@@ -91,12 +91,11 @@ const ButtonContainer = styled.div`
 	justify-content: space-between;
 	align-items: center;
 
-	button{
+	button {
 		font-size: 1.5rem;
 		width: 45%;
 	}
-
-	`;
+`;
 
 class Partners extends React.Component {
 	componentDidMount() {
@@ -131,7 +130,6 @@ class Partners extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			partners: this.props.partners,
 			email: '',
 			emailModal: false,
 			formSent: false,
@@ -183,6 +181,8 @@ class Partners extends React.Component {
 	render() {
 		const { classes } = this.props;
 
+		console.log('this.props.partners:', this.props.partners);
+
 		return (
 			<div>
 				<TopBar>
@@ -195,12 +195,16 @@ class Partners extends React.Component {
 						<AddIcon />
 					</Fab>
 				</TopBar>
-				<br></br>
+				<br />
 
-				{this.props.partners ? (
-					this.props.partners.map(partner => {
-						return <PartnerCard partner={partner} key={partner.user_id} />;
-					})
+				{this.props.partners && this.props.defaultProperties ? (
+					this.props.partners.map(partner => (
+						<PartnerCard
+							partner={partner}
+							key={partner.cleaner_id}
+							defaultProperties={this.props.defaultProperties}
+						/>
+					))
 				) : (
 					<Typography variant="overline">
 						No partners have been added yet.
@@ -216,7 +220,11 @@ class Partners extends React.Component {
 				>
 					{!this.state.formSent ? (
 						<>
-							<DialogTitle><Typography variant = 'h4' align='center'>Send An Email Invitation</Typography></DialogTitle>
+							<DialogTitle>
+								<Typography variant="h4" align="center">
+									Send An Email Invitation
+								</Typography>
+							</DialogTitle>
 							<DialogContent>
 								<TextField
 									fullWidth
@@ -231,20 +239,16 @@ class Partners extends React.Component {
 							</DialogContent>
 							<DialogActions>
 								<ButtonContainer>
-								<Button 
-								onClick={this.toggleEmail} 
-								variant="outlined" 
-								>
-									Cancel
-								</Button>
-								<Button
-									onClick={this.handleSubmit}
-									variant="contained"
-									color="primary"
-									
-								>
-									Submit
-								</Button>
+									<Button onClick={this.toggleEmail} variant="outlined">
+										Cancel
+									</Button>
+									<Button
+										onClick={this.handleSubmit}
+										variant="contained"
+										color="primary"
+									>
+										Submit
+									</Button>
 								</ButtonContainer>
 							</DialogActions>
 						</>
@@ -274,7 +278,7 @@ class Partners extends React.Component {
 							</TableHead>
 							<TableBody>
 								{this.props.invites.map(invite => (
-									<TableRow key={invite.createdAt}>
+									<TableRow key={invite.inviteCode}>
 										<TableCell component="th" scope="row">
 											{invite.email}
 										</TableCell>
@@ -297,7 +301,6 @@ class Partners extends React.Component {
 						</Typography>
 					</>
 				)}
-
 			</div>
 		);
 	}
