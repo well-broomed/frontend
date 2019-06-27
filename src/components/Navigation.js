@@ -97,6 +97,7 @@ const AccountFeatures = styled.div`
 	ul{
 			width: 70%;
 			padding: 0px 20px;
+			
 		}
 
 	.left{
@@ -234,7 +235,9 @@ class Navigation extends React.Component {
 					fullWidth = {true}
 					maxWidth = {'xl'}	
 				>
-					<DialogTitle align = 'center'>Please select your account type.</DialogTitle>
+					<DialogTitle align = 'center'>
+						<Typography variant = 'h4'>What kind of user are you?</Typography>
+					</DialogTitle>
 
 					<DialogContent>
 					<AccountFeatures>
@@ -243,7 +246,6 @@ class Navigation extends React.Component {
 						<Typography variant = 'h6' align = 'center'>
 						You want to:
 						</Typography>
-
 							<ul>
 								<li>Manage cleaning checklists</li>
 								<li>Assign cleaning shifts</li>
