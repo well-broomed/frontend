@@ -28,6 +28,10 @@ import {
 	UPDATING_DEADLINE,
 	UPDATED_DEADLINE,
 	UPDATE_DEADLINE_ERROR,
+	UPLOADING_IMAGE,
+	UPLOADED_IMAGE,
+	UPLOAD_IMAGE_ERROR,
+	CLEAR_IMAGE,
 	PROPERTY_UPDATED,
 } from '../actions';
 
@@ -39,6 +43,7 @@ const initialState = {
 	refreshCleaners: false,
 	partners: null,
 	tasks: null,
+	image_url: null,
 };
 
 const propertyReducer = (state = initialState, action) => {
@@ -106,13 +111,13 @@ const propertyReducer = (state = initialState, action) => {
 			};
 
 		case PROPERTY_ADDED:
-			return { ...state, refreshProperties: true };
+			return { ...state, refreshProperties: true, image_url: null};
 
 		case PROPERTY_DELETED:
 			return { ...state, refreshProperties: true };
 
 		case PROPERTY_UPDATED:
-			return { ...state, refreshProperties: true };
+			return { ...state, refreshProperties: true, image_url: null };
 
 		case CLEANER_UPDATED:
 			return { ...state, refreshCleaners: true, refreshProperties: true };
@@ -202,6 +207,32 @@ const propertyReducer = (state = initialState, action) => {
 				deleting_task: undefined,
 				deleteTaskError: action.payload,
 			};
+
+		//IMAGE
+		case UPLOADING_IMAGE:
+			return {
+				...state,
+				uploading_image: true
+			};
+		case UPLOADED_IMAGE:
+			return {
+				...state,
+				image_url: action.payload,
+				uploading_image: false
+			}
+		case UPLOAD_IMAGE_ERROR:
+			return {
+				...state,
+				uploading_image: undefined,
+				uploadingError: action.payload
+			}
+		case CLEAR_IMAGE:
+			return {
+				...state,
+				uploading_image: false,
+				uploadingError: null,
+				image_url: null
+			}
 
 		default:
 			return state;

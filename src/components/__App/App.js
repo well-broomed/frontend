@@ -83,7 +83,7 @@ const theme = createMuiTheme({
 			fontFamily: 'Noto Sans'
 		},
 		button: {
-			fontFamily: 'Fjalla One'
+			fontFamily: 'Noto Sans'
 		}
 	},
 });
