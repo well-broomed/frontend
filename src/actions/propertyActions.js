@@ -130,7 +130,7 @@ export const addProperty = property => {
 		property,
 		options
 	);
-		console.log(property);
+	
 	return dispatch => {
 		dispatch({ type: ADDING_PROPERTY });
 
