@@ -19,7 +19,7 @@ const ProgressRow = props => {
 	const propertyInfo = property.recent || property.current || property.upcoming;
 
 	return (
-		<PropertyRowContainer style={{ background: even ? 'inherit' : 'white' }}>
+		<PropertyRowContainer style={{ background: even ? 'inherit' : '#f2f2f2' }}>
 			<PropertyLink to={`/properties/${propertyInfo.property_id}`}>
 				<PropertyName
 					variant="h4"
@@ -52,7 +52,7 @@ export default ProgressRow;
 
 const PropertyRowContainer = styled.div`
 	width: 100%;
-	/* padding: 16px 0 6px; */
+	padding: 8px 0 0;
 `;
 
 const PropertyLink = styled(Link)`
