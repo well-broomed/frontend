@@ -455,7 +455,9 @@ class Navigation extends React.Component {
 							{localStorage.getItem('jwt') ? (
 								<>
 								<Link to = '/properties'>Properties</Link>
+								{user.role === 'manager' ? (
 								<Link to = '/partners'>Partners</Link>
+								) : (null)}
 								<Link to = '/guests'>Guests</Link>
 								<Link to = '/reports'>Reports</Link>
 								<Link to = '/account'>Account</Link>
