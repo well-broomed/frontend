@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 // Router
 import {withRouter} from 'react-router-dom';
 
-import {updateUserProfile, checkIfUserExists} from '../actions/index';
+import {updateUserProfile, updateUserPicture, checkIfUserExists} from '../actions/index';
 
 // FlexBox
 
@@ -147,7 +147,7 @@ class Account extends React.Component {
         } else if(event.target.name === 'image'){
             const changesForm = new FormData();
             changesForm.append("File", event.target.files[0], event.target.files[0].name)
-            this.props.updateUserProfile(user_id, changesForm);
+            this.props.updateUserPicture(user_id, changesForm);
         }
     }
 
@@ -310,6 +310,7 @@ const mapStateToProps = state => {
 export default withRouter(connect(mapStateToProps, {
     // actions
     updateUserProfile,
+    updateUserPicture,
     checkIfUserExists,
     
 })(withStyles(styles)(Account)));

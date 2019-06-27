@@ -78,6 +78,36 @@ export const updateUserProfile = (user_id, changes) => {
 	};
 };
 
+export const updateUserPicture = (user_id, changes) => {
+	let token = localStorage.getItem('jwt');
+	let userInfo = localStorage.getItem('userInfo');
+
+	let options = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+			'user-info': userInfo,
+		},
+	};
+	const endpoint = axios.put(
+		`${backendUrl}/api/users/profilepic/${user_id}`,
+		changes,
+		options
+	);
+
+	return dispatch => {
+		dispatch({ type: UPDATING_USER });
+
+		endpoint
+			.then(res => {
+				dispatch({ type: USER_UPDATED, payload: res.data });
+			})
+			.catch(err => {
+				console.log(err);
+				dispatch({ type: ERROR });
+			});
+	};
+}
+
 export const setUser = user => {
 	return dispatch => {
 		dispatch({ type: SET_USER, payload: user });

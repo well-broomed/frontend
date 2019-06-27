@@ -73,7 +73,7 @@ const styles = {
 	card: {
 		display: 'flex',
 		maxWidth: '600px',
-		margin: '12px 0 20px 0',
+		margin: '30px 0 20px 0',
 	},
 	media: {
 		objectFit: 'cover',
