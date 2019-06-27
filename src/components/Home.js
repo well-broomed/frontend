@@ -105,7 +105,7 @@ const AccountFeatures = styled.div`
 	}
 
 	ul{
-			width: 70%;
+			width: 100%;
 			padding: 0px 20px;
 			
 		}
@@ -187,7 +187,7 @@ class Home extends React.Component {
 					TransitionComponent={Transition}
 					onClose={this.toggleLogin}
 					fullWidth = {true}
-					maxWidth = {'xl'}	
+					maxWidth = {'md'}	
 				>
 					<div style = {{margin: '40px 0px 0px 0px'}}>
 					<Typography variant = 'h4' align = 'center'>What kind of user are you?</Typography>

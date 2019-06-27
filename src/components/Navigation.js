@@ -288,7 +288,7 @@ class Navigation extends React.Component {
 					TransitionComponent={Transition}
 					onClose={this.toggleModal}
 					fullWidth={true}
-					maxWidth={'xl'}
+					maxWidth={'md'}
 				>
 					<DialogTitle align="center">
 						<Typography variant="h4">What kind of user are you?</Typography>
