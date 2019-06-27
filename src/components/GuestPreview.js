@@ -38,7 +38,15 @@ const CardContainer = styled.div`
 	}
 `;
 
-const CardText = styled.div``;
+const CardText = styled.div`
+		transition: color 0.1s ease-in-out;
+		:hover{
+				h3, h4{
+					color: #3f51b5;
+					transition: color 0.01s ease-in-out;
+				}
+			}
+	`;
 
 const CardActions = styled.div`
 	width: 20%;
@@ -91,11 +99,11 @@ class GuestPreview extends React.Component {
 						<CardContainer>
 							<Link to={`/guests/${this.props.guest.guest_id}`}>
 								<CardText>
-									<Typography variant="h4">
+									<Typography variant="h3">
 										{this.props.guest.guest_name}
 									</Typography>
 
-									<Typography variant="h6">
+									<Typography variant="h4">
 										{this.props.guest.property_name}
 									</Typography>
 

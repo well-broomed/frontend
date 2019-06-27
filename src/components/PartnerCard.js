@@ -179,14 +179,14 @@ class PartnerCard extends React.Component {
 								/>
 							</Avatar>
 						}
-						// action={
-						// 	<Button
-						// 		variant={this.state.open ? 'contained' : 'outlined'}
-						// 		onClick={this.handlePartnerHouse}
-						// 	>
-						// 		House Availability
-						// 	</Button>
-						// }
+						action={
+							<Button
+								variant={this.state.open ? 'contained' : 'outlined'}
+								onClick={this.handlePartnerHouse}
+							>
+								House Availability
+							</Button>
+						}
 					/>
 					<CardContent className={classes.content}>
 						<Typography component="p" className={classes.contentTypography}>

@@ -4,8 +4,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 // Router
 import { withRouter } from 'react-router-dom';
-// Axios
-import axios from 'axios';
 
 import moment from 'moment';
 //Material-UI
@@ -72,7 +70,7 @@ const styles = {
 		width: '100%',
 	},
 	invitationsTitle: {
-		margin: '8px 0 12px',
+		margin: '40px 0',
 	},
 };
 
@@ -82,7 +80,23 @@ const TopBar = styled.div`
 	flex-flow: row nowrap;
 	justify-content: space-between;
 	align-items: center;
+	padding: 20px 0px;
 `;
+
+const ButtonContainer = styled.div`
+	width: 100%;
+	padding: 20px;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	align-items: center;
+
+	button{
+		font-size: 1.5rem;
+		width: 45%;
+	}
+
+	`;
 
 class Partners extends React.Component {
 	componentDidMount() {
@@ -202,7 +216,7 @@ class Partners extends React.Component {
 				>
 					{!this.state.formSent ? (
 						<>
-							<DialogTitle>Send An Email Invitation</DialogTitle>
+							<DialogTitle><Typography variant = 'h4' align='center'>Send An Email Invitation</Typography></DialogTitle>
 							<DialogContent>
 								<TextField
 									fullWidth
@@ -216,16 +230,22 @@ class Partners extends React.Component {
 								/>
 							</DialogContent>
 							<DialogActions>
-								<Button onClick={this.toggleEmail} variant="outlined">
+								<ButtonContainer>
+								<Button 
+								onClick={this.toggleEmail} 
+								variant="outlined" 
+								>
 									Cancel
 								</Button>
 								<Button
 									onClick={this.handleSubmit}
 									variant="contained"
 									color="primary"
+									
 								>
 									Submit
 								</Button>
+								</ButtonContainer>
 							</DialogActions>
 						</>
 					) : (

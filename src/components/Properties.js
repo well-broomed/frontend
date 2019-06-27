@@ -39,6 +39,7 @@ const TopBar = styled.div`
 	flex-flow: row nowrap;
 	justify-content: space-between;
 	align-items: center;
+	padding: 20px 0px;
 `;
 
 const styles = {
@@ -109,8 +110,8 @@ class Properties extends React.Component {
 		// Collect assigned Assistant Properties if user is an assistant
 		let asstProperties = [];
 		if(role !== 'manager' && this.props.properties){
-			if(this.props.user){
-				asstProperties = this.props.properties.filter(property => property.cleaner_id === this.props.user.user_id);
+			if(user){
+				asstProperties = this.props.properties.filter(property => property.cleaner_id === user.user_id);
 			}
 		}
 
@@ -191,7 +192,7 @@ class Properties extends React.Component {
 					) : null }
 
 					<Typography variant="h5"> Potential Properties </Typography>
-					<Typography variant = 'subtitle'>Mark yourself available to be assigned for shifts.</Typography>
+					<Typography variant = 'overline'>Mark yourself available to be assigned for shifts.</Typography>
 					<br></br>
 					{/** Available Properties */}
 					{/** These are all properties from all managers */}
