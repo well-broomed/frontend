@@ -431,7 +431,7 @@ const TopBar = styled.div`
 const PropertyImg = styled.img`
 	width: 160px;
 	height: 160px;
-	object-fit: contain;
+	object-fit: cover;
 `;
 
 const TitleContainer = styled.div`

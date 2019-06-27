@@ -119,7 +119,7 @@ const styles = {
 		width: '196px' 
 	},
 	image: {
-		backgroundSize: 'contain',
+		backgroundSize: 'cover',
 		width:'25%',
 	},
 	propertyName:{
