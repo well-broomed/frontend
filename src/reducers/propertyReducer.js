@@ -43,6 +43,7 @@ const initialState = {
 	refreshCleaners: false,
 	partners: null,
 	tasks: null,
+	image_url: null,
 };
 
 const propertyReducer = (state = initialState, action) => {
@@ -116,7 +117,7 @@ const propertyReducer = (state = initialState, action) => {
 			return { ...state, refreshProperties: true };
 
 		case PROPERTY_UPDATED:
-			return { ...state, refreshProperties: true };
+			return { ...state, refreshProperties: true, image_url: null };
 
 		case CLEANER_UPDATED:
 			return { ...state, refreshCleaners: true, refreshProperties: true };
