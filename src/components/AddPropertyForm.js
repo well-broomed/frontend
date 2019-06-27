@@ -84,6 +84,7 @@ class AddPropertyForm extends React.Component {
 	};
 
 	handleImage = ({ target }) => {
+		this.props.clearImage();
 		this.props.uploadImage(target.files[0]);
   };
 

@@ -82,6 +82,7 @@ class EditPropertyForm extends React.Component {
 	}
 
 	handleImage = ({ target }) => {
+		this.props.clearImage();
 		this.props.uploadImage(target.files[0]);
   };
 
@@ -173,7 +174,6 @@ class EditPropertyForm extends React.Component {
 						className={classes.formButton}
 						variant="contained"
 						color="primary"
-						type="submit"
 					>
 						Please Wait
 					</Button> 
@@ -182,6 +182,7 @@ class EditPropertyForm extends React.Component {
 						className={classes.formButton}
 						variant="contained"
 						color="primary"
+						type="submit"
 					>
 						Submit Changes
 					</Button> }
