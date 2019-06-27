@@ -70,7 +70,7 @@ const styles = {
 	},
 	logoutBtn: {
 		background: '#b71c1c',
-		color: 'white',
+		color: '#f5f5f3',
 	},
 	loginModal: {
 		background: '#3d3d3d',
@@ -148,11 +148,11 @@ const NavLinks = styled.div`
 		a{
 		padding: 22px;
 		text-align: center;
-		color: #fafafa;
+		color: #f5f5f3;
 		text-decoration: none;
 
 		:hover{
-			background: #fafafa;
+			background: #f5f5f3;
 			color: #3f51b5;
 			font-weight: 800;
 
@@ -288,7 +288,7 @@ class Navigation extends React.Component {
 					TransitionComponent={Transition}
 					onClose={this.toggleModal}
 					fullWidth={true}
-					maxWidth={'xl'}
+					maxWidth={'md'}
 				>
 					<DialogTitle align="center">
 						<Typography variant="h4">What kind of user are you?</Typography>
@@ -455,7 +455,9 @@ class Navigation extends React.Component {
 							{localStorage.getItem('jwt') ? (
 								<>
 								<Link to = '/properties'>Properties</Link>
+								{user.role === 'manager' ? (
 								<Link to = '/partners'>Partners</Link>
+								) : (null)}
 								<Link to = '/guests'>Guests</Link>
 								<Link to = '/reports'>Reports</Link>
 								<Link to = '/account'>Account</Link>

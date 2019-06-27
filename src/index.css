@@ -1,3 +1,8 @@
 body {
 	overflow-y: scroll;
+	/* background: url('https://images.pexels.com/photos/821649/pexels-photo-821649.jpeg?auto=compress&cs=tinysrgb&h=1920&w=2942');
+	background-repeat: no-repeat;
+	background-size: cover; */
+
+	background: #cecdc8;
 }

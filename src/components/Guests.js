@@ -154,7 +154,7 @@ class Guests extends React.Component {
 					TransitionComponent={Transition}
 					onClose={this.handleModalClose}
 					fullWidth={true}
-					maxWidth={'xl'}
+					maxWidth={'md'}
 				>
 					<DialogContent>
 						<AddGuestForm

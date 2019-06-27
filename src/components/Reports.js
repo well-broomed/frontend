@@ -217,6 +217,11 @@ class Reports extends React.Component {
 						index={this.state.tabValue}
 						onChangeIndex={this.handleChangeIndex}
 						className={classes.reports}
+						style={{
+							background: '#fafafa',
+							paddingTop: '20px',
+							marginTop: '0',
+						}}
 					>
 						<Typography component="div" dir={this.props.theme.direction}>
 							<Typography
@@ -232,8 +237,10 @@ class Reports extends React.Component {
 							</div>
 
 							<Divider className={classes.divider} />
-							<Typography variant = 'h3' align = 'center'>Properties</Typography>
-							<br></br>
+							<Typography variant="h3" align="center">
+								Properties
+							</Typography>
+							<br />
 							<TimeHeaders>
 								{['RECENT', 'CURRENT', 'UPCOMING'].map(title => (
 									<Typography
