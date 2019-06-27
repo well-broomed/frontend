@@ -170,7 +170,7 @@ class Account extends React.Component {
                          title = 'Profile Picture'/>
                      </CardActionArea>
                      <CardContent>
-                        <div>
+                        {/* <div> // Needs a constant live token on backend, out for now.
                         <Typography variant = 'overline'> Change Profile Picture </Typography>
                         <input
 							value={undefined}
@@ -185,7 +185,7 @@ class Account extends React.Component {
                              <IconButton  component="span" name = 'profilepic'><EditTwoTone name = 'profilepic'/>
                             </IconButton>
                         </label>
-                            </div>
+                            </div> */}
                         <Typography variant = 'overline'>Username</Typography>
                         {!this.state.usernameOpen ? (
                             <FlexRowNoWrap>
