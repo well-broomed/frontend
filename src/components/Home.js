@@ -11,7 +11,7 @@ import styled from 'styled-components';
 
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import {Tabs, Tab, Paper} from '@material-ui/core';
+import {Dialog, DialogTitle, DialogContent, Slide} from '@material-ui/core';
 
 // Icons
 import ListAltTwoTone from '@material-ui/icons/ListAltTwoTone';
@@ -85,19 +85,165 @@ const CallToAction = styled.div`
 	}
 `;
 
+const AccountFeatures = styled.div`
+	width: 100%;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	align-items: center;
+	padding: 20px;
+
+	@media (max-width: 800px){
+		flex-flow: column nowrap;
+		padding: 0px 20px;
+	}
+
+	button{
+		font-size: 1.5rem;
+		min-width: 70%;
+		margin: 0 auto;
+	}
+
+	ul{
+			width: 70%;
+			padding: 0px 20px;
+			
+		}
+
+	.left{
+		width: 45%;
+		display: flex;
+		flex-flow: column nowrap;
+		justify-content: center;
+		align-items: center;
+
+		@media (max-width: 800px){
+			width: 100%;
+			margin-bottom: 20px;
+			padding-bottom: 30px;
+			border-bottom: 2px solid slategray;
+		}
+		
+	}
+
+	.right{
+		width: 45%;
+		display: flex;
+		flex-flow: column nowrap;
+		justify-content: center;
+		align-items: center;
+
+		@media (max-width: 800px){
+			width: 100%;
+			margin-bottom: 20px;
+		}
+	}
+	`;
+
+const Transition = React.forwardRef((props, ref) => (
+	<Slide direction="up" {...props} ref={ref} />
+));
+
+
 class Home extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			
+			loginModal: false,
 		};
 	}
 
 	handleLogin = () => {
+		localStorage.setItem('accountType', this.state.accountType);
+
 		auth.login();
 	};
 
+	toggleLogin = () => {
+		this.setState({
+			loginModal: !this.state.loginModal
+		})
+	}
+
+	selectAccount = (event, role) => {
+		event.preventDefault();
+
+		this.setState(
+			{
+				accountType: role,
+				loginModal: false,
+			},
+			this.handleLogin
+		);
+	};
+
 	render() {
+
+
+		const loginModal = (
+			<div>
+				<Dialog
+					open={this.state.loginModal}
+					TransitionComponent={Transition}
+					onClose={this.toggleLogin}
+					fullWidth = {true}
+					maxWidth = {'xl'}	
+				>
+					<DialogTitle align = 'center'>
+						<Typography variant = 'h4'>What kind of user are you?</Typography>
+					</DialogTitle>
+
+					<DialogContent>
+					<AccountFeatures>
+						<div className = 'left'>
+						
+						<Typography variant = 'h6' align = 'center'>
+						You want to:
+						</Typography>
+							<ul>
+								<li>Manage cleaning checklists</li>
+								<li>Assign cleaning shifts</li>
+								<li>Monitor turnover status</li>
+								<li>Make life a little easier</li>
+							</ul>
+						
+						<Button variant = 'contained' color = 'primary' align='center'
+							onClick={event => {
+								this.selectAccount(event, 'manager');
+							}}
+						>
+							<div>I am a Manager</div>
+						</Button>
+						</div>
+
+						<div className = 'right'>
+							<Typography variant = 'h6'>
+								You want to:
+							</Typography>
+							
+							<ul>
+								<li>Pick up cleaning shifts</li>
+								<li>Be a lean, mean, cleaning machine</li>
+								<li>Rock out with your mop out</li>
+								<li>Earn some extra dough</li>
+							</ul>
+				
+						<Button variant = 'contained' color = 'primary' align = 'center'
+							onClick={event => {
+								this.selectAccount(event, 'assistant');
+							}}
+						>
+							<div>I am an Assistant</div>
+						</Button>
+
+						</div>
+
+					</AccountFeatures>
+					</DialogContent>
+				</Dialog>
+			</div>
+		);
+
 		return (
 			<div>
 				<Intro>
@@ -115,7 +261,7 @@ class Home extends React.Component {
 						size="large"
 						variant="contained"
 						color="primary"
-						onClick={this.handleLogin}
+						onClick={this.toggleLogin}
 					>
 						Let's do it!
 					</Button>
@@ -213,11 +359,13 @@ class Home extends React.Component {
 						size="large"
 						variant="contained"
 						color="primary"
-						onClick={this.handleLogin}
+						onClick={this.toggleLogin}
 					>
 						That sounds awesome! Sign Me Up!
 					</Button>
 				</CallToAction>
+
+				{loginModal}
 			</div>
 		);
 	}

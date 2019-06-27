@@ -31,6 +31,7 @@ import {
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { MuiThemeProvider } from '@material-ui/core/styles';
+import { trimExt } from 'upath';
 // import Typography from '@material-ui/core/Typography';
 
 //Styles
