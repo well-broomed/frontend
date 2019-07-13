@@ -124,7 +124,7 @@ class GuestPreview extends React.Component {
 										onClick={this.toggleEdit}
 										disabled={this.props.fetching}
 									/>
-									<DeleteForeverTwoTone onClick={this.toggleModal} style = {{color: 'darkred'}}/>
+									<DeleteForeverTwoTone onClick={this.toggleModal} style = {{color: 'darkred'}} />
 								</CardActions>
 							)}
 						</CardContainer>
