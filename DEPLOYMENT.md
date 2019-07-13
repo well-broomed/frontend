@@ -13,7 +13,7 @@ WellBroomed is built using React and Redux on the front-end, with a Material-UI 
 It is hosted on Netlify, and these build instructions will assume you have also chosen Netlify for your front-end deployment service.
 
 :exclamation:
-## If you have not completed the [backend setup](https://github.com/well-broomed/backend/blob/deployment-docs/DEPLOYMENT.md), please do so before proceeding. This configuration will ensure that you have access to the necessary variable values needed for build and deployment, particularly with regard to Auth0.
+### If you have not completed the [backend setup](https://github.com/well-broomed/backend/blob/deployment-docs/DEPLOYMENT.md), please do so before proceeding. This configuration will ensure that you have access to the necessary variable values needed for build and deployment, particularly with regard to Auth0.
 :exclamation:
 
 The first thing you will need to do is fork and clone your own repository, as that is where you will need to make your changes. Ensure that there is a `.env` file in the top-level directory of the repository.
