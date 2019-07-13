@@ -8,9 +8,9 @@
 2. [Yarn](#yarn)
 3. [Netlify](#Netlify)
 
-WellBroomed is built using React and Redux on the front-end, with a Material-UI component library.
+WellBroomed is built using React and Redux on the front-end, with a [Material-UI](https://material-ui.com/) component library, along with some help from [styled-components](https://www.styled-components.com/).
 
-It is hosted on Netlify, and these build instructions will assume you have also chosen Netlify for your front-end deployment service.
+It is hosted on [Netlify](https://www.netlify.com), and these build instructions will assume you have also chosen Netlify for your front-end deployment service.
 
 :exclamation:
 ### If you have not completed the [backend setup](https://github.com/well-broomed/backend/blob/deployment-docs/DEPLOYMENT.md), please do so before proceeding. This configuration will ensure that you have access to the necessary variable values needed for build and deployment, particularly with regard to Auth0.
