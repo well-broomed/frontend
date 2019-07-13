@@ -59,12 +59,26 @@ REACT_APP_FRONTEND_URL
 
 The `REACT_APP_AUTH0_CLIENT_ID` and `REACT_APP_AUTH0_DOMAIN` are the same values as in your local `.env` file.
 
-`REACT_APP_BACKEND_URL` is the URL for the backend deployment hosted on Heroku. Ensure there is no trailing backslash on this URL.
+`REACT_APP_BACKEND_URL` is the URL for the backend deployment hosted on Heroku. Ensure there is no trailing backslash on this URL. Without this value, it will default to `http://localhost:5000`.
 
-`REACT_APP_CALLBACK_URL` is the callback URL designated for this domain within the Auth0 application. Ensure that it matches the URL given to Auth0 exactly, with no trailing backslashes.
+`REACT_APP_CALLBACK_URL` is the callback URL designated for this domain within the Auth0 application. Ensure that it matches the URL given to Auth0 exactly, with no trailing backslashes. Without this value, it will default to `http://localhost:3000/callback`.
 
 `REACT_APP_FRONTEND_URL` is the URL that you would like the application to handle for purposes of redirects etc. This is in case you are using a development deployment and a production deployment, or want to utilize A/B testing of different builds. Simply swap the frontend URL value to point the application to whichever domain you choose. Without this value, the URL will default to `http://localhost:3000`.
 
 With these environment variables in place, utilize the `yarn build` command in the deployment settings with the `build/` directory as your publish directory. 
 
 Netlify should build the site, and that's all you'll need for the front-end deployment.
+
+---
+
+With all that complete, your frontend deployment should be ready for development! :tada:
+
+We hope you enjoy WellBroomed! :v:
+
+Adam Reid
+
+
+Max Kajiwara
+
+
+Kevin Tena
