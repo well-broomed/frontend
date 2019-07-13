@@ -37,7 +37,9 @@ These values are necessary in order to complete the authorization process in sig
 
 ## Yarn
 
-Once these `.env` values are in place, go to the top-level directory of the repository in your console and type `yarn start`. This will gather the necessary dependencies and build the application to be hosted locally. Be sure to commit and push the newly created `yarn.lock` file to your remote repository, as it is necessary for Netlify to build the site properly.
+Once these `.env` values are in place, go to the top-level directory of the repository in your console and type `yarn install`. This will gather the necessary dependencies and build the application to be hosted locally. Test the build using `yarn start`. By default, the application will be reachable at `http://localhost:3000`.
+
+Be sure to commit and push the newly created `yarn.lock` file to your remote repository, as it is necessary for Netlify to build the site properly.
 
 ## Netlify
 
