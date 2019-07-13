@@ -1,7 +1,8 @@
 # WellBroomed - Frontend
+
 Frontend Repository for [WellBroomed](https://www.wellbroomed.com)
 
-**Contributors**
+## Contributors
 
 - [Adam Reid](https://github.com/iAmAdamReid)
 - [Max Kajiwara](https://github.com/maxkajiwara)
